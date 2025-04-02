@@ -43,6 +43,18 @@ args = "Simple Test App"
 task = "workflow.run"
 args = "Streamlit Port 8080 Test"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "HTTP Server Test"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Very Minimal Streamlit"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Simple HTTP Server"
+
 [[workflows.workflow]]
 name = "Streamlit Server"
 author = "agent"
@@ -147,6 +159,51 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "streamlit run port_test.py --server.port 8080"
 waitForPort = 8080
+
+[[workflows.workflow]]
+name = "HTTP Server Test"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python test_server.py"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Very Minimal Streamlit"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "streamlit run very_minimal.py --server.port 5000"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Simple HTTP Server"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python simple_http_server.py"
+waitForPort = 5000
 
 [[ports]]
 localPort = 5000
