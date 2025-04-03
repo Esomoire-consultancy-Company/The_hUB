@@ -33,6 +33,9 @@ def get_buyer_by_id(buyer_id):
     """Get a buyer by ID"""
     db = get_db_session()
     try:
+        # Convert numpy.int64 to Python int if needed
+        if hasattr(buyer_id, 'item'):  # Check if it's numpy type
+            buyer_id = int(buyer_id)
         buyer = db.query(Buyer).filter(Buyer.id == buyer_id).first()
         return buyer
     finally:
@@ -53,6 +56,9 @@ def get_orders_by_buyer(buyer_id):
     """Get all orders for a specific buyer"""
     db = get_db_session()
     try:
+        # Convert numpy.int64 to Python int if needed
+        if hasattr(buyer_id, 'item'):  # Check if it's numpy type
+            buyer_id = int(buyer_id)
         # Eagerly load buyer relationship to avoid detached instance error
         orders = db.query(Order).filter(Order.buyer_id == buyer_id).options(sqlalchemy.orm.joinedload(Order.buyer)).all()
         return orders
@@ -90,6 +96,9 @@ def update_order_status(order_id, status):
     """Update the status of an order"""
     db = get_db_session()
     try:
+        # Convert numpy.int64 to Python int if needed
+        if hasattr(order_id, 'item'):  # Check if it's numpy type
+            order_id = int(order_id)
         order = db.query(Order).filter(Order.id == order_id).first()
         if order:
             order.status = status
@@ -104,6 +113,9 @@ def get_styles_by_order(order_id):
     """Get all styles for a specific order"""
     db = get_db_session()
     try:
+        # Convert numpy.int64 to Python int if needed
+        if hasattr(order_id, 'item'):  # Check if it's numpy type
+            order_id = int(order_id)
         styles = db.query(Style).filter(Style.order_id == order_id).all()
         return styles
     finally:
@@ -136,6 +148,9 @@ def update_style_status(style_id, status):
     """Update the status of a style"""
     db = get_db_session()
     try:
+        # Convert numpy.int64 to Python int if needed
+        if hasattr(style_id, 'item'):  # Check if it's numpy type
+            style_id = int(style_id)
         style = db.query(Style).filter(Style.id == style_id).first()
         if style:
             style.status = status
@@ -150,6 +165,9 @@ def get_materials_by_style(style_id):
     """Get all materials for a specific style"""
     db = get_db_session()
     try:
+        # Convert numpy.int64 to Python int if needed
+        if hasattr(style_id, 'item'):  # Check if it's numpy type
+            style_id = int(style_id)
         materials = db.query(Material).filter(Material.style_id == style_id).all()
         return materials
     finally:
@@ -177,12 +195,18 @@ def update_material_status(material_id, status, **kwargs):
     """Update the status and other fields of a material"""
     db = get_db_session()
     try:
+        # Convert numpy.int64 to Python int if needed
+        if hasattr(material_id, 'item'):  # Check if it's numpy type
+            material_id = int(material_id)
         material = db.query(Material).filter(Material.id == material_id).first()
         if material:
             material.status = status
             # Update other fields if provided
             for key, value in kwargs.items():
                 if hasattr(material, key):
+                    # Convert numpy types for kwargs values if needed
+                    if hasattr(value, 'item'):
+                        value = value.item()
                     setattr(material, key, value)
             db.commit()
             return True
@@ -260,6 +284,9 @@ def get_production_entries_by_style(style_id):
     """Get all production entries for a specific style"""
     db = get_db_session()
     try:
+        # Convert numpy.int64 to Python int if needed
+        if hasattr(style_id, 'item'):  # Check if it's numpy type
+            style_id = int(style_id)
         entries = db.query(ProductionEntry).filter(ProductionEntry.style_id == style_id).all()
         return entries
     finally:
