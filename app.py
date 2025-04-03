@@ -9,25 +9,38 @@ from order_booking import show_order_booking
 from order_confirmation import show_order_confirmation
 from merchandiser_agent import show_merchandiser_agent
 from retailer_analysis import show_retailer_analysis
-from stock_analysis import show_stock_analysis
-from virtual_silk_road_landing import show_virtual_silk_road_landing
-from virtual_silk_road import show_virtual_silk_road
-from visualization import show_visualization
-from empire_os_landing import show_empire_os_landing
-from synergyze_landing import show_synergyze_landing
-from hsn_transaction_system import show_hsn_transaction_system
+
+# Import manufacturing portal modules
+from manufacturing_dashboard import show_manufacturing_dashboard
+from order_style_management import show_order_style_management
+from material_tracker import show_material_tracker
+from production_timeline import show_production_timeline
+from line_plan import show_line_plan
+from reports import show_reports
+from init_db import show_db_initialization, initialize_database
+
+# Import visualization modules
+from supply_chain_visualization import show_supply_chain_visualization
+from synergy_visualization import show_synergy_visualization
+from voi_jeans_demo import show_voi_jeans_demo
 
 # Configure the page
 st.set_page_config(
-    page_title="Synergyze | Virtual Silk Road",
-    page_icon="🏙️",
+    page_title="ECG Manufacturing Portal",
+    page_icon="👕",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
+# Initialize database with sample data if needed
+if 'db_initialized' not in st.session_state:
+    # Try to initialize database
+    initialize_database()
+    st.session_state.db_initialized = True
+
 # Initialize session state for app flow
 if 'page' not in st.session_state:
-    st.session_state.page = 'retailer_analysis'  # Start directly on retailer analysis page for testing
+    st.session_state.page = 'manufacturing_dashboard'  # Start directly on manufacturing dashboard page
 
 if 'completed_onboarding' not in st.session_state:
     st.session_state.completed_onboarding = True  # Skip onboarding for testing
@@ -41,154 +54,265 @@ if 'cart' not in st.session_state:
 if 'order_submitted' not in st.session_state:
     st.session_state.order_submitted = False
 
-# Initialize new session state for authentication and access control
-if 'is_authenticated' not in st.session_state:
-    st.session_state.is_authenticated = False
-
-if 'user_role' not in st.session_state:
-    st.session_state.user_role = 'public'  # Options: 'public', 'licensed', 'emperor'
-
 # Sidebar navigation
 with st.sidebar:
-    # Application title with new branding
-    st.title("Synergyze Platform")
-    st.markdown("""
-    <div style='background: linear-gradient(90deg, rgba(75,0,130,0.2) 0%, rgba(123,104,238,0.2) 100%); 
-    padding: 10px; border-radius: 5px; margin-bottom: 15px;'>
-        <p style='margin: 0; font-size: 0.9em;'>Powered by</p>
-        <p style='margin: 0; font-weight: bold;'>Empire OS</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.title("Voi Jeans Management Portal")
+    
+    # Demo button with a prominent style
+    st.markdown(
+        """
+        <div style='background-color: #1E3A8A; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 15px;'>
+            <p style='margin: 0; font-weight: bold; color: white;'>✨ NEW!</p>
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
+    if st.button("🧥 VOI JEANS DEMO", use_container_width=True, type="primary"):
+        st.session_state.page = 'voi_jeans_demo'
+    
     st.markdown("---")
     
-    # Main navigation sections
-    if st.session_state.user_role == 'public':
-        # Public-facing marketing pages for the ecosystem
-        st.markdown("### Empire Ecosystem")
+    # Create three sections for navigation
+    tab1, tab2, tab3 = st.tabs(["🏭 Manufacturing (Scotts)", "🏬 Retail Distribution", "⚙️ Management Hub"])
+    
+    with tab1:
+        # Manufacturing Portal Navigation
+        st.markdown("### Manufacturing (Scotts Garments - CMP)")
         
-        if st.button("👑 Empire OS", use_container_width=True):
-            st.session_state.page = 'empire_os_landing'
+        # Procurement System section
+        st.markdown("#### Denim Procurement")
+        if st.button("👖 SS25 Denim Styles", use_container_width=True, key="material_tracker"):
+            st.session_state.page = 'material_tracker'
             
-        if st.button("🌏 Virtual Silk Road", use_container_width=True):
-            st.session_state.page = 'vsr_landing'
+        if st.button("🏭 Scotts Garments Management", use_container_width=True, key="order_style_mgmt"):
+            st.session_state.page = 'order_style_management'
             
-        if st.button("⚡ Synergyze Licenses", use_container_width=True):
-            st.session_state.page = 'synergyze_landing'
+        if st.button("💰 CMP Cost Calculation", use_container_width=True, key="reports"):
+            st.session_state.page = 'reports'
             
-        # Commerce portal
-        st.markdown("### Buying House Portal")
+        if st.button("📝 Production Order Placement", use_container_width=True, key="order_placement"):
+            st.session_state.page = 'order_style_management'
+            
+        if st.button("📦 Denim Fabric Tracking", use_container_width=True, key="material_tracking"):
+            st.session_state.page = 'material_tracker'
+            
+        # Manufacturing Management section
+        st.markdown("#### Manufacturing Management")
+        if st.button("📋 Production Planning", use_container_width=True, key="line_plan"):
+            st.session_state.page = 'line_plan'
+            
+        if st.button("📅 Production Scheduling", use_container_width=True, key="production_timeline"):
+            st.session_state.page = 'production_timeline'
+            
+        if st.button("⚙️ Quality Control Tracking", use_container_width=True, key="quality_control"):
+            st.session_state.page = 'production_timeline'
+            
+        if st.button("📊 Capacity Management", use_container_width=True, key="capacity_mgmt"):
+            st.session_state.page = 'manufacturing_dashboard'
+            
+        if st.button("📈 Production Reporting", use_container_width=True, key="prod_reporting"):
+            st.session_state.page = 'reports'
+            
+        # Fabric and Vendor Synchronization section
+        st.markdown("#### Fabric and Vendor Synchronization")
+        if st.button("📚 Material Library", use_container_width=True, key="material_library"):
+            st.session_state.page = 'material_tracker'
+            
+        if st.button("📊 Vendor Capability Matrix", use_container_width=True, key="vendor_capability"):
+            st.session_state.page = 'reports'
+            
+        if st.button("🔄 Material-vendor Matching", use_container_width=True, key="material_vendor_matching"):
+            st.session_state.page = 'order_style_management'
+            
+        if st.button("📈 Performance Tracking", use_container_width=True, key="vendor_performance"):
+            st.session_state.page = 'manufacturing_dashboard'
+            
+        # Factory Operations Dashboard section
+        st.markdown("#### Factory Operations Dashboard")
+        if st.button("👚 Factory Merchandiser View", use_container_width=True, key="factory_merchandiser"):
+            st.session_state.page = 'merchandiser_agent'
+            
+        if st.button("⏱ Production Tracking Timeline", use_container_width=True, key="prod_tracking_timeline"):
+            st.session_state.page = 'production_timeline'
+            
+        if st.button("🚚 Delivery Scheduling", use_container_width=True, key="delivery_scheduling"):
+            st.session_state.page = 'line_plan'
+            
+        if st.button("📋 Compliance Tracking", use_container_width=True, key="compliance_tracking"):
+            st.session_state.page = 'reports'
+            
+        if st.button("🔄 Supply Chain Visualization", use_container_width=True, key="supply_chain_viz"):
+            st.session_state.page = 'supply_chain_visualization'
+            
+        # HSN-Based Forecasting section
+        st.markdown("#### HSN-Based Forecasting")
+        if st.button("📡 Demand Signal Integration", use_container_width=True, key="demand_signal"):
+            st.session_state.page = 'manufacturing_dashboard'
+            
+        if st.button("📊 Supply Requirement Projections", use_container_width=True, key="supply_projections"):
+            st.session_state.page = 'reports'
+            
+        if st.button("⏳ Timeline Forecasting", use_container_width=True, key="timeline_forecasting"):
+            st.session_state.page = 'line_plan'
+            
+        if st.button("📉 Raw Material Demand Prediction", use_container_width=True, key="raw_material_prediction"):
+            st.session_state.page = 'material_tracker'
         
-        if st.button("🛍️ Browse Products", use_container_width=True):
+        # Database initialization (hidden in an expander to not clutter the UI)
+        with st.expander("⚙️ Database Management"):
+            if st.button("Database Setup", use_container_width=True, key="db_init"):
+                st.session_state.page = 'db_initialization'
+    
+    with tab2:
+        # Commune Connect Portal Navigation
+        st.markdown("### Voi Jeans Retail Distribution")
+        
+        # Store Management
+        st.markdown("#### Store Management")
+        if st.button("🏬 Retail Store Network", use_container_width=True, key="browse_products"):
             st.session_state.page = 'product_catalog'
         
-        if st.session_state.selected_product is not None:
-            if st.button("📋 Product Details", use_container_width=True):
-                st.session_state.page = 'product_detail'
-        
-        if st.session_state.cart:
-            if st.button("🛒 View Order", use_container_width=True):
-                st.session_state.page = 'order_booking'
-                
-        st.markdown("### Market Intelligence")
-        
-        # Add ECG Market Health Check button
-        if st.button("📊 Market Health Check", use_container_width=True):
+        if st.button("📊 Daily Sales vs Target", use_container_width=True, key="daily_sales"):
             st.session_state.page = 'retailer_analysis'
-            
-        # Add Stock Analysis button
-        if st.button("📈 Stock Analysis", use_container_width=True):
-            st.session_state.page = 'stock_analysis'
-            
-        st.markdown("### Inventory Management")
         
-        # Add HSN Transaction System button
-        if st.button("🏆 HSN Transaction Suite", use_container_width=True):
-            st.session_state.page = 'hsn_transaction_system'
-            
-    else:
-        # Licensed user or Emperor view sections - private dashboards
-        st.markdown("### Empire Command Center")
+        if st.button("🔖 E-Wards Loyalty Program", use_container_width=True, key="loyalty_program"):
+            st.session_state.page = 'product_detail'
         
-        if st.button("👑 Empire OS Control", use_container_width=True):
-            st.session_state.page = 'empire_os_dashboard'
+        if st.button("📦 Store Inventory Management", use_container_width=True, key="view_order"):
+            st.session_state.page = 'order_booking'
+        
+        # Product Management
+        st.markdown("#### Product Management")
+        
+        if st.button("👖 Denim Collection", use_container_width=True, key="denim_collection"):
+            st.session_state.page = 'product_catalog'
             
-        if st.button("🏙️ Virtual Silk Road", use_container_width=True):
-            st.session_state.page = 'virtual_silk_road'
+        if st.button("🎯 SS25 Collection Planning", use_container_width=True, key="ss25_planning"):
+            st.session_state.page = 'order_style_management'
             
-        if st.button("⚡ License Management", use_container_width=True):
-            st.session_state.page = 'license_management'
-            
-        st.markdown("### Enterprise Intelligence")
-            
-        if st.button("📊 Market Intelligence", use_container_width=True):
+        if st.button("🔍 Style Performance Analysis", use_container_width=True, key="style_performance"):
             st.session_state.page = 'retailer_analysis'
-            
-        if st.button("📈 Technical Analysis", use_container_width=True):
-            st.session_state.page = 'visualization'
-            
-        st.markdown("### Advanced Tools")
         
-        if st.button("🏆 HSN Transaction Suite", use_container_width=True):
-            st.session_state.page = 'hsn_transaction_system'
+        # Market Intelligence Section
+        st.markdown("#### Retail Analytics")
+        
+        if st.button("📈 Sales Performance Dashboard", use_container_width=True, key="market_health"):
+            st.session_state.page = 'retailer_analysis'
+        
+        if st.button("📱 Online vs In-Store Analysis", use_container_width=True, key="online_vs_store"):
+            st.session_state.page = 'manufacturing_dashboard'
+            
+        if st.button("🏙️ Regional Market Insights", use_container_width=True, key="regional_insights"):
+            st.session_state.page = 'reports'
+        
+        # Add a hint about the retail analytics
+        st.info("Access real-time sales analytics and performance metrics across all Voi Jeans retail locations.")
+        
+        # Add access to the merchandiser agent
+        st.markdown("### Your Support Team")
+        
+        # Merchandiser button with notification badge style
+        if st.button("👩‍💼 Your Merchandiser Agent", use_container_width=True, key="merchandiser"):
+            st.session_state.page = 'merchandiser_agent'
+        
+        # Show a hint about the merchandiser
+        if 'merchandiser' in st.session_state and isinstance(st.session_state.merchandiser, dict):
+            # Display merchandiser info if already assigned and valid
+            st.markdown(f"""
+            <div style='background-color: #1E3A8A; padding: 10px; border-radius: 5px; margin-top: 10px;'>
+                <p style='margin: 0; font-size: 0.9em;'>You're working with:</p>
+                <p style='margin: 0; font-weight: bold;'>{st.session_state.merchandiser.get('name', 'Your Merchandiser')}</p>
+                <p style='margin: 0; font-size: 0.8em;'>{st.session_state.merchandiser.get('specialization', 'Denim Expert')}</p>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            # Show a teaser about having a merchandiser
+            st.info("Connect with your dedicated merchandising agent for personalized support throughout your order process.")
     
-    # User authentication section
-    st.markdown("---")
-    st.markdown("### User Access")
+    with tab3:
+        # Voi Jeans Management Hub
+        st.markdown("### Voi Jeans Management Hub")
+        
+        # Finance & Governance section
+        st.markdown("#### Finance & Governance")
+        if st.button("💰 CMP Cost Management", use_container_width=True, key="license_application"):
+            st.session_state.page = 'manufacturing_dashboard'
+        
+        if st.button("📊 Financial Performance", use_container_width=True, key="application_review"):
+            st.session_state.page = 'order_style_management'
+        
+        if st.button("💵 Vendor Payment Processing", use_container_width=True, key="payment_processing"):
+            st.session_state.page = 'reports'
+        
+        if st.button("📑 Compliance Documentation", use_container_width=True, key="license_approval"):
+            st.session_state.page = 'line_plan'
+        
+        if st.button("🔄 Monthly Reconciliation", use_container_width=True, key="license_renewal"):
+            st.session_state.page = 'production_timeline'
+        
+        # Administration section
+        st.markdown("#### Administration")
+        if st.button("👤 User Account Management", use_container_width=True, key="role_definition"):
+            st.session_state.page = 'manufacturing_dashboard'
+        
+        if st.button("🔐 Access Control Settings", use_container_width=True, key="permission_assignment"):
+            st.session_state.page = 'reports'
+        
+        if st.button("🏢 Department Configuration", use_container_width=True, key="user_classification"):
+            st.session_state.page = 'order_style_management'
+        
+        if st.button("📱 Mobile App Administration", use_container_width=True, key="user_categorization"):
+            st.session_state.page = 'line_plan'
+            
+        # Business Intelligence section
+        st.markdown("#### Business Intelligence")
+        if st.button("📈 Executive Dashboard", use_container_width=True, key="executive_dashboard"):
+            st.session_state.page = 'manufacturing_dashboard'
+        
+        if st.button("📊 SS25 Performance Metrics", use_container_width=True, key="ss25_metrics"):
+            st.session_state.page = 'retailer_analysis'
+        
+        if st.button("📉 Competitor Analysis", use_container_width=True, key="competitor_analysis"):
+            st.session_state.page = 'reports'
+        
+        if st.button("🌐 Market Trend Analysis", use_container_width=True, key="license_suspension"):
+            st.session_state.page = 'material_tracker'
+            
+        # Synergyze Visualization section
+        st.markdown("#### Synergyze Ecosystem")
+        if st.button("🔄 Synergyze Ecosystem Visualization", use_container_width=True, key="synergy_viz"):
+            st.session_state.page = 'synergy_visualization'
+            
+        if st.button("⚖️ License Management", use_container_width=True, key="license_management"):
+            st.session_state.page = 'synergy_visualization'
+            
+        if st.button("🔗 Supply & Retail Integration", use_container_width=True, key="woven_commune_integration"):
+            st.session_state.page = 'synergy_visualization'
     
-    # Simple authentication UI for demo purposes
-    access_options = ['Public View', 'Licensed User', 'Emperor Access']
-    selected_access = st.selectbox(
-        "Select Access Level:",
-        access_options,
-        index=0 if st.session_state.user_role == 'public' else 
-              1 if st.session_state.user_role == 'licensed' else 2
-    )
-    
-    if st.button("Switch Access Level", use_container_width=True):
-        if selected_access == 'Public View':
-            st.session_state.user_role = 'public'
-            st.session_state.is_authenticated = False
-            st.session_state.page = 'vsr_landing'  # Default to landing page for public users
-        elif selected_access == 'Licensed User':
-            st.session_state.user_role = 'licensed'
-            st.session_state.is_authenticated = True
-            st.session_state.page = 'virtual_silk_road'  # Default to VSR for licensed users
-        else:  # Emperor Access
-            st.session_state.user_role = 'emperor'
-            st.session_state.is_authenticated = True
-            st.session_state.page = 'virtual_silk_road'  # Default to VSR for emperor too
-        st.rerun()
-    
-    # Disclaimer for demo
-    if st.session_state.user_role != 'public':
-        st.markdown("""
-        <div style='background-color: rgba(255, 230, 153, 0.2); padding: 10px; border-radius: 5px; border-left: 3px solid #FFD700; margin-top: 10px;'>
-            <p style='margin: 0; font-size: 0.8em;'><b>Note:</b> You're viewing the {0} interface. In production, this would require proper authentication.</p>
-        </div>
-        """.format(
-            "Emperor" if st.session_state.user_role == 'emperor' else "Licensed User"
-        ), unsafe_allow_html=True)
+    # Additional resources
+    st.markdown("### Resources")
+    resources_expander = st.expander("Helpful Resources")
+    with resources_expander:
+        st.markdown("- [Fabric Guide]()")
+        st.markdown("- [Size Charts]()")
+        st.markdown("- [Customization Options]()")
+        st.markdown("- [Production Process]()")
+        st.markdown("- [Manufacturing Handbook]()")
                 
     # Reset button at the bottom
     st.markdown("---")
     if st.button("🔄 Reset Application", use_container_width=True):
-        st.session_state.page = 'vsr_landing'
+        st.session_state.page = 'onboarding'
         st.session_state.completed_onboarding = False
         st.session_state.selected_product = None
         st.session_state.cart = []
         st.session_state.order_submitted = False
-        st.session_state.user_role = 'public'
-        st.session_state.is_authenticated = False
-        # Reset merchandiser info
+        # Also reset merchandiser
         if 'merchandiser' in st.session_state:
             del st.session_state.merchandiser
         if 'conversation' in st.session_state:
             del st.session_state.conversation
         st.rerun()
-
-# Set default page if none is selected
-if 'page' not in st.session_state:
-    st.session_state.page = 'vsr_landing'  # Default to the public landing page
 
 # Main content area based on the current page
 if st.session_state.page == 'onboarding':
@@ -205,83 +329,28 @@ elif st.session_state.page == 'merchandiser_agent':
     show_merchandiser_agent()
 elif st.session_state.page == 'retailer_analysis':
     show_retailer_analysis()
-elif st.session_state.page == 'stock_analysis':
-    show_stock_analysis()
-elif st.session_state.page == 'visualization':
-    show_visualization()
-elif st.session_state.page == 'hsn_transaction_system':
-    show_hsn_transaction_system()
-# Empire Ecosystem pages
-elif st.session_state.page == 'empire_os_landing':
-    show_empire_os_landing()  # Public marketing page for Empire OS
-elif st.session_state.page == 'vsr_landing':
-    show_virtual_silk_road_landing()  # Public marketing page for Virtual Silk Road
-elif st.session_state.page == 'synergyze_landing':
-    show_synergyze_landing()  # Public marketing page for Synergyze Licenses
+# Manufacturing portal pages
+elif st.session_state.page == 'manufacturing_dashboard':
+    show_manufacturing_dashboard()
+elif st.session_state.page == 'order_style_management':
+    show_order_style_management()
+elif st.session_state.page == 'material_tracker':
+    show_material_tracker()
+elif st.session_state.page == 'production_timeline':
+    show_production_timeline()
+elif st.session_state.page == 'line_plan':
+    show_line_plan()
+elif st.session_state.page == 'reports':
+    show_reports()
+elif st.session_state.page == 'db_initialization':
+    show_db_initialization()
+elif st.session_state.page == 'supply_chain_visualization':
+    show_supply_chain_visualization()
+elif st.session_state.page == 'synergy_visualization':
+    show_synergy_visualization()
+elif st.session_state.page == 'voi_jeans_demo':
+    show_voi_jeans_demo()
 
-# Private access dashboards
-elif st.session_state.page == 'virtual_silk_road':
-    # Check if user has proper access
-    if st.session_state.user_role in ['licensed', 'emperor']:
-        show_virtual_silk_road()  # Private Emperor's view
-    else:
-        # Redirect unauthorized users to the public landing
-        st.warning("⚠️ You need licensed access to view the Emperor's Virtual Silk Road dashboard.")
-        show_virtual_silk_road_landing()
-# Emperor control dashboards - redirect if no access
-elif st.session_state.page in ['empire_os_dashboard', 'license_management']:
-    if st.session_state.user_role == 'emperor':
-        # Show the Emperor's dashboard
-        from empire_os_dashboard import show_empire_os_dashboard, show_license_dashboard
-        
-        if st.session_state.page == 'empire_os_dashboard':
-            show_empire_os_dashboard()
-        else:  # license_management
-            show_license_dashboard()
-    else:
-        # Redirect unauthorized users
-        st.warning("⚠️ Only the Emperor has access to this command interface.")
-        show_empire_os_landing()
-else:
-    # Fallback to landing page if an unknown page is requested
-    show_virtual_silk_road_landing()
-
-# Footer - dynamically change based on the current section
+# Footer
 st.markdown("---")
-
-# Create a universal ecosystem diagram at the bottom of all pages
-if st.session_state.page in ['empire_os_landing', 'vsr_landing', 'synergyze_landing', 'virtual_silk_road', 'empire_os_dashboard', 'license_management']:
-    # Show the ecosystem hierarchy for all Imperial pages
-    st.markdown("""
-    <div style="text-align: center; margin-bottom: 10px;">
-        <div style="display: inline-flex; align-items: center; justify-content: center; gap: 15px;">
-            <div style="text-align: center;">
-                <span style="font-weight: bold; color: gold; font-size: 0.9em;">👑 EMPIRE OS</span><br>
-                <span style="font-size: 0.7em; color: #666;">Operating System</span>
-            </div>
-            <div style="color: #999;">→</div>
-            <div style="text-align: center;">
-                <span style="font-weight: bold; color: #4B0082; font-size: 0.9em;">🌏 VIRTUAL SILK ROAD</span><br>
-                <span style="font-size: 0.7em; color: #666;">Network</span>
-            </div>
-            <div style="color: #999;">→</div>
-            <div style="text-align: center;">
-                <span style="font-weight: bold; color: #8A2BE2; font-size: 0.9em;">⚡ SYNERGYZE</span><br>
-                <span style="font-size: 0.7em; color: #666;">Licenses</span>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # Different footers based on the specific ecosystem page
-    if st.session_state.page == 'empire_os_landing':
-        st.caption("Empire OS | The Ultimate Enterprise Governance Operating System | © 2025 Imperial Technology")
-    elif st.session_state.page in ['vsr_landing', 'virtual_silk_road']:
-        st.caption("Virtual Silk Road | Powered by Empire OS | © 2025 Imperial Technology")
-    elif st.session_state.page in ['synergyze_landing', 'license_management']:
-        st.caption("Synergyze Licenses | Deployed on the Virtual Silk Road | Powered by Empire OS | © 2025 Imperial Technology")
-    else:
-        st.caption("Empire Ecosystem | © 2025 Imperial Technology")
-else:
-    # For other portal pages not directly related to the Empire ecosystem
-    st.caption("Buying House Portal | Ready Styles. Bulk Orders. Tailored For You.")
+st.caption("Voi Jeans Retail India Pvt Ltd | Denim Excellence. CMP Manufacturing. Retail Distribution.")
