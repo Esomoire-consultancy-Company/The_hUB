@@ -276,6 +276,31 @@ def show_product_catalog():
             st.checkbox("Only show in-stock fabrics", help="Show only products with immediately available fabrics")
             st.checkbox("Show eco-friendly options", help="Display only environmentally friendly product options")
     
+    # Market Price Intelligence - New Feature Banner
+    st.markdown("---")
+    st.markdown("""
+    <div style="background: linear-gradient(90deg, #e63946 0%, #1E3A8A 100%); 
+         padding: 20px; border-radius: 10px; margin: 20px 0; color: white; text-align: center;">
+        <h2 style="margin: 0; color: white;">🔎 NEW! Market Price Intelligence</h2>
+        <p style="margin: 5px 0 0 0;">Make informed pricing decisions with our proprietary Market Intelligence Engine</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    market_cols = st.columns([3, 1])
+    with market_cols[0]:
+        st.markdown("""
+        Get detailed market insights for your products:
+        - Industry average price ranges
+        - Competitive price positioning
+        - Margin optimization recommendations
+        - Volume-based pricing adjustments
+        - Regional market analysis
+        """)
+    with market_cols[1]:
+        if st.button("🔍 Launch Price Intelligence", use_container_width=True, type="primary"):
+            st.session_state.page = 'market_price_intelligence'
+            st.rerun()
+    
     # Market trends section for added value
     st.markdown("---")
     st.subheader("Market Trends & Popular Choices")
