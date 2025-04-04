@@ -14,25 +14,70 @@ def show_product_detail():
     
     product = st.session_state.selected_product
     
-    # Product header
-    st.title(f"{product['name']} (ID: {product['id']})")
+    # Premium product header with brand styling
+    st.markdown(f"""
+    <div style="background: linear-gradient(90deg, #1E3A8A 0%, #e63946 100%); 
+         padding: 20px; border-radius: 10px; margin-bottom: 20px; color: white;">
+        <h1 style="margin: 0; color: white;">{product['name']}</h1>
+        <p style="margin: 5px 0 0 0; font-size: 0.9em;">Premium Denim Collection • Product ID: {product['id']}</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Layout with two columns
     col1, col2 = st.columns([2, 3])
     
     with col1:
-        # Product image
-        st.image(product['image'], use_column_width=True)
+        # Replace default icon with better denim product images
+        if "Denim" in product['name']:
+            img_url = "https://images.unsplash.com/photo-1602293589930-45aad59ba3ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+        elif "Shirt" in product['name']:
+            img_url = "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80" 
+        elif "Jacket" in product['name']:
+            img_url = "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+        elif "T-Shirt" in product['name']:
+            img_url = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+        else:
+            img_url = "https://images.unsplash.com/photo-1565084888279-aca607ecce0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+            
+        # Display enhanced image with hover zoom effect
+        st.markdown(f"""
+        <div style="overflow: hidden; border-radius: 10px; margin: 10px 0;">
+            <img src="{img_url}" width="100%" style="transition: transform 0.5s ease;"
+                 onmouseover="this.style.transform='scale(1.05)';" 
+                 onmouseout="this.style.transform='scale(1.0)';">
+        </div>
+        """, unsafe_allow_html=True)
         
-        # Quick specs as key-value pairs
-        st.subheader("Product Specifications")
-        st.write(f"**Base Fabric:** {product['fabric']}")
-        st.write(f"**Minimum Order Quantity:** {product['moq']} pieces")
-        st.write(f"**Price Range:** {product['price_range']} per piece")
+        # Quick specs with premium styling
+        st.markdown("""
+        <div style="background-color: #1E1E1E; padding: 15px; border-radius: 10px; margin: 15px 0;">
+            <h3 style="color: #e63946; margin-top: 0;">Product Specifications</h3>
+        """, unsafe_allow_html=True)
         
-        # Additional product details
+        st.markdown(f"""
+            <div style="margin: 10px 0;">
+                <p style="margin: 0; font-weight: bold; color: #CCC;">Base Fabric</p>
+                <p style="margin: 0; font-size: 1.1em;">{product['fabric']}</p>
+            </div>
+            <div style="margin: 10px 0;">
+                <p style="margin: 0; font-weight: bold; color: #CCC;">Minimum Order Quantity</p>
+                <p style="margin: 0; font-size: 1.1em;">{product['moq']} pieces</p>
+            </div>
+            <div style="margin: 10px 0;">
+                <p style="margin: 0; font-weight: bold; color: #CCC;">Price Range</p>
+                <p style="margin: 0; font-size: 1.1em;">{product['price_range']} per piece</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+        # Additional product details with enhanced styling
         with st.expander("Product Description", expanded=True):
-            st.write(product['description'])
+            st.markdown(f"""
+            <div style="background-color: #2E2E2E; padding: 15px; border-radius: 10px;">
+                <p style="line-height: 1.6;">{product['description']}</p>
+            </div>
+            """, unsafe_allow_html=True)
     
     with col2:
         # Customization options
@@ -196,9 +241,14 @@ def show_product_detail():
         Available for select products with a 20% rush fee. Reduces production time by 30%.
         """)
     
-    # Related products
+    # Related products with premium styling
     st.markdown("---")
-    st.subheader("You May Also Like")
+    st.markdown("""
+    <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h2 style="color: #e63946; margin-top: 0;">Complete Your Collection</h2>
+        <p style="color: #CCC; margin-bottom: 20px;">Customers who viewed this product also considered these items</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Display related products in a row
     cols = st.columns(3)
@@ -212,9 +262,48 @@ def show_product_detail():
     
     for i, related in enumerate(related_products):
         with cols[i]:
-            st.write(f"**{related['name']}**")
-            st.image(related['image'], width=100)
-            if st.button(f"View", key=f"related_{i}"):
+            # Create premium card for related product
+            st.markdown(f"""
+            <div style="background-color: #2E2E2E; padding: 15px; border-radius: 10px; margin-bottom: 10px; 
+                 box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.3s ease, box-shadow 0.3s ease;"
+                 onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 8px 16px rgba(0,0,0,0.3)';"
+                 onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)';">
+                <h3 style="color: #e63946; margin-bottom: 5px;">{related['name']}</h3>
+                <p style="color: #ddd; margin: 0; font-size: 0.9em;">ID: {related['id']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Get appropriate image based on product name
+            if "Denim" in related['name']:
+                img_url = "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+            elif "Shirt" in related['name']:
+                img_url = "https://images.unsplash.com/photo-1593030942418-5448ef6b4416?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80" 
+            elif "Jacket" in related['name']:
+                img_url = "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+            elif "T-Shirt" in related['name']:
+                img_url = "https://images.unsplash.com/photo-1581655353564-df123a1eb820?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+            else:
+                img_url = "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+            
+            # Display image with rounded corners and hover zoom effect
+            st.markdown(f"""
+            <div style="overflow: hidden; border-radius: 10px; margin: 10px 0;">
+                <img src="{img_url}" width="100%" style="transition: transform 0.5s ease;"
+                     onmouseover="this.style.transform='scale(1.05)';" 
+                     onmouseout="this.style.transform='scale(1.0)';">
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Quick specs display
+            st.markdown(f"""
+            <div style="margin: 10px 0;">
+                <p style="margin: 0; font-weight: bold; color: #e63946;">{related['price_range']}</p>
+                <p style="margin: 0; font-size: 0.9em; color: #CCC;">{related['fabric']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # View button with premium styling
+            if st.button(f"🔍 View Details", key=f"related_{i}", use_container_width=True):
                 st.session_state.selected_product = related
                 st.rerun()
 

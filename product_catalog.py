@@ -143,16 +143,37 @@ def show_product_catalog():
             if i + j < len(product_types):
                 product = product_types[i + j]
                 with cols[j]:
-                    # Create a card-like element
+                    # Create a premium card-like element with hover effects
                     st.markdown(f"""
-                    <div style="background-color: #1E1E1E; padding: 15px; border-radius: 10px; margin-bottom: 10px;">
-                        <h3 style="color: #1E88E5;">{product['name']}</h3>
-                        <p>ID: {product['id']}</p>
+                    <div style="background-color: #1E1E1E; padding: 15px; border-radius: 10px; margin-bottom: 10px; 
+                         box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.3s ease, box-shadow 0.3s ease;"
+                         onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 8px 16px rgba(0,0,0,0.3)';"
+                         onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)';">
+                        <h3 style="color: #e63946; margin-bottom: 5px;">{product['name']}</h3>
+                        <p style="color: #ddd; margin: 0; font-size: 0.9em;">Product ID: {product['id']}</p>
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    # Use better images with proper sizing
-                    st.image(product['image'], use_container_width=True)
+                    # Replace default icon with better denim product images
+                    if "Denim" in product['name']:
+                        img_url = "https://images.unsplash.com/photo-1602293589930-45aad59ba3ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+                    elif "Shirt" in product['name']:
+                        img_url = "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80" 
+                    elif "Jacket" in product['name']:
+                        img_url = "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+                    elif "T-Shirt" in product['name']:
+                        img_url = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+                    else:
+                        img_url = "https://images.unsplash.com/photo-1565084888279-aca607ecce0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+                    
+                    # Display image with rounded corners and hover zoom effect
+                    st.markdown(f"""
+                    <div style="overflow: hidden; border-radius: 10px; margin: 10px 0;">
+                        <img src="{img_url}" width="100%" style="transition: transform 0.5s ease;"
+                             onmouseover="this.style.transform='scale(1.05)';" 
+                             onmouseout="this.style.transform='scale(1.0)';">
+                    </div>
+                    """, unsafe_allow_html=True)
                     
                     # More detailed product info with better formatting
                     st.markdown(f"""
