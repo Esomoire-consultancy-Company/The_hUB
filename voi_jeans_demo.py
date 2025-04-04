@@ -603,8 +603,90 @@ def show_integration_demo():
     
     st.plotly_chart(fig, use_container_width=True)
     
+    # Add ECG Governance Layer with company selection
+    st.subheader("ECG Governance Layer - Executive Intelligence")
+    
+    # Create a selection interface for companies
+    st.markdown("### Company Selection Interface")
+    st.markdown("Select the company you want to analyze:")
+    
+    # Company selection with performance scores
+    company_data = {
+        "Voi Jeans Retail India Pvt Ltd": {"score": 87, "industry": "Retail Fashion", "region": "South Asia"},
+        "Scotts Garments LLP": {"score": 82, "industry": "Manufacturing", "region": "South Asia"},
+        "Lifestyle International": {"score": 76, "industry": "Department Store", "region": "Pan India"},
+        "Reliance Trends": {"score": 84, "industry": "Fashion Retail", "region": "Pan India"},
+        "Shoppers Stop": {"score": 79, "industry": "Department Store", "region": "Pan India"}
+    }
+    
+    # Company selector
+    selected_company = st.selectbox(
+        "Choose company:", 
+        list(company_data.keys()),
+        index=0
+    )
+    
+    # Initialize session state for the selected company if not present
+    if 'selected_company_data' not in st.session_state:
+        st.session_state.selected_company_data = company_data[selected_company]
+    
+    # Update session state when selection changes
+    if st.session_state.get('selected_company_data', {}).get('company_name', '') != selected_company:
+        st.session_state.selected_company_data = company_data[selected_company]
+        st.session_state.selected_company_data['company_name'] = selected_company
+    
+    # Display company performance score and metrics
+    company_score = company_data[selected_company]["score"]
+    company_industry = company_data[selected_company]["industry"]
+    company_region = company_data[selected_company]["region"]
+    
+    # Create metrics display
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("ECG Performance Score", f"{company_score}/100", 
+                 delta=f"{company_score - 75}" if company_score > 75 else f"{company_score - 75}")
+    with col2:
+        st.metric("Industry", company_industry)
+    with col3:
+        st.metric("Region", company_region)
+    
+    # Generate recommended team based on company score
+    st.markdown("### Recommended ECG Implementation Team")
+    
+    # Team mapping based on score ranges
+    if company_score >= 85:
+        team_level = "Premium"
+        team_members = ["Senior Consultant (15+ yrs)", "Technical Architect", "Industry Expert", "Data Analyst", "Implementation Lead"]
+        team_color = "success"
+    elif company_score >= 80:
+        team_level = "Advanced"
+        team_members = ["Senior Consultant (10+ yrs)", "Technical Lead", "Industry Specialist", "Implementation Specialist"]
+        team_color = "primary"
+    elif company_score >= 75:
+        team_level = "Standard"
+        team_members = ["Consultant (5+ yrs)", "Technical Specialist", "Implementation Associate"]
+        team_color = "warning"
+    else:
+        team_level = "Basic"
+        team_members = ["Junior Consultant", "Technical Associate"]
+        team_color = "danger"
+    
+    # Display the recommended team
+    st.markdown(f"""
+    <div style='background-color: {'#1E3A8A' if team_level == 'Premium' else '#2563EB' if team_level == 'Advanced' else '#F59E0B' if team_level == 'Standard' else '#EF4444'}; 
+        padding: 10px; border-radius: 5px; color: white;'>
+    <h4 style='margin-top: 0;'>{team_level} Implementation Team</h4>
+    <p>Based on {selected_company}'s ECG Performance Score of {company_score}/100</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Show team members
+    st.markdown("#### Team Composition:")
+    for member in team_members:
+        st.markdown(f"- {member}")
+    
     # Add interactive clickable dashboards for C-suite executives
-    st.subheader("C-Suite Executive Dashboards")
+    st.subheader(f"C-Suite Executive Dashboards for {selected_company}")
     st.markdown("Click on any dashboard to view its specific metrics and KPIs:")
     
     # Create tabs for each executive dashboard
@@ -832,6 +914,116 @@ def show_integration_demo():
     From design approval through production at Scotts Garments to inventory receipt at Voi Jeans stores 
     and finally to sales, all data is connected in a unified platform with appropriate time lags between stages.
     """)
+    
+    # Add ECG AI Assistant
+    st.subheader("🤖 ECG AI Implementation Assistant")
+    
+    # Create AI chat interface
+    st.markdown("""
+    Our AI-powered implementation assistant can provide contextual information about:
+    - Company-specific implementation strategies
+    - Dashboard explanations and insights
+    - Best practices for your industry
+    - Implementation team coordination
+    
+    Try asking a question related to the selected company or dashboards.
+    """)
+    
+    # Create a chat interface
+    if 'chat_messages' not in st.session_state:
+        st.session_state.chat_messages = [
+            {"role": "assistant", "content": f"Hello! I'm your ECG Implementation Assistant for {selected_company}. How can I help you today?"}
+        ]
+    
+    # Display chat messages
+    for message in st.session_state.chat_messages:
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
+    
+    # Chat input
+    user_query = st.chat_input("Ask a question about the dashboards or implementation...")
+    
+    if user_query:
+        # Add user message to chat history
+        st.session_state.chat_messages.append({"role": "user", "content": user_query})
+        
+        # Display user message
+        with st.chat_message("user"):
+            st.write(user_query)
+        
+        # Generate response based on the query and selected company
+        response = generate_ai_response(user_query, selected_company, company_data[selected_company], team_level)
+        
+        # Add assistant response to chat history
+        st.session_state.chat_messages.append({"role": "assistant", "content": response})
+        
+        # Display assistant response
+        with st.chat_message("assistant"):
+            st.write(response)
+
+# Function to generate AI responses
+def generate_ai_response(query, company_name, company_info, team_level):
+    """Generate contextual AI responses based on the query and company information"""
+    
+    query = query.lower()
+    
+    # Company-specific responses
+    if "implementation" in query or "process" in query or "timeline" in query:
+        return f"""
+        For {company_name} with a performance score of {company_info['score']}/100, we recommend our {team_level} implementation approach.
+        
+        The implementation process typically involves:
+        1. Initial assessment and team assignment (1-2 weeks)
+        2. System configuration and data integration (3-4 weeks)
+        3. Dashboard customization for your C-suite executives (2 weeks)
+        4. User training and onboarding (1 week)
+        5. Post-implementation support (ongoing)
+        
+        Given your industry ({company_info['industry']}), we will focus on industry-specific KPIs and benchmarks.
+        """
+    
+    elif "dashboard" in query or "ceo" in query or "cro" in query or "cio" in query or "cfo" in query:
+        return f"""
+        The C-suite dashboards for {company_name} provide tailored insights based on your performance score and industry benchmarks.
+        
+        Each dashboard serves a specific purpose:
+        - CEO Dashboard: Holistic business view with cross-functional KPIs
+        - CRO Dashboard: Revenue optimization and sales channel performance
+        - CIO Dashboard: Technology infrastructure and digital transformation tracking
+        - CFO Dashboard: Financial health metrics and risk management indicators
+        
+        These are completely customizable to match your specific business goals and management style.
+        """
+    
+    elif "team" in query or "consultant" in query or "specialist" in query:
+        return f"""
+        Based on {company_name}'s performance score of {company_info['score']}/100, we've assigned a {team_level} implementation team.
+        
+        This team has deep expertise in the {company_info['industry']} industry and has successfully implemented Synergyze for similar companies in the {company_info['region']} region.
+        
+        The team is structured to provide the optimal balance of industry knowledge, technical expertise, and implementation experience to ensure a successful deployment of the ECG governance layer.
+        """
+    
+    elif "industry" in query or "benchmark" in query or "comparison" in query:
+        return f"""
+        {company_name} operates in the {company_info['industry']} industry, where the average ECG performance score is approximately 72/100.
+        
+        With your score of {company_info['score']}/100, you're performing above industry average, which indicates strong operational practices and readiness for digital transformation.
+        
+        Our implementation will leverage your strengths while addressing specific optimization opportunities we've identified for companies in your sector.
+        """
+    
+    else:
+        return f"""
+        I'm here to assist with your ECG implementation for {company_name}. I can provide information about:
+        
+        - Implementation process and timeline
+        - Dashboard customization and features
+        - Industry benchmarks and comparisons
+        - Team structure and responsibilities
+        
+        Please feel free to ask specific questions about these or other aspects of the ECG governance layer implementation.
+        """
 
 if __name__ == "__main__":
     show_voi_jeans_demo()
