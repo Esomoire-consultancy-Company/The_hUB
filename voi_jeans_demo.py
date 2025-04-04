@@ -1221,10 +1221,11 @@ def show_integration_demo():
                 st.button(f"Link New Device", key=f"link_device_{role}")
     
     with exec_tabs[3]:
-        st.markdown("### 👑 Empire OS View (ECG Owner Access)")
+        st.markdown("### 🏢 Owner's View (Company-wide Access)")
         st.markdown("""
-        This is the Emperor's View - exclusive to ECG's owner. This view provides complete governance oversight
-        across all companies in the network, showing the entire empire from a single command center.
+        This is the Owner's View - exclusively for company directors registered with the Ministry of Corporate Affairs (MCA).
+        This view provides complete access to all hierarchical levels of your company, enabling comprehensive oversight
+        and helping improve your company's Divine Score.
         """)
         
         # Add Empire access authentication with special message
