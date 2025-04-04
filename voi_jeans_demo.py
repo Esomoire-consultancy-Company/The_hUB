@@ -15,7 +15,7 @@ def show_voi_jeans_demo():
     st.title("🧥 Voi Jeans Organization & Synergyze Implementation")
     
     # Create tabs for different views
-    tab1, tab2, tab3, tab4 = st.tabs(["🏢 Organizational Structure", "🔄 Department Workflows", "📊 Integration Demo", "👔 C-Suite Module"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["🏢 Organizational Structure", "🔄 Department Workflows", "📊 Integration Demo", "👔 C-Suite Module", "🎪 Event Management"])
     
     with tab1:
         show_org_structure()
@@ -28,6 +28,592 @@ def show_voi_jeans_demo():
         
     with tab4:
         show_c_suite_module()
+    
+    with tab5:
+        show_event_management()
+
+def show_event_management():
+    """Display the event management and corporate hosting capabilities of ECG"""
+    
+    st.subheader("🎪 Premium Event Management & Corporate Hosting")
+    
+    st.markdown("""
+    <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <h3 style="color: #e63946; margin: 0;">ECG Event Management Services</h3>
+        <p style="color: #CCC; margin-top: 10px;">
+        Leverage ECG's expertise to host premium corporate events, seasonal launches, and company assemblies
+        with our comprehensive event management services. We handle everything from planning to execution,
+        providing a premium experience for your stakeholders with deep analytics integration.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Create tabs for different aspects of event management
+    event_tabs = st.tabs(["Event Portfolio", "Seasonal Launch Platform", "Corporate Assembly", "Pricing Matrix"])
+    
+    with event_tabs[0]:
+        st.markdown("### ECG Event Portfolio")
+        st.markdown("""
+        Our event management team has expertise in hosting a variety of corporate events,
+        each tailored to the specific needs of your business and integrated with our analytics platform.
+        """)
+        
+        # Display event types with cards
+        event_types_col1, event_types_col2 = st.columns(2)
+        
+        with event_types_col1:
+            st.markdown("""
+            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                <h4 style="color: #e63946; margin-top: 0;">Product Launch Events</h4>
+                <p>Showcase your new product lines with immersive experiences designed to captivate buyers and media.</p>
+                <ul>
+                    <li>Seasonal collection launches</li>
+                    <li>New product line introductions</li>
+                    <li>Brand repositioning events</li>
+                </ul>
+                <p><strong>Integration:</strong> Real-time order booking with inventory allocation</p>
+            </div>
+            
+            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                <h4 style="color: #e63946; margin-top: 0;">Investor Relations Events</h4>
+                <p>Present your company's financial performance and strategic vision to investors with data-driven insights.</p>
+                <ul>
+                    <li>Annual investor meetings</li>
+                    <li>Quarterly earnings presentations</li>
+                    <li>Funding round pitches</li>
+                </ul>
+                <p><strong>Integration:</strong> Live financial dashboards with predictive analytics</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with event_types_col2:
+            st.markdown("""
+            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                <h4 style="color: #e63946; margin-top: 0;">Corporate Training Programs</h4>
+                <p>Elevate your team's capabilities with specialized training events designed for knowledge transfer and skill development.</p>
+                <ul>
+                    <li>Sales force training</li>
+                    <li>Leadership development workshops</li>
+                    <li>Product knowledge seminars</li>
+                </ul>
+                <p><strong>Integration:</strong> Skills tracking and performance impact measurement</p>
+            </div>
+            
+            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                <h4 style="color: #e63946; margin-top: 0;">Industry Networking Events</h4>
+                <p>Position your brand as an industry leader by hosting exclusive networking events that bring together key stakeholders.</p>
+                <ul>
+                    <li>Industry summits</li>
+                    <li>Partner ecosystem meetings</li>
+                    <li>Innovation showcases</li>
+                </ul>
+                <p><strong>Integration:</strong> Relationship mapping and business opportunity tracking</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+        # Showcase past events
+        st.markdown("### Past Event Gallery")
+        
+        past_events = [
+            {
+                "title": "SS24 Collection Launch",
+                "client": "Voi Jeans",
+                "date": "October 15, 2023",
+                "attendees": 120,
+                "orders": "₹2.4 Cr",
+                "description": "Seasonal collection launch event with live ordering system and virtual showroom."
+            },
+            {
+                "title": "Annual Distributor Meet",
+                "client": "Fashion Retail Group",
+                "date": "August 5, 2023",
+                "attendees": 85,
+                "orders": "₹5.1 Cr",
+                "description": "Distributor training and new season preview with integrated order management."
+            },
+            {
+                "title": "Investor Summit 2023",
+                "client": "Apparel Industry Consortium",
+                "date": "March 22, 2023",
+                "attendees": 75,
+                "orders": "N/A",
+                "description": "Industry-wide financial performance presentation with interactive analytics."
+            }
+        ]
+        
+        event_cols = st.columns(3)
+        
+        for i, event in enumerate(past_events):
+            with event_cols[i]:
+                st.markdown(f"""
+                <div style="border: 1px solid #ddd; padding: 15px; border-radius: 10px; height: 250px;">
+                    <h4 style="color: #e63946; margin-top: 0;">{event['title']}</h4>
+                    <p><strong>Client:</strong> {event['client']}</p>
+                    <p><strong>Date:</strong> {event['date']}</p>
+                    <p><strong>Attendees:</strong> {event['attendees']}</p>
+                    <p><strong>Orders Generated:</strong> {event['orders']}</p>
+                    <p>{event['description']}</p>
+                </div>
+                """, unsafe_allow_html=True)
+    
+    with event_tabs[1]:
+        st.markdown("### Seasonal Launch Platform")
+        st.markdown("""
+        Our specialized platform for fashion seasonal launches integrates your product showcase
+        with real-time order booking, inventory allocation, and performance analytics.
+        """)
+        
+        # Create seasonal launch simulation
+        st.markdown("#### Seasonal Launch Simulation")
+        
+        # Select season and year
+        season_cols = st.columns(3)
+        with season_cols[0]:
+            selected_season = st.selectbox("Select Season", ["Spring/Summer 2025", "Fall/Winter 2025", "Spring/Summer 2026"])
+        with season_cols[1]:
+            event_type = st.selectbox("Event Type", ["Physical Showcase", "Virtual Exhibition", "Hybrid Event"])
+        with season_cols[2]:
+            attendee_count = st.number_input("Expected Attendees", min_value=50, max_value=500, value=150, step=10)
+        
+        # Create season collection data
+        collections = {
+            "Spring/Summer 2025": [
+                {"name": "Urban Denim", "styles": 32, "projected_revenue": "₹1.8 Cr"},
+                {"name": "Festival Collection", "styles": 24, "projected_revenue": "₹1.2 Cr"},
+                {"name": "Resort Wear", "styles": 18, "projected_revenue": "₹0.9 Cr"},
+                {"name": "Athleisure", "styles": 22, "projected_revenue": "₹1.4 Cr"}
+            ],
+            "Fall/Winter 2025": [
+                {"name": "Premium Denim", "styles": 28, "projected_revenue": "₹2.1 Cr"},
+                {"name": "Winter Essentials", "styles": 30, "projected_revenue": "₹1.6 Cr"},
+                {"name": "Festive Edit", "styles": 26, "projected_revenue": "₹1.9 Cr"},
+                {"name": "Urban Outerwear", "styles": 18, "projected_revenue": "₹1.3 Cr"}
+            ],
+            "Spring/Summer 2026": [
+                {"name": "Sustainable Denim", "styles": 35, "projected_revenue": "₹2.3 Cr"},
+                {"name": "Vacation Edit", "styles": 22, "projected_revenue": "₹1.1 Cr"},
+                {"name": "Urban Casual", "styles": 27, "projected_revenue": "₹1.5 Cr"},
+                {"name": "Performance Wear", "styles": 20, "projected_revenue": "₹1.2 Cr"}
+            ]
+        }
+        
+        # Display collection table
+        st.markdown(f"#### {selected_season} Collections")
+        
+        collection_data = {
+            "Collection": [c["name"] for c in collections[selected_season]],
+            "Styles": [c["styles"] for c in collections[selected_season]],
+            "Projected Revenue": [c["projected_revenue"] for c in collections[selected_season]]
+        }
+        
+        collection_df = pd.DataFrame(collection_data)
+        st.dataframe(collection_df, use_container_width=True)
+        
+        # Create event planning timeline
+        st.markdown("#### Event Planning Timeline")
+        
+        # Timeline data
+        timeline_data = {
+            "Phase": ["Planning", "Invitations", "Content Creation", "Setup", "Event Day", "Follow-up"],
+            "Start": ["-12 weeks", "-8 weeks", "-6 weeks", "-1 week", "Day 0", "+1 day"],
+            "End": ["-8 weeks", "-4 weeks", "-2 weeks", "Day 0", "Day 0", "+3 weeks"],
+            "Status": ["Complete", "In Progress", "Not Started", "Not Started", "Not Started", "Not Started"],
+            "Completion": [100, 60, 30, 0, 0, 0]
+        }
+        
+        timeline_df = pd.DataFrame(timeline_data)
+        
+        # Create a Gantt chart
+        fig = px.timeline(
+            timeline_df, 
+            x_start="Start", 
+            x_end="End", 
+            y="Phase",
+            color="Status",
+            title="Event Planning Timeline",
+            height=300
+        )
+        
+        fig.update_layout(
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='white')
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Event ROI calculator
+        st.markdown("#### Event ROI Calculator")
+        
+        roi_cols = st.columns(2)
+        
+        with roi_cols[0]:
+            st.markdown("##### Event Investment")
+            
+            venue_cost = st.number_input("Venue Cost (₹)", value=250000, step=50000)
+            production_cost = st.number_input("Production Cost (₹)", value=350000, step=50000)
+            marketing_cost = st.number_input("Marketing Cost (₹)", value=150000, step=50000)
+            logistics_cost = st.number_input("Logistics & Staff (₹)", value=200000, step=50000)
+            
+            total_cost = venue_cost + production_cost + marketing_cost + logistics_cost
+            st.markdown(f"**Total Investment: ₹{total_cost:,}**")
+            
+        with roi_cols[1]:
+            st.markdown("##### Projected Returns")
+            
+            expected_orders = st.number_input("Expected Order Value (₹Cr)", value=6.5, step=0.5)
+            expected_orders_inr = expected_orders * 10000000
+            
+            conversion_rate = st.slider("Buyer Conversion Rate (%)", min_value=30, max_value=100, value=70)
+            
+            # Calculate projected returns
+            projected_returns = expected_orders_inr * (conversion_rate / 100)
+            roi = (projected_returns - total_cost) / total_cost * 100
+            
+            st.markdown(f"**Projected Returns: ₹{projected_returns:,.2f}**")
+            st.markdown(f"**Expected ROI: {roi:.2f}%**")
+            
+            # Show ROI gauge
+            fig = go.Figure(go.Indicator(
+                mode = "gauge+number",
+                value = roi,
+                title = {'text': "ROI %"},
+                gauge = {
+                    'axis': {'range': [0, 1000]},
+                    'bar': {'color': "#e63946"},
+                    'steps': [
+                        {'range': [0, 200], 'color': "#ffcccb"},
+                        {'range': [200, 500], 'color': "#ffb3b3"},
+                        {'range': [500, 1000], 'color': "#ff6666"}
+                    ]
+                }
+            ))
+            
+            fig.update_layout(
+                height=250,
+                margin=dict(l=10, r=10, t=50, b=10),
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white')
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+    
+    with event_tabs[2]:
+        st.markdown("### Corporate Assembly Platform")
+        st.markdown("""
+        ECG provides a comprehensive platform for hosting corporate assemblies, annual meetings,
+        and company-wide gatherings with integrated analytics, attendance tracking, and performance metrics.
+        """)
+        
+        # Corporate assembly simulation
+        st.markdown("#### Corporate Assembly Simulator")
+        
+        # Basic event settings
+        assembly_cols = st.columns(3)
+        with assembly_cols[0]:
+            assembly_type = st.selectbox("Assembly Type", ["Annual General Meeting", "Quarterly Business Review", "Leadership Summit", "All Hands Meeting"])
+        with assembly_cols[1]:
+            assembly_mode = st.selectbox("Event Mode", ["In-person", "Virtual", "Hybrid"])
+        with assembly_cols[2]:
+            expected_participants = st.number_input("Expected Participants", min_value=10, max_value=1000, value=150)
+        
+        # Create agenda builder
+        st.markdown("#### Agenda Builder")
+        
+        agenda_items = [
+            {"time": "09:00 - 09:30", "session": "Registration & Networking", "presenter": "N/A", "interactive": False},
+            {"time": "09:30 - 10:00", "session": "Welcome Address", "presenter": "CEO", "interactive": False},
+            {"time": "10:00 - 11:00", "session": "Business Performance Review", "presenter": "CFO", "interactive": True},
+            {"time": "11:00 - 11:15", "session": "Break", "presenter": "N/A", "interactive": False},
+            {"time": "11:15 - 12:15", "session": "Strategic Initiatives", "presenter": "CRO", "interactive": True},
+            {"time": "12:15 - 13:15", "session": "Lunch", "presenter": "N/A", "interactive": False},
+            {"time": "13:15 - 14:15", "session": "Department Breakout Sessions", "presenter": "Department Heads", "interactive": True},
+            {"time": "14:15 - 15:00", "session": "Innovation Showcase", "presenter": "CIO & R&D Lead", "interactive": True},
+            {"time": "15:00 - 15:45", "session": "Recognition & Awards", "presenter": "CEO & HR Head", "interactive": False},
+            {"time": "15:45 - 16:00", "session": "Closing Remarks", "presenter": "CEO", "interactive": False}
+        ]
+        
+        agenda_data = {
+            "Time": [item["time"] for item in agenda_items],
+            "Session": [item["session"] for item in agenda_items],
+            "Presenter": [item["presenter"] for item in agenda_items],
+            "Interactive": [item["interactive"] for item in agenda_items]
+        }
+        
+        agenda_df = pd.DataFrame(agenda_data)
+        
+        # Make the agenda editable
+        edited_agenda = st.data_editor(
+            agenda_df,
+            column_config={
+                "Time": st.column_config.TextColumn("Time", width="medium"),
+                "Session": st.column_config.TextColumn("Session", width="large"),
+                "Presenter": st.column_config.TextColumn("Presenter", width="medium"),
+                "Interactive": st.column_config.CheckboxColumn("Interactive", width="small")
+            },
+            use_container_width=True,
+            num_rows="dynamic"
+        )
+        
+        # Assembly analytics preview
+        st.markdown("#### Assembly Analytics Preview")
+        
+        metrics_col1, metrics_col2, metrics_col3, metrics_col4 = st.columns(4)
+        
+        with metrics_col1:
+            st.metric("Expected Attendance", f"{expected_participants}", "+15% vs last event")
+        with metrics_col2:
+            st.metric("Engagement Score", "82%", "+7% vs last event")
+        with metrics_col3:
+            st.metric("Action Items Completion", "85%", "+12% vs last event")
+        with metrics_col4:
+            st.metric("ROI", "320%", "+45% vs last event")
+        
+        # Engagement visualization
+        st.markdown("#### Predicted Engagement Heatmap")
+        
+        # Sample engagement data for each agenda item by department
+        departments = ["Executive Team", "Finance", "Sales", "Marketing", "Operations", "IT", "HR", "R&D"]
+        
+        # Create engagement heatmap data (each cell contains engagement score 0-100)
+        np.random.seed(42)  # For reproducibility
+        engagement_data = np.random.randint(50, 100, size=(len(agenda_items), len(departments)))
+        
+        # Some logical adjustments - higher engagement for relevant departments
+        # Finance more engaged in CFO session, etc.
+        engagement_data[2, 1] = 95  # CFO session, Finance department
+        engagement_data[4, 2] = 94  # CRO session, Sales department
+        engagement_data[7, 7] = 97  # Innovation showcase, R&D department
+        
+        # Create engagement heatmap
+        fig = px.imshow(
+            engagement_data,
+            x=departments,
+            y=[item["session"] for item in agenda_items],
+            color_continuous_scale="RdBu_r",
+            title="Predicted Engagement by Department & Session",
+            labels=dict(x="Department", y="Session", color="Engagement Score")
+        )
+        
+        fig.update_layout(
+            height=500,
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='white')
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Assembly content builder
+        st.markdown("#### Assembly Content Builder")
+        
+        content_cols = st.columns(2)
+        with content_cols[0]:
+            st.markdown("##### Presentation Templates")
+            
+            templates = ["Corporate Performance Review", "Strategic Vision", "Department Updates", "Recognition & Awards", "Innovation Showcase"]
+            for template in templates:
+                st.checkbox(template, value=True)
+            
+            st.button("Generate Presentation Templates", key="generate_templates")
+            
+        with content_cols[1]:
+            st.markdown("##### Interactive Elements")
+            
+            interactive_elements = ["Live Polling", "Q&A Sessions", "Breakout Rooms", "Digital Whiteboard", "Live Dashboard"]
+            for element in interactive_elements:
+                st.checkbox(element, value=element in ["Live Polling", "Q&A Sessions"])
+            
+            st.button("Configure Interactive Elements", key="configure_interactive")
+    
+    with event_tabs[3]:
+        st.markdown("### Event Management Pricing Matrix")
+        st.markdown("""
+        ECG offers tiered pricing for our event management services based on event type, duration,
+        attendee count, and required services. Our premium packages include full integration with
+        our analytics platform for real-time insights and post-event analysis.
+        """)
+        
+        # Create pricing table
+        pricing_data = {
+            "Package": ["Standard", "Premium", "Enterprise", "Platinum"],
+            "Price Range": ["₹3-5 Lakhs", "₹5-8 Lakhs", "₹8-12 Lakhs", "₹12+ Lakhs"],
+            "Attendee Capacity": ["Up to 100", "100-200", "200-500", "500+"],
+            "Duration": ["1 day", "1-2 days", "2-3 days", "Custom"],
+            "Analytics Integration": ["Basic", "Enhanced", "Advanced", "Enterprise"],
+            "Staff Support": ["3-5 personnel", "5-8 personnel", "8-12 personnel", "12+ personnel"]
+        }
+        
+        pricing_df = pd.DataFrame(pricing_data)
+        
+        # Display pricing table
+        st.dataframe(pricing_df, use_container_width=True)
+        
+        # Add-on services
+        st.markdown("#### Optional Add-on Services")
+        
+        addon_col1, addon_col2 = st.columns(2)
+        
+        with addon_col1:
+            st.markdown("""
+            - **Real-time Order Booking System**: ₹1.5 Lakhs
+            - **Virtual Showroom Integration**: ₹2 Lakhs
+            - **Mobile Event App**: ₹1.2 Lakhs
+            - **Professional Photography & Videography**: ₹1 Lakh
+            - **Social Media Management**: ₹75,000
+            """)
+        
+        with addon_col2:
+            st.markdown("""
+            - **VIP Experience Management**: ₹1.8 Lakhs
+            - **International Buyer Coordination**: ₹2.5 Lakhs
+            - **Post-Event Analytics Report**: ₹1 Lakh
+            - **Digital Content Creation**: ₹1.5 Lakhs
+            - **Trend Forecast Presentation**: ₹1.8 Lakhs
+            """)
+        
+        # ROI calculator
+        st.markdown("#### Event ROI Calculator")
+        
+        # Create columns for investment and returns
+        calculator_cols = st.columns(2)
+        
+        with calculator_cols[0]:
+            st.markdown("##### Event Investment")
+            
+            selected_package = st.selectbox("Select Package", ["Standard", "Premium", "Enterprise", "Platinum"])
+            
+            # Set base price based on package
+            if selected_package == "Standard":
+                base_price = 400000
+            elif selected_package == "Premium":
+                base_price = 650000
+            elif selected_package == "Enterprise":
+                base_price = 1000000
+            else:  # Platinum
+                base_price = 1500000
+            
+            st.number_input("Base Package Cost (₹)", value=base_price, step=100000, disabled=True)
+            
+            # Add-ons selection
+            addons_cost = 0
+            
+            st.markdown("##### Select Add-ons")
+            
+            if st.checkbox("Real-time Order Booking System", value=True):
+                addons_cost += 150000
+            
+            if st.checkbox("Virtual Showroom Integration"):
+                addons_cost += 200000
+            
+            if st.checkbox("Mobile Event App"):
+                addons_cost += 120000
+            
+            if st.checkbox("Professional Photography & Videography", value=True):
+                addons_cost += 100000
+            
+            if st.checkbox("Social Media Management", value=True):
+                addons_cost += 75000
+            
+            # Display total investment
+            total_investment = base_price + addons_cost
+            st.markdown(f"**Total Investment: ₹{total_investment:,}**")
+        
+        with calculator_cols[1]:
+            st.markdown("##### Projected Returns")
+            
+            # Input expected outcomes
+            expected_orders = st.number_input("Expected Orders (₹ Cr)", value=10.0, step=1.0)
+            expected_orders_inr = expected_orders * 10000000
+            
+            brand_value_increase = st.slider("Brand Value Increase (%)", min_value=5, max_value=30, value=15)
+            brand_value_inr = total_investment * (brand_value_increase / 100)
+            
+            efficiency_saving = st.slider("Operational Efficiency Gain (%)", min_value=5, max_value=30, value=12)
+            efficiency_inr = total_investment * (efficiency_saving / 100)
+            
+            # Calculate total returns and ROI
+            total_returns = expected_orders_inr + brand_value_inr + efficiency_inr
+            event_roi = (total_returns - total_investment) / total_investment * 100
+            
+            st.markdown(f"**Expected Orders: ₹{expected_orders_inr:,}**")
+            st.markdown(f"**Brand Value Increase: ₹{brand_value_inr:,.2f}**")
+            st.markdown(f"**Operational Efficiency Gain: ₹{efficiency_inr:,.2f}**")
+            st.markdown(f"**Total Returns: ₹{total_returns:,.2f}**")
+            st.markdown(f"**Event ROI: {event_roi:.2f}%**")
+        
+        # Contact information
+        st.markdown("#### Contact Us for Custom Quotation")
+        
+        contact_cols = st.columns(3)
+        
+        with contact_cols[0]:
+            st.text_input("Company Name", placeholder="Your company name")
+        
+        with contact_cols[1]:
+            st.text_input("Contact Person", placeholder="Your name")
+        
+        with contact_cols[2]:
+            st.text_input("Email", placeholder="Your email address")
+        
+        st.text_area("Event Description", placeholder="Describe your event requirements")
+        
+        st.button("Request Quotation", key="request_quote")
+    
+    # Success stories
+    st.markdown("### ECG Event Management Success Stories")
+    
+    # Create success story data
+    success_stories = [
+        {
+            "client": "Premium Fashion Brand",
+            "event": "FW23 Collection Launch",
+            "results": "Generated ₹8.5 Cr in orders with a 92% buyer conversion rate",
+            "roi": "740%"
+        },
+        {
+            "client": "Retail Conglomerate",
+            "event": "Annual Vendor Summit",
+            "results": "Streamlined vendor onboarding process reducing time-to-market by 35%",
+            "roi": "420%"
+        },
+        {
+            "client": "Department Store Chain",
+            "event": "Quarterly Business Review",
+            "results": "Improved strategic alignment across 75 store managers with 96% action item completion",
+            "roi": "380%"
+        }
+    ]
+    
+    success_cols = st.columns(3)
+    
+    for i, story in enumerate(success_stories):
+        with success_cols[i]:
+            st.markdown(f"""
+            <div style="border: 2px solid #e63946; border-radius: 10px; padding: 15px; height: 200px;">
+                <h4 style="color: #e63946; margin-top: 0;">{story['client']}</h4>
+                <p><strong>Event:</strong> {story['event']}</p>
+                <p><strong>Results:</strong> {story['results']}</p>
+                <p><strong>ROI:</strong> {story['roi']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    # Contact information
+    st.markdown("### Ready to elevate your corporate events?")
+    
+    st.markdown("""
+    <div style="background-color: #e63946; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px;">
+        <h3 style="color: white; margin: 0;">Contact ECG's Event Management Team</h3>
+        <p style="color: white; margin-top: 10px;">
+        Let us handle your next corporate event, seasonal launch, or company assembly with our premium
+        event management services integrated with our powerful analytics platform.
+        </p>
+        <p style="color: white; margin-top: 10px;">
+        <strong>Email:</strong> events@ecg.consulting &nbsp;|&nbsp; <strong>Phone:</strong> +91 9876543210
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
 def show_org_structure():
     """Show Voi Jeans organizational structure and how it maps to Synergyze"""
