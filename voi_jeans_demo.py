@@ -1047,7 +1047,7 @@ def show_integration_demo():
     }
     
     # Create tabs to show Executive Network, License Details, Connected Devices, Company Owner View, and Empire View
-    exec_tabs = st.tabs(["Executive Network", "Executive License Details", "Connected Devices", "🏢 Owner's View", "👑 Empire View"])
+    exec_tabs = st.tabs(["Executive Network", "Executive License Details", "Connected Devices", "🏢 Owner's View", "👑 Empire OS"])
     
     with exec_tabs[0]:
         # Create a simple network visualization
@@ -1222,14 +1222,782 @@ def show_integration_demo():
     
     with exec_tabs[3]:
         st.markdown("### 🏢 Owner's View (Company-wide Access)")
-        st.markdown("""
-        This is the Owner's View - exclusively for company directors registered with the Ministry of Corporate Affairs (MCA).
-        This view provides complete access to all hierarchical levels of your company, enabling comprehensive oversight
+        st.markdown(f"""
+        This is the Owner's View - exclusively for {selected_company}'s directors and owners. This view provides complete 
+        access to all hierarchical levels of your company from every perspective, enabling comprehensive oversight
         and helping improve your company's Divine Score.
         """)
         
-        # Add Empire access authentication with special message
-        st.warning("⚠️ Restricted Access: Empire OS View is exclusively for ECG's owner")
+        # Add Owner access authentication with special message
+        st.warning("⚠️ Restricted Access: Owner's View is exclusively for company directors and authorized personnel")
+        
+        # Add authentication options
+        auth_tabs = st.tabs(["Director Login", "Chartered Accountant Login", "MCA Verification"])
+        
+        with auth_tabs[0]:
+            owner_auth_col1, owner_auth_col2 = st.columns([1, 3])
+            with owner_auth_col1:
+                st.image("https://i.imgur.com/kcshvTN.png", width=150)
+            with owner_auth_col2:
+                st.markdown(f"### {selected_company} Director Authentication")
+                st.text_input("Director ID", placeholder="Enter your Director ID")
+                st.text_input("Authentication Token", type="password", placeholder="Enter your access token")
+                owner_login = st.button("Access Owner's View", key="owner_login")
+        
+        with auth_tabs[1]:
+            ca_auth_col1, ca_auth_col2 = st.columns([1, 3])
+            with ca_auth_col1:
+                st.image("https://i.imgur.com/8SPCX9k.png", width=150)
+            with ca_auth_col2:
+                st.markdown("### Chartered Accountant Authentication")
+                st.text_input("CA Membership Number", placeholder="Enter CA membership number")
+                st.text_input("Company CIN", placeholder="Enter Company CIN")
+                st.text_input("CA Password", type="password", placeholder="Enter password")
+                ca_login = st.button("Access via CA Verification", key="ca_login")
+        
+        with auth_tabs[2]:
+            mca_col1, mca_col2 = st.columns([1, 3])
+            with mca_col1:
+                st.image("https://i.imgur.com/bIGUQrx.png", width=150)
+            with mca_col2:
+                st.markdown("### MCA Portal Integration")
+                st.markdown("""
+                MCA Portal integration allows automatic verification of company directors.
+                This feature requires an API subscription to the MCA data service.
+                """)
+                st.checkbox("Enable MCA Data Integration", key="enable_mca")
+                st.selectbox("Access Level", ["Basic (Director Verification Only)", "Advanced (Full Company Data)"], key="mca_level")
+                mca_setup = st.button("Setup MCA Integration", key="mca_setup")
+        
+        # Create Owner's View if logged in
+        if owner_login or ca_login or 'owner_view_active' in st.session_state:
+            st.session_state.owner_view_active = True
+            
+            # Show Owner's View
+            st.success(f"Owner's View Access Granted - Welcome, Director of {selected_company}")
+            
+            # Create Owner's Dashboard with comprehensive company view
+            st.markdown(f"## {selected_company} Company Overview")
+            
+            # Main KPIs
+            owner_kpi_cols = st.columns(5)
+            
+            company_score = company_data[selected_company]["score"]
+            with owner_kpi_cols[0]:
+                st.metric("Divine Score", f"{company_score}/100")
+            with owner_kpi_cols[1]:
+                st.metric("Implementation Status", "Active")
+            with owner_kpi_cols[2]:
+                st.metric("Dashboards Deployed", "4")
+            with owner_kpi_cols[3]:
+                st.metric("System Health", "98%")
+            with owner_kpi_cols[4]:
+                st.metric("User Activity", "High")
+            
+            # Add divine score gauges showing improvement potential
+            st.markdown("### Divine Score Analysis")
+            st.markdown("""
+            Your Divine Score determines your company's implementation tier and affects system capabilities.
+            Improving this score unlocks advanced features and optimizes your governance structure.
+            """)
+            
+            # Create score gauge chart
+            gauge_fig = go.Figure(go.Indicator(
+                mode = "gauge+number+delta",
+                value = company_score,
+                domain = {'x': [0, 1], 'y': [0, 1]},
+                title = {'text': "Divine Score", 'font': {'size': 24}},
+                delta = {'reference': 75, 'increasing': {'color': "green"}},
+                gauge = {
+                    'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
+                    'bar': {'color': "darkblue"},
+                    'bgcolor': "white",
+                    'borderwidth': 2,
+                    'bordercolor': "gray",
+                    'steps': [
+                        {'range': [0, 50], 'color': 'red'},
+                        {'range': [50, 75], 'color': 'orange'},
+                        {'range': [75, 85], 'color': 'yellow'},
+                        {'range': [85, 100], 'color': 'green'}],
+                    'threshold': {
+                        'line': {'color': "red", 'width': 4},
+                        'thickness': 0.75,
+                        'value': 85}}))
+            
+            gauge_fig.update_layout(height=250)
+            st.plotly_chart(gauge_fig, use_container_width=True)
+            
+            # Hierarchical Access Tabs - All roles in one view
+            st.markdown("## All-Access Hierarchical View")
+            st.markdown("""
+            As a company owner, you have complete visibility across all hierarchical levels.
+            This unified view allows you to see your organization from every perspective.
+            """)
+            
+            # Create hierarchical tabs for all levels
+            hierarch_tabs = st.tabs(["CEO Level", "Executive Level", "Department Level", "Team Level", "Process Level"])
+            
+            with hierarch_tabs[0]:
+                st.markdown("### CEO Level View")
+                st.markdown(f"""
+                This highest-level view shows {selected_company}'s overall performance and strategic direction.
+                The CEO level focuses on company-wide metrics, market position, and long-term objectives.
+                """)
+                
+                # CEO level metrics
+                ceo_cols = st.columns(2)
+                with ceo_cols[0]:
+                    # Create a pie chart for business segments
+                    segments = ["Retail", "E-commerce", "Wholesale", "Licensing"]
+                    segment_values = [random.randint(20, 40) for _ in range(4)]
+                    
+                    fig = px.pie(
+                        values=segment_values, 
+                        names=segments,
+                        title="Business Segment Performance",
+                        color_discrete_sequence=px.colors.sequential.Blues_r
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                
+                with ceo_cols[1]:
+                    # Create a line chart for year-over-year growth
+                    years = ["2021", "2022", "2023", "2024", "2025 (Projected)"]
+                    growth = [5.2, 7.1, 8.3, 10.2, 12.5]
+                    
+                    fig = px.line(
+                        x=years, 
+                        y=growth, 
+                        title="Year-Over-Year Growth (%)",
+                        markers=True
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                
+                # Strategic initiatives tracking
+                st.markdown("### Strategic Initiatives")
+                
+                strategic_data = {
+                    "Initiative": ["Market Expansion", "Digital Transformation", "Supply Chain Optimization", "Brand Repositioning"],
+                    "Status": ["In Progress", "Completed", "In Progress", "Planning"],
+                    "Completion": [65, 100, 40, 15],
+                    "Owner": ["CRO", "CIO", "COO", "CMO"]
+                }
+                
+                strategic_df = pd.DataFrame(strategic_data)
+                st.dataframe(strategic_df, use_container_width=True)
+            
+            with hierarch_tabs[1]:
+                st.markdown("### Executive Level View")
+                
+                # Create executive dashboard summary with selection
+                exec_role = st.selectbox(
+                    "Select Executive Dashboard", 
+                    ["CFO Dashboard", "CIO Dashboard", "CRO Dashboard", "CEO Dashboard"],
+                    key="owner_exec_select"
+                )
+                
+                if exec_role == "CFO Dashboard":
+                    st.markdown("### Financial Performance Overview")
+                    
+                    # Financial KPIs
+                    fin_cols = st.columns(4)
+                    with fin_cols[0]:
+                        st.metric("Gross Margin", "38.5%", "+2.1%")
+                    with fin_cols[1]:
+                        st.metric("Operating Expense", "$1.24M", "-5.3%")
+                    with fin_cols[2]:
+                        st.metric("Working Capital", "$3.85M", "+10.2%")
+                    with fin_cols[3]:
+                        st.metric("Cash Flow", "$865K", "+7.8%")
+                    
+                    # Financial charts
+                    fin_chart_cols = st.columns(2)
+                    with fin_chart_cols[0]:
+                        # Create expense breakdown chart
+                        expense_categories = ["COGS", "Labor", "Marketing", "R&D", "Rent", "Other"]
+                        expense_values = [45, 25, 10, 8, 7, 5]
+                        
+                        fig = px.pie(
+                            values=expense_values, 
+                            names=expense_categories,
+                            title="Expense Breakdown",
+                            hole=0.4
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                    
+                    with fin_chart_cols[1]:
+                        # Create revenue vs. target chart
+                        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
+                        revenue = [1.2, 1.3, 1.5, 1.4, 1.6, 1.7]
+                        targets = [1.3, 1.3, 1.4, 1.5, 1.5, 1.6]
+                        
+                        fig = go.Figure()
+                        fig.add_trace(go.Bar(x=months, y=revenue, name="Actual Revenue"))
+                        fig.add_trace(go.Scatter(x=months, y=targets, name="Target", mode="lines+markers", line=dict(color="red")))
+                        fig.update_layout(title="Revenue vs. Target (in millions)")
+                        st.plotly_chart(fig, use_container_width=True)
+                
+                elif exec_role == "CIO Dashboard":
+                    st.markdown("### Technology Infrastructure Overview")
+                    
+                    # Technology KPIs
+                    tech_cols = st.columns(4)
+                    with tech_cols[0]:
+                        st.metric("System Uptime", "99.8%", "+0.2%")
+                    with tech_cols[1]:
+                        st.metric("Security Score", "92/100", "+5")
+                    with tech_cols[2]:
+                        st.metric("Digital Projects", "8 Active", "+2")
+                    with tech_cols[3]:
+                        st.metric("IT ROI", "3.2x", "+0.4")
+                    
+                    # Technology project status
+                    tech_projects = {
+                        "Project": ["ERP Integration", "Cloud Migration", "Mobile App", "Data Warehouse", "AI Analytics"],
+                        "Status": ["In Progress", "Completed", "In Progress", "Planning", "In Progress"],
+                        "Completion": [75, 100, 60, 25, 40],
+                        "Priority": ["High", "Critical", "Medium", "Medium", "High"]
+                    }
+                    
+                    tech_df = pd.DataFrame(tech_projects)
+                    
+                    # Display progress bars for each project
+                    for i, row in tech_df.iterrows():
+                        st.markdown(f"**{row['Project']}** - {row['Status']} ({row['Priority']} Priority)")
+                        st.progress(row['Completion']/100)
+                
+                elif exec_role == "CRO Dashboard":
+                    st.markdown("### Revenue & Sales Overview")
+                    
+                    # Revenue KPIs
+                    rev_cols = st.columns(4)
+                    with rev_cols[0]:
+                        st.metric("Monthly Revenue", "$2.4M", "+12.5%")
+                    with rev_cols[1]:
+                        st.metric("Customer Acquisition", "1,245", "+8.7%")
+                    with rev_cols[2]:
+                        st.metric("Conversion Rate", "3.8%", "+0.5%")
+                    with rev_cols[3]:
+                        st.metric("CAC", "$42.80", "-5.2%")
+                    
+                    # Revenue breakdown
+                    sales_cols = st.columns(2)
+                    with sales_cols[0]:
+                        # Create channel breakdown chart
+                        channels = ["Retail Stores", "E-commerce", "Marketplaces", "Wholesalers"]
+                        channel_values = [45, 32, 15, 8]
+                        
+                        fig = px.bar(
+                            x=channels, 
+                            y=channel_values,
+                            title="Sales by Channel (%)",
+                            color=channels
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                    
+                    with sales_cols[1]:
+                        # Create regional performance chart
+                        regions = ["North", "South", "East", "West", "Central"]
+                        region_sales = [885, 765, 642, 921, 512]
+                        region_targets = [850, 800, 700, 850, 600]
+                        
+                        region_data = pd.DataFrame({
+                            "Region": regions,
+                            "Sales": region_sales,
+                            "Target": region_targets
+                        })
+                        
+                        fig = px.bar(
+                            region_data,
+                            x="Region",
+                            y=["Sales", "Target"],
+                            title="Regional Performance vs. Target (in thousands)",
+                            barmode="group"
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                
+                else:  # CEO Dashboard is shown in the first tab
+                    st.markdown("👆 The CEO Dashboard is displayed in the 'CEO Level' tab above")
+            
+            with hierarch_tabs[2]:
+                st.markdown("### Department Level View")
+                
+                # Department selection
+                dept = st.selectbox(
+                    "Select Department", 
+                    ["Finance", "Technology", "Marketing", "Sales", "Operations", "HR"],
+                    key="owner_dept_select"
+                )
+                
+                # Display department specific KPIs and data
+                st.markdown(f"### {dept} Department Overview")
+                
+                dept_kpi_cols = st.columns(3)
+                
+                if dept == "Finance":
+                    with dept_kpi_cols[0]:
+                        st.metric("Budget Variance", "+2.3%", "1.1%")
+                    with dept_kpi_cols[1]:
+                        st.metric("Reporting Accuracy", "99.2%", "+0.5%")
+                    with dept_kpi_cols[2]:
+                        st.metric("Payment Processing", "1.8 days", "-0.3 days")
+                    
+                    # Add finance department tasks
+                    finance_tasks = {
+                        "Task": ["Month-end Close", "Budget Planning", "Tax Compliance", "Vendor Payments", "Financial Audit"],
+                        "Status": ["Completed", "In Progress", "Not Started", "In Progress", "Not Started"],
+                        "Due Date": ["April 5, 2025", "April 15, 2025", "April 20, 2025", "April 10, 2025", "May 1, 2025"],
+                        "Assigned To": ["John Smith", "Maria Garcia", "David Chen", "Susan Taylor", "John Smith"]
+                    }
+                    
+                    st.dataframe(pd.DataFrame(finance_tasks), use_container_width=True)
+                
+                elif dept == "Technology":
+                    with dept_kpi_cols[0]:
+                        st.metric("Ticket Resolution", "94.5%", "+2.1%")
+                    with dept_kpi_cols[1]:
+                        st.metric("Development Velocity", "18 Story Points", "+3")
+                    with dept_kpi_cols[2]:
+                        st.metric("Infrastructure Cost", "$32.5K", "-5.2%")
+                    
+                    # Add tech department systems
+                    st.markdown("### Systems Health")
+                    
+                    system_cols = st.columns(4)
+                    with system_cols[0]:
+                        st.markdown("#### ERP")
+                        st.markdown("Status: 🟢 Healthy")
+                        st.metric("Uptime", "99.9%")
+                    with system_cols[1]:
+                        st.markdown("#### CRM")
+                        st.markdown("Status: 🟢 Healthy")
+                        st.metric("Uptime", "99.7%")
+                    with system_cols[2]:
+                        st.markdown("#### E-Commerce")
+                        st.markdown("Status: 🟡 Minor Issues")
+                        st.metric("Uptime", "98.2%")
+                    with system_cols[3]:
+                        st.markdown("#### Analytics")
+                        st.markdown("Status: 🟢 Healthy")
+                        st.metric("Uptime", "99.8%")
+                
+                elif dept == "Marketing":
+                    with dept_kpi_cols[0]:
+                        st.metric("Campaign ROI", "3.2x", "+0.4")
+                    with dept_kpi_cols[1]:
+                        st.metric("Social Engagement", "8.5%", "+1.2%")
+                    with dept_kpi_cols[2]:
+                        st.metric("Brand Awareness", "72%", "+5%")
+                    
+                    # Add marketing campaigns
+                    campaigns = {
+                        "Campaign": ["Spring Collection", "Loyalty Rewards", "Social Media", "Email Retargeting", "Influencer Program"],
+                        "Status": ["Active", "Active", "Active", "Planned", "Active"],
+                        "Budget": ["$45,000", "$30,000", "$25,000", "$15,000", "$35,000"],
+                        "ROI": ["2.8x", "3.5x", "4.1x", "N/A", "2.6x"]
+                    }
+                    
+                    st.dataframe(pd.DataFrame(campaigns), use_container_width=True)
+                
+                elif dept == "Sales":
+                    with dept_kpi_cols[0]:
+                        st.metric("Sales Team Performance", "92%", "+3%")
+                    with dept_kpi_cols[1]:
+                        st.metric("Lead Conversion", "18.5%", "+2.1%")
+                    with dept_kpi_cols[2]:
+                        st.metric("Average Order Value", "$128", "+$12")
+                    
+                    # Add sales representatives performance
+                    sales_reps = {
+                        "Representative": ["Alex Johnson", "Sarah Miller", "James Wilson", "Maria Rodriguez", "David Kim"],
+                        "Sales (Monthly)": ["$98,500", "$112,300", "$87,600", "$124,800", "$91,200"],
+                        "Target": ["$95,000", "$100,000", "$90,000", "$115,000", "$95,000"],
+                        "Performance": ["103.7%", "112.3%", "97.3%", "108.5%", "96.0%"]
+                    }
+                    
+                    st.dataframe(pd.DataFrame(sales_reps), use_container_width=True)
+                
+                elif dept == "Operations":
+                    with dept_kpi_cols[0]:
+                        st.metric("Inventory Turnover", "4.2", "+0.3")
+                    with dept_kpi_cols[1]:
+                        st.metric("Order Fulfillment", "98.5%", "+0.7%")
+                    with dept_kpi_cols[2]:
+                        st.metric("Shipping Time", "1.8 days", "-0.2 days")
+                    
+                    # Add operations metrics
+                    st.markdown("### Warehouse Performance")
+                    
+                    warehouse_cols = st.columns(2)
+                    with warehouse_cols[0]:
+                        # Create inventory status chart
+                        categories = ["Apparel", "Footwear", "Accessories", "Beauty"]
+                        in_stock = [82, 76, 91, 88]
+                        
+                        fig = px.bar(
+                            x=categories, 
+                            y=in_stock,
+                            title="Inventory Status by Category (% In Stock)",
+                            color=categories
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                    
+                    with warehouse_cols[1]:
+                        # Create shipping performance chart
+                        shipping_types = ["Standard", "Express", "Next Day", "International"]
+                        on_time = [96, 93, 91, 87]
+                        
+                        fig = px.bar(
+                            x=shipping_types, 
+                            y=on_time,
+                            title="On-Time Shipping Performance (%)",
+                            color=shipping_types
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                
+                else:  # HR
+                    with dept_kpi_cols[0]:
+                        st.metric("Employee Satisfaction", "87%", "+2%")
+                    with dept_kpi_cols[1]:
+                        st.metric("Turnover Rate", "12.5%", "-1.2%")
+                    with dept_kpi_cols[2]:
+                        st.metric("Training Completion", "94.3%", "+1.8%")
+                    
+                    # Add HR metrics
+                    st.markdown("### Workforce Overview")
+                    
+                    hr_cols = st.columns(2)
+                    with hr_cols[0]:
+                        # Create department breakdown
+                        dept_names = ["Sales", "Operations", "Marketing", "Tech", "Finance", "HR"]
+                        headcount = [28, 42, 15, 12, 8, 5]
+                        
+                        fig = px.pie(
+                            values=headcount, 
+                            names=dept_names,
+                            title="Headcount by Department",
+                            hole=0.3
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                    
+                    with hr_cols[1]:
+                        # Create training status
+                        training_modules = ["Compliance", "Product Knowledge", "Sales Skills", "Leadership", "Technical"]
+                        completion_rates = [98, 87, 92, 76, 83]
+                        
+                        fig = px.bar(
+                            x=training_modules, 
+                            y=completion_rates,
+                            title="Training Completion Rates (%)",
+                            color=training_modules
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+            
+            with hierarch_tabs[3]:
+                st.markdown("### Team Level View")
+                
+                # Create team selection
+                team = st.selectbox(
+                    "Select Team", 
+                    ["Retail Sales", "E-commerce", "Visual Merchandising", "Customer Service", "Product Development", "Marketing"],
+                    key="owner_team_select"
+                )
+                
+                # Display team specific KPIs and data
+                st.markdown(f"### {team} Team Performance")
+                
+                team_kpi_cols = st.columns(3)
+                with team_kpi_cols[0]:
+                    st.metric("Team Productivity", "94%", "+2%")
+                with team_kpi_cols[1]:
+                    st.metric("Goal Attainment", "87%", "+5%")
+                with team_kpi_cols[2]:
+                    st.metric("Quality Score", "4.2/5", "+0.3")
+                
+                # Team members and their performance
+                if team == "Retail Sales":
+                    team_members = [
+                        {"name": "Jennifer Lee", "role": "Store Manager", "performance": 95, "status": "●"},
+                        {"name": "Michael Brown", "role": "Assistant Manager", "performance": 88, "status": "●"},
+                        {"name": "Emily Davis", "role": "Sales Associate", "performance": 92, "status": "●"},
+                        {"name": "Joshua Martin", "role": "Sales Associate", "performance": 84, "status": "●"},
+                        {"name": "Amanda Wilson", "role": "Sales Associate", "performance": 79, "status": "●"},
+                        {"name": "Robert Taylor", "role": "Sales Associate", "performance": 91, "status": "●"},
+                    ]
+                elif team == "E-commerce":
+                    team_members = [
+                        {"name": "Daniel Wong", "role": "E-commerce Manager", "performance": 93, "status": "●"},
+                        {"name": "Nicole Smith", "role": "Digital Content Creator", "performance": 87, "status": "●"},
+                        {"name": "Jason Brown", "role": "Web Developer", "performance": 90, "status": "●"},
+                        {"name": "Lisa Chen", "role": "UX Designer", "performance": 94, "status": "●"},
+                        {"name": "Kevin Johnson", "role": "Data Analyst", "performance": 89, "status": "●"},
+                    ]
+                elif team == "Visual Merchandising":
+                    team_members = [
+                        {"name": "Sophia Rodriguez", "role": "VM Manager", "performance": 96, "status": "●"},
+                        {"name": "Marcus Freeman", "role": "VM Specialist", "performance": 88, "status": "●"},
+                        {"name": "Olivia Thompson", "role": "VM Specialist", "performance": 92, "status": "●"},
+                        {"name": "Jake Williams", "role": "VM Assistant", "performance": 81, "status": "●"},
+                    ]
+                elif team == "Customer Service":
+                    team_members = [
+                        {"name": "Rachel Miller", "role": "CS Manager", "performance": 90, "status": "●"},
+                        {"name": "Thomas Jenkins", "role": "CS Representative", "performance": 86, "status": "●"},
+                        {"name": "Emma Carter", "role": "CS Representative", "performance": 93, "status": "●"},
+                        {"name": "David Lopez", "role": "CS Representative", "performance": 88, "status": "●"},
+                        {"name": "Sarah Wilson", "role": "CS Representative", "performance": 84, "status": "●"},
+                    ]
+                elif team == "Product Development":
+                    team_members = [
+                        {"name": "Alex Chen", "role": "Product Manager", "performance": 94, "status": "●"},
+                        {"name": "Maria Garcia", "role": "Designer", "performance": 97, "status": "●"},
+                        {"name": "James Wilson", "role": "Designer", "performance": 85, "status": "●"},
+                        {"name": "Linda Johnson", "role": "Material Specialist", "performance": 89, "status": "●"},
+                        {"name": "Robert Kim", "role": "Technical Designer", "performance": 92, "status": "●"},
+                    ]
+                else:  # Marketing
+                    team_members = [
+                        {"name": "Jessica Park", "role": "Marketing Manager", "performance": 91, "status": "●"},
+                        {"name": "Brandon Smith", "role": "Social Media Specialist", "performance": 88, "status": "●"},
+                        {"name": "Tiffany Brooks", "role": "Content Creator", "performance": 94, "status": "●"},
+                        {"name": "Andrew Davis", "role": "SEO Specialist", "performance": 87, "status": "●"},
+                        {"name": "Michelle Wang", "role": "Graphic Designer", "performance": 92, "status": "●"},
+                    ]
+                
+                # Color code the status based on performance
+                for member in team_members:
+                    if member["performance"] >= 90:
+                        member["status"] = "🟢"  # Green
+                    elif member["performance"] >= 80:
+                        member["status"] = "🟡"  # Yellow
+                    else:
+                        member["status"] = "🔴"  # Red
+                
+                # Display team members in a table
+                team_df = pd.DataFrame(team_members)
+                team_df = team_df[["status", "name", "role", "performance"]]
+                team_df.columns = ["Status", "Name", "Role", "Performance"]
+                
+                st.dataframe(team_df, use_container_width=True)
+                
+                # Team goals and projects
+                st.markdown("### Team Goals & Projects")
+                
+                team_goals = {
+                    "Goal/Project": ["Increase Sales", "Customer Satisfaction", "Training Completion", "Process Improvement", "Innovation"],
+                    "Target": ["110% of prior quarter", "4.5/5 rating", "100% completion", "15% efficiency gain", "2 new initiatives"],
+                    "Current": ["105%", "4.2/5", "92%", "8%", "1 completed"],
+                    "Status": ["On Track", "On Track", "At Risk", "Delayed", "On Track"]
+                }
+                
+                team_goals_df = pd.DataFrame(team_goals)
+                st.dataframe(team_goals_df, use_container_width=True)
+            
+            with hierarch_tabs[4]:
+                st.markdown("### Process Level View")
+                
+                # Process selection
+                process = st.selectbox(
+                    "Select Business Process", 
+                    ["Order Fulfillment", "Inventory Management", "Customer Onboarding", "Returns Processing", "Procurement"],
+                    key="owner_process_select"
+                )
+                
+                # Display process specific KPIs and steps
+                st.markdown(f"### {process} Process Performance")
+                
+                process_kpi_cols = st.columns(3)
+                with process_kpi_cols[0]:
+                    st.metric("Process Efficiency", "86%", "+3%")
+                with process_kpi_cols[1]:
+                    st.metric("Error Rate", "1.2%", "-0.5%")
+                with process_kpi_cols[2]:
+                    st.metric("Avg. Completion Time", "1.8 days", "-0.3 days")
+                
+                # Process flow visualization
+                st.markdown("### Process Flow Visualization")
+                
+                if process == "Order Fulfillment":
+                    steps = ["Order Receipt", "Payment Processing", "Inventory Check", "Picking", "Packing", "Shipping", "Delivery Confirmation"]
+                    efficiencies = [98, 99, 92, 88, 94, 90, 96]
+                elif process == "Inventory Management":
+                    steps = ["Receiving", "Quality Check", "Storage", "Cycle Count", "Replenishment", "Transfer Management"]
+                    efficiencies = [93, 90, 95, 87, 89, 84]
+                elif process == "Customer Onboarding":
+                    steps = ["Sign-up", "Verification", "Profile Creation", "Preference Setting", "Welcome Communication"]
+                    efficiencies = [96, 92, 88, 85, 97]
+                elif process == "Returns Processing":
+                    steps = ["Return Request", "Approval", "Return Receipt", "Quality Check", "Refund", "Inventory Update"]
+                    efficiencies = [95, 92, 89, 87, 96, 91]
+                else:  # Procurement
+                    steps = ["Requirement Identification", "Vendor Selection", "Quote Request", "Negotiation", "PO Creation", "Delivery", "Payment"]
+                    efficiencies = [91, 86, 93, 88, 95, 89, 94]
+                
+                # Create process flow diagram
+                G_process = nx.DiGraph()
+                
+                # Add nodes for each process step
+                for i, step in enumerate(steps):
+                    G_process.add_node(i, name=step, efficiency=efficiencies[i])
+                
+                # Add edges between sequential steps
+                for i in range(len(steps) - 1):
+                    G_process.add_edge(i, i+1)
+                
+                # Create position layout
+                pos_process = {i: (i, 0) for i in range(len(steps))}
+                
+                # Create edge trace
+                edge_x = []
+                edge_y = []
+                for edge in G_process.edges():
+                    x0, y0 = pos_process[edge[0]]
+                    x1, y1 = pos_process[edge[1]]
+                    edge_x.extend([x0, x1, None])
+                    edge_y.extend([y0, y1, None])
+                
+                edge_trace = go.Scatter(
+                    x=edge_x, y=edge_y,
+                    line=dict(width=2, color='#888'),
+                    hoverinfo='none',
+                    mode='lines')
+                
+                # Create node trace
+                node_x = []
+                node_y = []
+                node_text = []
+                node_colors = []
+                
+                for node, attr in G_process.nodes(data=True):
+                    x, y = pos_process[node]
+                    node_x.append(x)
+                    node_y.append(y)
+                    node_text.append(f"{attr['name']}<br>{attr['efficiency']}% Efficient")
+                    
+                    # Color based on efficiency
+                    if attr['efficiency'] >= 95:
+                        node_colors.append('green')
+                    elif attr['efficiency'] >= 90:
+                        node_colors.append('lightgreen')
+                    elif attr['efficiency'] >= 85:
+                        node_colors.append('gold')
+                    else:
+                        node_colors.append('orange')
+                
+                node_trace = go.Scatter(
+                    x=node_x, y=node_y,
+                    mode='markers+text',
+                    text=[G_process.nodes[node]['name'] for node in G_process.nodes()],
+                    textposition="top center",
+                    marker=dict(
+                        size=30,
+                        color=node_colors,
+                        line=dict(width=2, color='DarkSlateGrey')),
+                    hovertext=node_text,
+                    hoverinfo='text'
+                )
+                
+                # Create figure
+                fig = go.Figure(data=[edge_trace, node_trace],
+                             layout=go.Layout(
+                                title=f"{process} Process Flow with Efficiency Metrics",
+                                showlegend=False,
+                                hovermode='closest',
+                                margin=dict(b=20,l=5,r=5,t=40),
+                                xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                                yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                                height=300,
+                                plot_bgcolor='rgba(248,248,248,1)'
+                            ))
+                
+                st.plotly_chart(fig, use_container_width=True)
+                
+                # Process improvement opportunities
+                st.markdown("### Process Improvement Opportunities")
+                
+                process_impr = {
+                    "Bottleneck": ["Inventory Check", "Quality Inspection", "Payment Processing"],
+                    "Impact": ["High", "Medium", "Low"],
+                    "Recommended Action": ["Implement real-time inventory tracking", "Add additional QC checkpoints", "Upgrade payment gateway"],
+                    "Potential Benefit": ["15% faster fulfillment", "2.5% quality improvement", "0.8% reduced payment failures"]
+                }
+                
+                process_impr_df = pd.DataFrame(process_impr)
+                st.dataframe(process_impr_df, use_container_width=True)
+            
+            # Divine Score Improvement Actions
+            st.markdown("## Divine Score Improvement Actions")
+            st.markdown("""
+            As a company owner, you can take specific actions to improve your Divine Score.
+            Higher scores unlock premium features and ensure optimal governance.
+            """)
+            
+            # Score improvement actions
+            score_actions = {
+                "Action": [
+                    "Complete Executive Training Modules",
+                    "Increase Dashboard Usage Frequency",
+                    "Implement Data Quality Improvements",
+                    "Expand Connected Device Coverage",
+                    "Activate Advanced Analytics Features"
+                ],
+                "Current Status": [
+                    "2/5 Completed",
+                    "Medium Usage",
+                    "Basic Implementation",
+                    "Limited Coverage",
+                    "Not Activated"
+                ],
+                "Score Impact": [
+                    "+5 points",
+                    "+3 points",
+                    "+8 points",
+                    "+4 points",
+                    "+10 points"
+                ]
+            }
+            
+            score_df = pd.DataFrame(score_actions)
+            
+            # Add action buttons
+            action_col1, action_col2, action_col3 = st.columns([3, 1, 1])
+            with action_col1:
+                st.dataframe(score_df, use_container_width=True)
+            with action_col2:
+                st.button("Start Selected Actions", key="start_actions")
+            with action_col3:
+                st.button("Schedule Implementation", key="schedule_actions")
+            
+            # ECG Integration Notifications
+            st.markdown("## 📬 ECG Governance Notifications")
+            
+            notification_data = [
+                {"priority": "High", "message": "Executive Training: 3 modules pending completion", "date": "Apr 02, 2025"},
+                {"priority": "Medium", "message": "License Renewal: CFO Dashboard due in 30 days", "date": "Apr 01, 2025"},
+                {"priority": "Low", "message": "New Feature Available: Advanced Revenue Forecasting", "date": "Mar 28, 2025"},
+                {"priority": "High", "message": "Security Update: Action required for identity verification", "date": "Mar 25, 2025"},
+                {"priority": "Medium", "message": "Team Access Request: 2 pending approvals", "date": "Mar 22, 2025"}
+            ]
+            
+            notification_df = pd.DataFrame(notification_data)
+            
+            # Style the dataframe based on priority
+            def highlight_priority(val):
+                if val == "High":
+                    return 'background-color: #FFCCCB'
+                elif val == "Medium":
+                    return 'background-color: #FFFFCC'
+                else:
+                    return 'background-color: #CCFFCC'
+            
+            styled_df = notification_df.style.applymap(highlight_priority, subset=['priority'])
+            st.dataframe(styled_df, use_container_width=True)
+            
+            # Action buttons
+            note_cols = st.columns([1, 1, 3])
+            with note_cols[0]:
+                st.button("Mark All as Read", key="mark_read")
+            with note_cols[1]:
+                st.button("Take Actions", key="take_actions")
         
         empire_auth_col1, empire_auth_col2 = st.columns([1, 3])
         with empire_auth_col1:
