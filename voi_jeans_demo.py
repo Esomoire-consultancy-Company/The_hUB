@@ -606,24 +606,117 @@ def show_integration_demo():
     # Add ECG Governance Layer with company selection
     st.subheader("ECG Governance Layer - Executive Intelligence")
     
-    # Create a selection interface for companies
-    st.markdown("### Company Selection Interface")
-    st.markdown("Select the company you want to analyze:")
+    # Create a selection interface for companies with improved UI
+    st.markdown("### 🏢 Company Selection Interface")
+    st.markdown("Select the company you want to analyze through the ECG Governance Layer:")
     
-    # Company selection with performance scores
+    # Company selection with performance scores and additional metadata
     company_data = {
-        "Voi Jeans Retail India Pvt Ltd": {"score": 87, "industry": "Retail Fashion", "region": "South Asia"},
-        "Scotts Garments LLP": {"score": 82, "industry": "Manufacturing", "region": "South Asia"},
-        "Lifestyle International": {"score": 76, "industry": "Department Store", "region": "Pan India"},
-        "Reliance Trends": {"score": 84, "industry": "Fashion Retail", "region": "Pan India"},
-        "Shoppers Stop": {"score": 79, "industry": "Department Store", "region": "Pan India"}
+        "Voi Jeans Retail India Pvt Ltd": {
+            "score": 87, 
+            "industry": "Retail Fashion", 
+            "region": "South Asia",
+            "stores": 20,
+            "employees": 1250,
+            "annual_revenue": "₹128.5 Cr",
+            "growth": 12.4,
+            "logo_emoji": "👖"
+        },
+        "Scotts Garments LLP": {
+            "score": 82, 
+            "industry": "Manufacturing", 
+            "region": "South Asia",
+            "factories": 3,
+            "employees": 850,
+            "annual_revenue": "₹93.2 Cr",
+            "growth": 8.7,
+            "logo_emoji": "🏭"
+        },
+        "Lifestyle International": {
+            "score": 76, 
+            "industry": "Department Store", 
+            "region": "Pan India",
+            "stores": 35,
+            "employees": 4200,
+            "annual_revenue": "₹876.3 Cr",
+            "growth": 5.2,
+            "logo_emoji": "🛍️"
+        },
+        "Reliance Trends": {
+            "score": 84, 
+            "industry": "Fashion Retail", 
+            "region": "Pan India",
+            "stores": 125,
+            "employees": 9800,
+            "annual_revenue": "₹1,245.8 Cr",
+            "growth": 14.3,
+            "logo_emoji": "👔"
+        },
+        "Shoppers Stop": {
+            "score": 79, 
+            "industry": "Department Store", 
+            "region": "Pan India",
+            "stores": 42,
+            "employees": 5600,
+            "annual_revenue": "₹954.7 Cr",
+            "growth": 7.9,
+            "logo_emoji": "🛒"
+        }
     }
     
-    # Company selector
-    selected_company = st.selectbox(
-        "Choose company:", 
+    # Create company selection cards for a more visual selection experience
+    cols = st.columns(5)
+    
+    # Determine if we have a selected company already
+    if 'selected_company' not in st.session_state:
+        st.session_state.selected_company = "Voi Jeans Retail India Pvt Ltd"
+    
+    # Display company cards
+    for i, (company_name, data) in enumerate(company_data.items()):
+        with cols[i % 5]:
+            selected = st.session_state.selected_company == company_name
+            card_color = "#1E3A8A" if selected else "#F0F2F6"
+            text_color = "white" if selected else "black"
+            emoji = data["logo_emoji"]
+            score = data["score"]
+            
+            st.markdown(f"""
+            <div style="
+                padding: 10px; 
+                border-radius: 5px; 
+                background-color: {card_color}; 
+                color: {text_color}; 
+                text-align: center;
+                margin-bottom: 10px;
+                cursor: pointer;
+                height: 120px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                border: 2px solid {'#0D1B43' if selected else '#E5E7EB'};
+                " 
+                onclick="alert('Clicked {company_name}')">
+                <div style="font-size: 24px;">{emoji}</div>
+                <div style="font-weight: bold; margin-top: 5px;">{company_name.split(' ')[0]}</div>
+                <div style="margin-top: 5px;">Score: {score}/100</div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            if st.button(f"Select {company_name.split(' ')[0]}", key=f"btn_{company_name}"):
+                st.session_state.selected_company = company_name
+                st.rerun()
+    
+    # Use the selected company
+    selected_company = st.session_state.selected_company
+    
+    # Display full company selection dropdown for alternative selection method
+    st.selectbox(
+        "Or select company from dropdown:", 
         list(company_data.keys()),
-        index=0
+        index=list(company_data.keys()).index(selected_company),
+        key="company_dropdown",
+        on_change=lambda: setattr(st.session_state, 'selected_company', st.session_state.company_dropdown)
     )
     
     # Initialize session state for the selected company if not present
@@ -915,6 +1008,217 @@ def show_integration_demo():
     and finally to sales, all data is connected in a unified platform with appropriate time lags between stages.
     """)
     
+    # Add Executive Suite License Deployment Network
+    st.subheader("🔌 ECG Governance Network & License Deployment")
+    
+    st.markdown(f"""
+    This interactive network shows how executive licenses are deployed across {selected_company}'s operations.
+    Similar to ECG's license management process, executive dashboards are provided to key stakeholders with appropriate
+    access permissions and data visibility based on their role.
+    """)
+    
+    # Create role-license mapping
+    role_licenses = {
+        "CEO Dashboard": {
+            "access_level": "Full Access", 
+            "visibility": "All Divisions",
+            "data_types": ["Strategic", "Financial", "Operational", "Market"],
+            "connected_devices": ["Desktop", "Tablet", "Mobile", "Digital Display"]
+        },
+        "CRO Dashboard": {
+            "access_level": "Department Access", 
+            "visibility": "Revenue Divisions",
+            "data_types": ["Sales", "Marketing", "Customer", "Product"],
+            "connected_devices": ["Desktop", "Tablet", "Mobile"]
+        },
+        "CIO Dashboard": {
+            "access_level": "Department Access", 
+            "visibility": "Tech Divisions",
+            "data_types": ["System", "Security", "Development", "Integration"],
+            "connected_devices": ["Desktop", "Mobile", "Network Monitors"]
+        },
+        "CFO Dashboard": {
+            "access_level": "Department Access", 
+            "visibility": "Finance Divisions",
+            "data_types": ["Financial", "Treasury", "Risk", "Compliance"],
+            "connected_devices": ["Desktop", "Secure Tablet", "Financial Terminals"]
+        }
+    }
+    
+    # Create tabs to show Executive Network and License Details
+    exec_tabs = st.tabs(["Executive Network", "Executive License Details", "Connected Devices"])
+    
+    with exec_tabs[0]:
+        # Create a simple network visualization
+        st.markdown("### Executive Dashboard Deployment Network")
+        
+        # Create a network graph showing executive dashboard relationships
+        G = nx.DiGraph()
+        
+        # Add nodes for the company, executives, and systems
+        G.add_node(selected_company, group=1, size=25)
+        
+        for role in role_licenses.keys():
+            G.add_node(role, group=2, size=20)
+        
+        departments = ["Finance Department", "Technology Department", "Marketing Department", 
+                     "Sales Department", "Operations Department", "HR Department"]
+        
+        for dept in departments:
+            G.add_node(dept, group=3, size=15)
+        
+        # Add connections between company and dashboards
+        for role in role_licenses.keys():
+            G.add_edge(selected_company, role, weight=5)
+        
+        # Add connections between dashboards and departments
+        G.add_edge("CEO Dashboard", "Finance Department", weight=3)
+        G.add_edge("CEO Dashboard", "Technology Department", weight=3)
+        G.add_edge("CEO Dashboard", "Marketing Department", weight=3)
+        G.add_edge("CEO Dashboard", "Sales Department", weight=3)
+        G.add_edge("CEO Dashboard", "Operations Department", weight=3)
+        G.add_edge("CEO Dashboard", "HR Department", weight=3)
+        
+        G.add_edge("CRO Dashboard", "Marketing Department", weight=4)
+        G.add_edge("CRO Dashboard", "Sales Department", weight=4)
+        
+        G.add_edge("CIO Dashboard", "Technology Department", weight=4)
+        G.add_edge("CIO Dashboard", "Operations Department", weight=2)
+        
+        G.add_edge("CFO Dashboard", "Finance Department", weight=4)
+        G.add_edge("CFO Dashboard", "Operations Department", weight=2)
+        
+        # Create position layout
+        pos = nx.spring_layout(G, k=0.3, seed=42)
+        
+        # Prepare node traces by group
+        node_traces = []
+        colors = ['#1E3A8A', '#7C3AED', '#10B981']
+        groups = {}
+        
+        # Collect nodes by group
+        for node in G.nodes():
+            group = G.nodes[node]['group']
+            size = G.nodes[node]['size']
+            if group not in groups:
+                groups[group] = {
+                    'x': [],
+                    'y': [],
+                    'text': [],
+                    'size': [],
+                    'color': colors[group-1]
+                }
+            x, y = pos[node]
+            groups[group]['x'].append(x)
+            groups[group]['y'].append(y)
+            groups[group]['text'].append(node)
+            groups[group]['size'].append(size)
+        
+        # Create a trace for each group
+        for group_id, group_data in groups.items():
+            node_trace = go.Scatter(
+                x=group_data['x'],
+                y=group_data['y'],
+                text=group_data['text'],
+                mode='markers+text',
+                textposition="top center",
+                marker=dict(
+                    size=group_data['size'],
+                    color=group_data['color'],
+                    line=dict(width=2, color='DarkSlateGrey')),
+                name=f"Group {group_id}"
+            )
+            node_traces.append(node_trace)
+        
+        # Create edge trace
+        edge_x = []
+        edge_y = []
+        
+        for edge in G.edges():
+            x0, y0 = pos[edge[0]]
+            x1, y1 = pos[edge[1]]
+            edge_x.extend([x0, x1, None])
+            edge_y.extend([y0, y1, None])
+        
+        edge_trace = go.Scatter(
+            x=edge_x,
+            y=edge_y,
+            line=dict(width=1.5, color='#888'),
+            hoverinfo='none',
+            mode='lines'
+        )
+        
+        # Create figure
+        fig = go.Figure(data=[edge_trace] + node_traces,
+                     layout=go.Layout(
+                        title=f"Executive Dashboard Deployment - {selected_company}",
+                        showlegend=False,
+                        hovermode='closest',
+                        margin=dict(b=20,l=5,r=5,t=40),
+                        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                        height=500,
+                        plot_bgcolor='rgba(248,248,248,1)'
+                    ))
+        
+        # Update node trace legends
+        fig.data[1].name = "Company"
+        fig.data[2].name = "Executive Dashboards"
+        fig.data[3].name = "Departments"
+        
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with exec_tabs[1]:
+        st.markdown("### Executive License Details")
+        st.markdown(f"""
+        Each executive dashboard is deployed with a specific license that determines access levels, 
+        data visibility, and integration capabilities. Below are the license details for {selected_company}'s 
+        executive team:
+        """)
+        
+        # Create license details table
+        license_data = {
+            "Dashboard": list(role_licenses.keys()),
+            "Access Level": [data["access_level"] for data in role_licenses.values()],
+            "Visibility": [data["visibility"] for data in role_licenses.values()],
+            "Primary Data Types": [", ".join(data["data_types"]) for data in role_licenses.values()]
+        }
+        
+        license_df = pd.DataFrame(license_data)
+        st.dataframe(license_df, use_container_width=True)
+        
+        # Add dynamic license activation UI
+        st.markdown("### License Management")
+        
+        license_cols = st.columns(4)
+        for i, role in enumerate(role_licenses.keys()):
+            with license_cols[i]:
+                st.markdown(f"**{role}**")
+                st.toggle(f"Active License", value=True, key=f"license_{role}")
+                st.selectbox(f"Renewal Period", ["Annual", "Bi-Annual", "Quarterly", "Monthly"], key=f"renewal_{role}")
+    
+    with exec_tabs[2]:
+        st.markdown("### Connected Device Integration")
+        st.markdown(f"""
+        ECG's executive dashboards can be accessed through various connected devices, each providing 
+        appropriate information based on the device type and executive role. This ensures that key metrics 
+        are always accessible, regardless of location or device type.
+        """)
+        
+        # Show device integration mapping
+        device_cols = st.columns(4)
+        
+        for i, (role, data) in enumerate(role_licenses.items()):
+            with device_cols[i]:
+                st.markdown(f"**{role}**")
+                st.markdown("##### Connected Devices:")
+                for device in data["connected_devices"]:
+                    device_icon = "💻" if device == "Desktop" else "📱" if device == "Mobile" else "📟" if device == "Network Monitors" else "💰" if device == "Financial Terminals" else "📋" if device == "Tablet" else "📱" if device == "Secure Tablet" else "📺" if device == "Digital Display" else "📟"
+                    st.markdown(f"{device_icon} {device}")
+                
+                # Add device linking button
+                st.button(f"Link New Device", key=f"link_device_{role}")
+    
     # Add ECG AI Assistant
     st.subheader("🤖 ECG AI Implementation Assistant")
     
@@ -925,6 +1229,8 @@ def show_integration_demo():
     - Dashboard explanations and insights
     - Best practices for your industry
     - Implementation team coordination
+    - Connected device deployment
+    - License activation and management
     
     Try asking a question related to the selected company or dashboards.
     """)
@@ -983,16 +1289,139 @@ def generate_ai_response(query, company_name, company_info, team_level):
         """
     
     elif "dashboard" in query or "ceo" in query or "cro" in query or "cio" in query or "cfo" in query:
+        # Determine which dashboard the user is asking about
+        if "ceo" in query:
+            return f"""
+            The CEO Dashboard for {company_name} provides a holistic view of the business with access to all divisions.
+            
+            Key features include:
+            - Executive metrics showing overall company performance
+            - Departmental performance comparisons and targets
+            - Strategic initiative tracking with completion percentages
+            - Market position analysis with competitive benchmarking
+            
+            This dashboard is typically used by the CEO and board members to make high-level strategic decisions.
+            It aggregates data from all other executive dashboards for comprehensive oversight.
+            
+            The CEO can access this dashboard from multiple device types including desktop, tablet, mobile, and office displays.
+            """
+        elif "cro" in query:
+            return f"""
+            The CRO Dashboard for {company_name} focuses on revenue generation and sales performance.
+            
+            Key features include:
+            - Channel breakdown showing performance across retail and e-commerce
+            - Customer acquisition metrics and conversion rates
+            - Sales forecasting with trend analysis
+            - Regional performance comparisons
+            
+            This dashboard is optimized for the Chief Revenue Officer and sales leadership team.
+            It helps identify growth opportunities and optimize the sales funnel.
+            
+            The dashboard has department-level access with visibility into revenue-generating divisions.
+            It's accessible on desktop computers, tablets, and mobile devices for on-the-go decision making.
+            """
+        elif "cio" in query:
+            return f"""
+            The CIO Dashboard for {company_name} provides technology infrastructure and digital metrics.
+            
+            Key features include:
+            - System performance monitoring with uptime and response times
+            - Digital transformation initiative tracking
+            - Security and compliance status across all systems
+            - Technology ROI metrics and investment tracking
+            
+            This dashboard helps the Chief Information Officer ensure that technology investments
+            are delivering value and systems are operating efficiently.
+            
+            The dashboard provides visibility into the technology stack with department-level access.
+            It can be accessed from desktops, mobile devices, and network monitoring stations.
+            """
+        elif "cfo" in query:
+            return f"""
+            The CFO Dashboard for {company_name} delivers financial health and performance metrics.
+            
+            Key features include:
+            - Real-time financial KPIs including gross margin and working capital
+            - Expense breakdowns by category for cost management
+            - Cash flow and balance sheet visualizations
+            - Investment and ROI analysis tools
+            
+            This dashboard gives the Chief Financial Officer complete visibility into the company's
+            financial position and helps identify optimization opportunities.
+            
+            The dashboard has department-level access with visibility into financial systems.
+            It's accessible via secure desktop workstations, secure tablets, and financial terminals
+            with enhanced security protocols.
+            """
+        else:
+            return f"""
+            The C-suite dashboards for {company_name} provide tailored insights based on your performance score of {company_info['score']}/100 and industry benchmarks.
+            
+            Each dashboard serves a specific purpose:
+            - CEO Dashboard: Holistic business view with cross-functional KPIs
+            - CRO Dashboard: Revenue optimization and sales channel performance
+            - CIO Dashboard: Technology infrastructure and digital transformation tracking
+            - CFO Dashboard: Financial health metrics and risk management indicators
+            
+            These are completely customizable to match your specific business goals and management style.
+            Each dashboard has appropriate access controls and can be accessed through various devices.
+            
+            Which specific executive dashboard would you like to learn more about?
+            """
+    
+    elif "network" in query or "deployment" in query or "integration" in query:
         return f"""
-        The C-suite dashboards for {company_name} provide tailored insights based on your performance score and industry benchmarks.
+        The ECG Governance Network for {company_name} creates a centralized system where executive
+        dashboards are deployed based on role-specific needs.
         
-        Each dashboard serves a specific purpose:
-        - CEO Dashboard: Holistic business view with cross-functional KPIs
-        - CRO Dashboard: Revenue optimization and sales channel performance
-        - CIO Dashboard: Technology infrastructure and digital transformation tracking
-        - CFO Dashboard: Financial health metrics and risk management indicators
+        The network architecture includes:
+        - Central company hub with connections to all executive dashboards
+        - Executive dashboards with role-appropriate connections to departments
+        - Department-level access controls and data flow management
+        - Device integration for multi-platform accessibility
         
-        These are completely customizable to match your specific business goals and management style.
+        This network ensures that information flows securely to the right stakeholders
+        at the right time, similar to how our license management system works.
+        
+        Each connection in the network represents data flow and system integration,
+        with appropriate security and access controls in place.
+        """
+    
+    elif "license" in query or "access" in query or "permission" in query:
+        return f"""
+        ECG's license management for {company_name} provides role-based access control for all executives:
+        
+        - CEO Dashboard License: Full access to all divisions with comprehensive data types
+        - CRO Dashboard License: Department access focused on revenue generation
+        - CIO Dashboard License: Department access centered on technology infrastructure
+        - CFO Dashboard License: Department access for financial management
+        
+        Each license determines what data is visible, which system features are accessible,
+        and how dashboards can be customized. Licenses are managed centrally and can be
+        activated or deactivated as needed.
+        
+        The licenses automatically adjust access privileges based on user roles,
+        ensuring security and compliance while providing the necessary insights
+        for decision-making.
+        """
+    
+    elif "device" in query or "mobile" in query or "tablet" in query or "desktop" in query:
+        return f"""
+        ECG's executive dashboards for {company_name} support various connected devices:
+        
+        - Desktop Computers: Full dashboard experience with advanced analytics
+        - Tablets: Optimized interface for touch with core metrics
+        - Mobile Phones: Essential KPIs and alerts for on-the-go access
+        - Specialized Devices: Role-specific terminals (financial, network monitoring)
+        - Digital Displays: For office visualization of key metrics
+        
+        Each device provides an appropriate level of detail and interaction based on
+        the form factor and typical use case. All devices sync in real-time to ensure
+        consistent data across platforms.
+        
+        The system detects the device type and automatically adapts the interface while
+        maintaining the necessary security controls based on the executive's role.
         """
     
     elif "team" in query or "consultant" in query or "specialist" in query:
@@ -1001,7 +1430,14 @@ def generate_ai_response(query, company_name, company_info, team_level):
         
         This team has deep expertise in the {company_info['industry']} industry and has successfully implemented Synergyze for similar companies in the {company_info['region']} region.
         
-        The team is structured to provide the optimal balance of industry knowledge, technical expertise, and implementation experience to ensure a successful deployment of the ECG governance layer.
+        The team composition includes:
+        {', '.join(team_members)}
+        
+        Each team member brings specialized skills that match your company's specific needs
+        and challenges, ensuring efficient implementation and knowledge transfer.
+        
+        The team will work directly with your executives to customize dashboards, integrate
+        systems, and provide training on best practices for governance.
         """
     
     elif "industry" in query or "benchmark" in query or "comparison" in query:
@@ -1010,7 +1446,48 @@ def generate_ai_response(query, company_name, company_info, team_level):
         
         With your score of {company_info['score']}/100, you're performing above industry average, which indicates strong operational practices and readiness for digital transformation.
         
-        Our implementation will leverage your strengths while addressing specific optimization opportunities we've identified for companies in your sector.
+        Your key strengths relative to industry peers include:
+        - {get_strength_for_industry(company_info['industry'])}
+        - {get_strength_for_score(company_info['score'])}
+        
+        Our implementation will leverage these strengths while addressing specific optimization opportunities we've identified for companies in your sector.
+        """
+    
+    elif "emporal score" in query or "performance score" in query or "score" in query:
+        return f"""
+        The ECG Performance Score (also known as Emporal Score) for {company_name} is {company_info['score']}/100.
+        
+        This score is calculated based on multiple factors:
+        - Operational efficiency and process maturity
+        - Data quality and systems integration
+        - Governance structure and compliance
+        - Responsiveness to market changes
+        - Innovation and digital readiness
+        
+        Your score of {company_info['score']} places you in the {team_level} implementation category.
+        
+        This score determines the appropriate implementation team assignment and approach,
+        ensuring you receive the right level of expertise and support for your specific
+        organizational maturity level.
+        """
+    
+    elif "shop" in query or "shopping" in query or "b2b" in query:
+        return f"""
+        The ECG B2B shopping experience for {company_name} provides a seamless, enterprise-grade
+        procurement process for your governance software needs.
+        
+        Key features include:
+        - Customized company portal with your branding and user hierarchy
+        - Role-based module selection with appropriate license assignment
+        - Enterprise pricing with volume discounts based on user count
+        - Secure checkout with multiple payment options including invoice
+        - Automatic license provisioning and deployment after purchase
+        
+        The B2B shopping experience is fully integrated with the implementation process,
+        ensuring that purchased licenses are immediately available and properly configured
+        for your executive team.
+        
+        Would you like to see a demonstration of the B2B shopping portal?
         """
     
     else:
@@ -1018,12 +1495,37 @@ def generate_ai_response(query, company_name, company_info, team_level):
         I'm here to assist with your ECG implementation for {company_name}. I can provide information about:
         
         - Implementation process and timeline
-        - Dashboard customization and features
-        - Industry benchmarks and comparisons
-        - Team structure and responsibilities
+        - Executive dashboard features and customization
+        - License management and access controls
+        - Connected device deployment and integration
+        - Team structure and industry benchmarks
+        - ECG Performance Score (Emporal Score) significance
+        - B2B shopping experience for governance solutions
         
         Please feel free to ask specific questions about these or other aspects of the ECG governance layer implementation.
         """
+
+# Helper functions for AI responses
+def get_strength_for_industry(industry):
+    """Return a strength based on the industry"""
+    industry_strengths = {
+        "Retail Fashion": "Strong customer data collection and trend analysis",
+        "Manufacturing": "Robust operational tracking and quality control metrics",
+        "Department Store": "Comprehensive inventory management across diverse categories",
+        "Fashion Retail": "Advanced omnichannel integration and customer journey tracking"
+    }
+    return industry_strengths.get(industry, "Industry-specific operational excellence")
+
+def get_strength_for_score(score):
+    """Return a strength based on the score range"""
+    if score >= 85:
+        return "Exceptional data governance and cross-departmental integration"
+    elif score >= 80:
+        return "Strong digital transformation readiness and systems architecture"
+    elif score >= 75:
+        return "Good foundational systems with clear improvement roadmap"
+    else:
+        return "Core operational systems with digitization potential"
 
 if __name__ == "__main__":
     show_voi_jeans_demo()
