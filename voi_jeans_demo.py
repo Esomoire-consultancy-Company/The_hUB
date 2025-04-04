@@ -2068,7 +2068,7 @@ def show_integration_demo():
             st.markdown("### Empire OS Authentication")
             st.text_input("Emperor ID", value="ECG-EMPEROR-001", disabled=True)
             st.text_input("Authentication Token", type="password", value="••••••••••••••••")
-            empire_login = st.button("Access Empire OS", key="empire_login")
+            empire_login = st.button("Access Empire OS", key="empire_login_dashboards")
         
         if empire_login or 'empire_view_active' in st.session_state:
             st.session_state.empire_view_active = True
@@ -2375,8 +2375,8 @@ def show_integration_demo():
         with empire_auth_col2:
             st.markdown("### Empire OS Authentication")
             st.text_input("Emperor ID", value="ECG-EMPEROR-001", disabled=True, key="emperor_id")
-            st.text_input("Authentication Token", type="password", placeholder="Enter your MCA-verified token", key="emperor_token")
-            empire_login = st.button("Access Empire OS", key="empire_login")
+            st.text_input("Authentication Token", type="password", placeholder="Enter your MCA-verified token", key="emperor_token_integration")
+            empire_login = st.button("Access Empire OS", key="empire_login_integration")
         
         # Create Empire OS view if logged in
         if empire_login or 'empire_view_active' in st.session_state:
@@ -3544,6 +3544,348 @@ def show_c_suite_module():
             </p>
         </div>
         """, unsafe_allow_html=True)
+        
+        # Add the Divine Score Logic Matrix
+        st.markdown("### Divine Score Logic Matrix")
+        st.markdown("""
+        The Divine Score calculation follows a sophisticated matrix that factors in various dimensions 
+        across all departments. This holistic approach ensures comprehensive evaluation of your organization's performance.
+        """)
+        
+        # Create tabs for the logic matrix
+        matrix_tabs = st.tabs(["Score Matrix", "Rule Matrix", "Score Factors", "Daily Reporting"])
+        
+        with matrix_tabs[0]:
+            # Create the Divine Score Matrix
+            st.markdown("#### Divine Score Calculation Matrix")
+            st.markdown("This matrix shows how scores from different departments contribute to the overall Divine Score.")
+            
+            # Create the matrix data
+            matrix_data = {
+                "Department/Factor": ["Finance", "Operations", "Marketing", "Technology", "Sales", "Corporate Governance"],
+                "Revenue Impact": [0.25, 0.20, 0.15, 0.10, 0.30, 0.10],
+                "Efficiency Score": [0.20, 0.30, 0.10, 0.25, 0.15, 0.20],
+                "Innovation Factor": [0.10, 0.15, 0.25, 0.30, 0.10, 0.10],
+                "Growth Potential": [0.15, 0.10, 0.30, 0.20, 0.25, 0.15],
+                "Risk Management": [0.30, 0.25, 0.20, 0.15, 0.20, 0.45]
+            }
+            
+            matrix_df = pd.DataFrame(matrix_data)
+            
+            # Calculate the weight sum for each department
+            matrix_df["Weight Sum"] = matrix_df.iloc[:, 1:6].sum(axis=1)
+            
+            # Format the dataframe with percentage styles
+            def format_as_percent(val):
+                if isinstance(val, (int, float)):
+                    return f"{val:.0%}"
+                return val
+            
+            # Apply styling to the dataframe
+            styled_matrix = matrix_df.style.format(format_as_percent, subset=matrix_df.columns[1:])
+            styled_matrix = styled_matrix.background_gradient(cmap="YlGnBu", subset=matrix_df.columns[1:6])
+            
+            # Display the matrix
+            st.dataframe(styled_matrix, use_container_width=True)
+            
+            # Display the matrix visualized as a heatmap
+            fig = px.imshow(
+                matrix_df.iloc[:, 1:6].values,
+                x=matrix_df.columns[1:6],
+                y=matrix_df["Department/Factor"],
+                color_continuous_scale=px.colors.sequential.Viridis,
+                title="Divine Score Weight Matrix Visualization",
+                labels=dict(x="Factor", y="Department", color="Weight")
+            )
+            
+            fig.update_layout(
+                height=500,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white')
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with matrix_tabs[1]:
+            # Create the Rule Matrix
+            st.markdown("#### Divine Score Rule Matrix")
+            st.markdown("This matrix defines the rules and thresholds for different score levels.")
+            
+            # Create rule matrix data
+            rule_data = {
+                "Score Range": ["90-100", "85-89", "80-84", "75-79", "70-74", "Below 70"],
+                "Classification": ["Exceptional", "Excellent", "Good", "Satisfactory", "Needs Improvement", "Critical Attention"],
+                "Implementation Tier": ["Premium+", "Premium", "Advanced", "Standard", "Basic+", "Basic"],
+                "Team Size": ["5-7 members", "5 members", "4 members", "3 members", "2-3 members", "2 members"],
+                "Frequency of Reporting": ["Monthly", "Bi-monthly", "Quarterly", "Quarterly", "Monthly", "Bi-weekly"],
+                "Executive Focus": ["Strategic Growth", "Innovation & Expansion", "Process Optimization", "Operational Efficiency", "Risk Mitigation", "Corrective Action"]
+            }
+            
+            rule_df = pd.DataFrame(rule_data)
+            
+            # Define a color mapping for classifications
+            classification_colors = {
+                "Exceptional": "#1a9641",
+                "Excellent": "#41ab5d",
+                "Good": "#78c679",
+                "Satisfactory": "#c2e699",
+                "Needs Improvement": "#fdae61",
+                "Critical Attention": "#d7191c"
+            }
+            
+            # Function to apply colors to the classification column
+            def color_classification(val):
+                color = classification_colors.get(val, "")
+                return f'background-color: {color}; color: white'
+            
+            # Apply styling
+            styled_rules = rule_df.style.applymap(color_classification, subset=['Classification'])
+            
+            # Display the rule matrix
+            st.dataframe(styled_rules, use_container_width=True)
+            
+            # Add a visualization of the score ranges
+            score_ranges = [95, 87, 82, 77, 72, 65]
+            classifications = rule_df["Classification"].tolist()
+            
+            fig = go.Figure()
+            
+            # Add color bands for score ranges
+            for i, (score, classification) in enumerate(zip(score_ranges, classifications)):
+                color = classification_colors.get(classification, "#888")
+                
+                # Add a bar for each score range
+                fig.add_trace(go.Bar(
+                    x=[score],
+                    y=[classification],
+                    orientation='h',
+                    marker=dict(color=color),
+                    width=0.7,
+                    name=f"{rule_df['Score Range'][i]}"
+                ))
+            
+            # Update layout
+            fig.update_layout(
+                title="Divine Score Classification Visualization",
+                xaxis=dict(
+                    title="Score",
+                    range=[60, 100]
+                ),
+                yaxis=dict(
+                    title="Classification",
+                    categoryorder='array',
+                    categoryarray=classifications[::-1]
+                ),
+                height=400,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white')
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+        with matrix_tabs[2]:
+            # Create the Score Factors breakdown
+            st.markdown("#### Divine Score Factor Definitions")
+            st.markdown("This section explains each factor used in the Divine Score calculation.")
+            
+            factor_data = {
+                "Factor": ["Revenue Impact", "Efficiency Score", "Innovation Factor", "Growth Potential", "Risk Management"],
+                "Description": [
+                    "Measures how effectively each department contributes to revenue generation through direct sales, cost reduction, or process improvements.",
+                    "Evaluates operational efficiency, resource utilization, and process optimization within each department.",
+                    "Assesses the creation and implementation of new ideas, technologies, and approaches that drive competitive advantage.",
+                    "Measures each department's contribution to sustainable long-term growth through market expansion, capability development, or asset appreciation.",
+                    "Evaluates the identification, assessment, and mitigation of potential threats to organizational success."
+                ],
+                "Data Sources": [
+                    "Financial reports, Sales data, Cost-benefit analyses",
+                    "KPI dashboards, Resource utilization metrics, Process cycle times",
+                    "R&D output, Patent applications, New product/service launches, Process improvements",
+                    "Market share trends, Capability maturity assessments, New market entries",
+                    "Risk registers, Compliance reports, Incident statistics, Financial stability metrics"
+                ],
+                "Measurement Frequency": ["Monthly", "Weekly", "Quarterly", "Quarterly", "Monthly"]
+            }
+            
+            factor_df = pd.DataFrame(factor_data)
+            
+            # Display the factor definitions
+            st.dataframe(factor_df, use_container_width=True)
+            
+            # Add factor weight distribution chart
+            st.markdown("#### Factor Weight Distribution by Department")
+            
+            # Create a radar chart for each department showing factor distribution
+            departments = matrix_df["Department/Factor"].tolist()
+            factors = matrix_df.columns[1:6].tolist()
+            
+            fig = go.Figure()
+            
+            for i, dept in enumerate(departments):
+                fig.add_trace(go.Scatterpolar(
+                    r=matrix_df.iloc[i, 1:6].tolist(),
+                    theta=factors,
+                    fill='toself',
+                    name=dept
+                ))
+            
+            fig.update_layout(
+                polar=dict(
+                    radialaxis=dict(
+                        visible=True,
+                        range=[0, 0.5]
+                    )
+                ),
+                showlegend=True,
+                height=600,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white')
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+        with matrix_tabs[3]:
+            # Create the Daily Reporting section
+            st.markdown("#### Daily Performance Reporting")
+            st.markdown("""
+            The Divine Score system includes automated daily reporting that provides insights into 
+            organizational performance. Daily reports are delivered via email and can be customized 
+            by department heads to focus on specific KPIs.
+            """)
+            
+            # Sample daily report interface
+            st.markdown("##### Configure Daily Report Delivery")
+            
+            report_cols = st.columns(3)
+            with report_cols[0]:
+                st.selectbox("Report Type", ["Executive Summary", "Detailed Analysis", "KPI Dashboard", "Alert Summary"])
+            with report_cols[1]:
+                st.multiselect("Recipients", ["CEO", "CFO", "CRO", "CIO", "CMO", "COO", "Department Heads"], default=["CEO"])
+            with report_cols[2]:
+                st.selectbox("Delivery Time", ["6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM"], index=1)
+            
+            st.markdown("##### Sample Daily Report Preview")
+            
+            # Create a sample daily report
+            sample_report = {
+                "Department": ["Finance", "Operations", "Marketing", "Technology", "Sales"],
+                "Daily Score": [83, 87, 79, 92, 84],
+                "Change": ["+2", "-1", "+3", "0", "+5"],
+                "Key Metric 1": [98.2, 85.7, 123.5, 99.98, 112.3],
+                "Key Metric 2": [45.3, 92.1, 87.6, 76.5, 94.2]
+            }
+            
+            sample_df = pd.DataFrame(sample_report)
+            
+            # Function to highlight changes
+            def highlight_change(val):
+                if isinstance(val, str):
+                    if "+" in val:
+                        return 'background-color: #c8e6c9; color: #2e7d32'
+                    elif "-" in val:
+                        return 'background-color: #ffcdd2; color: #c62828'
+                return ''
+            
+            # Function to highlight scores
+            def highlight_score(val):
+                if isinstance(val, (int, float)):
+                    if val >= 90:
+                        return 'background-color: #1a9641; color: white'
+                    elif val >= 85:
+                        return 'background-color: #41ab5d; color: white'
+                    elif val >= 80:
+                        return 'background-color: #78c679; color: white'
+                    elif val >= 75:
+                        return 'background-color: #c2e699; color: black'
+                    elif val >= 70:
+                        return 'background-color: #fdae61; color: black'
+                    else:
+                        return 'background-color: #d7191c; color: white'
+                return ''
+            
+            # Apply styling
+            styled_report = sample_df.style.applymap(highlight_change, subset=['Change']).applymap(highlight_score, subset=['Daily Score'])
+            
+            # Display the sample report
+            st.dataframe(styled_report, use_container_width=True)
+            
+            # Sample chart showing daily score trends
+            st.markdown("##### Divine Score Daily Trend (Last 30 Days)")
+            
+            # Generate sample daily data for the last 30 days
+            import datetime
+            
+            end_date = datetime.datetime.now()
+            start_date = end_date - datetime.timedelta(days=30)
+            dates = [start_date + datetime.timedelta(days=i) for i in range(30)]
+            
+            # Generate sample scores with some trend
+            np.random.seed(42)  # For reproducibility
+            
+            base_score = 80
+            trend = np.cumsum(np.random.normal(0.1, 0.5, 30))  # Slight upward trend with randomness
+            scores = base_score + trend
+            scores = np.clip(scores, 70, 95)  # Keep within reasonable limits
+            
+            # Create dataframe for line chart
+            trend_data = {
+                "Date": dates,
+                "Divine Score": scores
+            }
+            
+            trend_df = pd.DataFrame(trend_data)
+            
+            # Create trend line chart
+            fig = px.line(
+                trend_df, 
+                x="Date", 
+                y="Divine Score",
+                title="Divine Score Daily Trend",
+                markers=True
+            )
+            
+            # Add threshold lines
+            for threshold, level in [(90, "Exceptional"), (85, "Excellent"), (80, "Good"), (75, "Satisfactory"), (70, "Needs Improvement")]:
+                fig.add_shape(
+                    type="line",
+                    x0=trend_df["Date"].min(),
+                    y0=threshold,
+                    x1=trend_df["Date"].max(),
+                    y1=threshold,
+                    line=dict(
+                        color=list(classification_colors.values())[list(classification_colors.keys()).index(level)],
+                        width=1,
+                        dash="dash",
+                    )
+                )
+            
+            fig.update_layout(
+                height=400,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white')
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Email delivery options
+            st.markdown("##### Email Delivery Options")
+            st.markdown("Daily reports are delivered via email with the following options:")
+            
+            email_options_cols = st.columns(2)
+            with email_options_cols[0]:
+                st.checkbox("Include PDF attachment", value=True)
+                st.checkbox("Include Excel data export", value=True)
+                st.checkbox("Enable interactive dashboard link", value=True)
+            with email_options_cols[1]:
+                st.checkbox("Send alerts for significant changes", value=True)
+                st.checkbox("Include comparative benchmarks", value=True)
+                st.checkbox("Add improvement recommendations", value=True)
+            
+            st.button("Save Email Configuration", key="save_email_config")
         
         # Score breakdown
         score_cols = st.columns([1, 2])
