@@ -15,7 +15,7 @@ def show_voi_jeans_demo():
     st.title("🧥 Voi Jeans Organization & Synergyze Implementation")
     
     # Create tabs for different views
-    tab1, tab2, tab3 = st.tabs(["🏢 Organizational Structure", "🔄 Department Workflows", "📊 Integration Demo"])
+    tab1, tab2, tab3, tab4 = st.tabs(["🏢 Organizational Structure", "🔄 Department Workflows", "📊 Integration Demo", "👔 C-Suite Module"])
     
     with tab1:
         show_org_structure()
@@ -25,6 +25,9 @@ def show_voi_jeans_demo():
     
     with tab3:
         show_integration_demo()
+        
+    with tab4:
+        show_c_suite_module()
 
 def show_org_structure():
     """Show Voi Jeans organizational structure and how it maps to Synergyze"""
@@ -2725,6 +2728,16 @@ def generate_ai_response(query, company_name, company_info, team_level):
     
     query = query.lower()
     
+    # Define team members based on the team level
+    if team_level == "Premium":
+        team_members = ["Senior Consultant (15+ yrs)", "Technical Architect", "Industry Expert", "Data Analyst", "Implementation Lead"]
+    elif team_level == "Advanced":
+        team_members = ["Senior Consultant (10+ yrs)", "Technical Lead", "Industry Specialist", "Implementation Specialist"]
+    elif team_level == "Standard":
+        team_members = ["Consultant (5+ yrs)", "Technical Specialist", "Implementation Associate"]
+    else:  # Basic
+        team_members = ["Junior Consultant", "Technical Associate"]
+    
     # Company-specific responses
     if "implementation" in query or "process" in query or "timeline" in query:
         return f"""
@@ -2978,6 +2991,749 @@ def get_strength_for_score(score):
         return "Good foundational systems with clear improvement roadmap"
     else:
         return "Core operational systems with digitization potential"
+
+def show_c_suite_module():
+    """Display the C-Suite module with CEO at center and other executives around it"""
+    
+    st.subheader("ECG Consulting Wing - C-Suite Governance Module")
+    
+    st.markdown("""
+    <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <h3 style="color: #e63946; margin: 0;">C-Suite Governance Overview</h3>
+        <p style="color: #CCC; margin-top: 10px;">
+        The C-Suite Governance Module is the cornerstone of ECG's consulting approach, providing executives 
+        with a comprehensive view of their organization. The CEO is positioned at the center with direct 
+        oversight of all key departments, each led by specialized C-level executives.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Company selection (single company view for clients)
+    st.markdown("### Select Company")
+    
+    company = st.selectbox(
+        "Choose your company to view C-Suite structure:",
+        ["Voi Jeans Retail India Pvt Ltd"],
+        index=0
+    )
+    
+    # C-Suite visualization using a custom circular layout
+    st.markdown(f"### {company} C-Suite Structure")
+    
+    # Create tabs for different views
+    c_suite_tabs = st.tabs(["Department Breakdown", "C-Suite Dashboard", "Performance Metrics"])
+    
+    with c_suite_tabs[0]:
+        # Create a visualization similar to the provided image
+        st.markdown("""
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h3>Department Breakdown with Synergyze Module Mapping</h3>
+            <p>This visualization shows the reporting structure with the CEO at the center and C-suite executives leading their respective departments.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Create the C-Suite visualization
+        # Define department data
+        departments = [
+            {"name": "Head of Finance", "color": "#9c27b0", "sub_departments": ["Financial Planning", "Accounts", "Audit"]},
+            {"name": "Head of Retail", "color": "#4caf50", "sub_departments": ["Store Operations", "E-commerce", "Inventory Management"]},
+            {"name": "Head of Manufacturing", "color": "#2196f3", "sub_departments": ["Production Planning", "Quality Control", "Supply Chain"]},
+            {"name": "Head of Marketing", "color": "#ff9800", "sub_departments": ["Digital Marketing", "Customer Relations", "Brand Management"]},
+            {"name": "Head of R&D", "color": "#03a9f4", "sub_departments": ["Design Team", "Product Development", "QA Team"]}
+        ]
+        
+        # Use Plotly to create a custom circular visualization
+        fig = go.Figure()
+        
+        # Calculate positions in a circle
+        num_departments = len(departments)
+        radius = 1
+        center_x, center_y = 0, 0
+        
+        # Add CEO in the center
+        fig.add_trace(go.Scatter(
+            x=[center_x], 
+            y=[center_y],
+            mode='markers+text',
+            marker=dict(
+                color='#9c27b0',
+                size=60,
+                line=dict(
+                    color='white',
+                    width=2
+                )
+            ),
+            text=['CEO'],
+            textposition='middle center',
+            textfont=dict(
+                color='white',
+                size=14,
+                family='Arial, sans-serif'
+            ),
+            hoverinfo='text',
+            hovertext=['Chief Executive Officer'],
+            name='CEO'
+        ))
+        
+        # Add departments around the center
+        for i, dept in enumerate(departments):
+            angle = (2 * np.pi * i / num_departments)
+            x = center_x + radius * np.cos(angle)
+            y = center_y + radius * np.sin(angle)
+            
+            # Add department node
+            fig.add_trace(go.Scatter(
+                x=[x], 
+                y=[y],
+                mode='markers+text',
+                marker=dict(
+                    color=dept["color"],
+                    size=50,
+                    line=dict(
+                        color='white',
+                        width=2
+                    )
+                ),
+                text=[dept["name"]],
+                textposition='middle center',
+                textfont=dict(
+                    color='white',
+                    size=10,
+                    family='Arial, sans-serif'
+                ),
+                hoverinfo='text',
+                hovertext=[dept["name"]],
+                name=dept["name"]
+            ))
+            
+            # Add line from CEO to department
+            fig.add_trace(go.Scatter(
+                x=[center_x, x],
+                y=[center_y, y],
+                mode='lines',
+                line=dict(
+                    color=dept["color"],
+                    width=3
+                ),
+                hoverinfo='none',
+                showlegend=False
+            ))
+            
+            # Add sub-departments
+            for j, sub_dept in enumerate(dept["sub_departments"]):
+                # Calculate position for sub-department
+                sub_radius = 0.3
+                sub_angle = angle + (j - len(dept["sub_departments"])/2 + 0.5) * 0.2
+                sub_x = x + sub_radius * np.cos(sub_angle)
+                sub_y = y + sub_radius * np.sin(sub_angle)
+                
+                # Add sub-department node
+                fig.add_trace(go.Scatter(
+                    x=[sub_x], 
+                    y=[sub_y],
+                    mode='markers+text',
+                    marker=dict(
+                        color=dept["color"],
+                        opacity=0.7,
+                        size=30,
+                        line=dict(
+                            color='white',
+                            width=1
+                        )
+                    ),
+                    text=[sub_dept],
+                    textposition='middle center',
+                    textfont=dict(
+                        color='white',
+                        size=8,
+                        family='Arial, sans-serif'
+                    ),
+                    hoverinfo='text',
+                    hovertext=[sub_dept],
+                    name=sub_dept,
+                    showlegend=False
+                ))
+                
+                # Add line from department to sub-department
+                fig.add_trace(go.Scatter(
+                    x=[x, sub_x],
+                    y=[y, sub_y],
+                    mode='lines',
+                    line=dict(
+                        color=dept["color"],
+                        width=2,
+                        dash='dot'
+                    ),
+                    hoverinfo='none',
+                    showlegend=False
+                ))
+        
+        # Update layout
+        fig.update_layout(
+            title="C-Suite Structure with Department Breakdown",
+            showlegend=False,
+            height=700,
+            width=700,
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=20, r=20, t=60, b=20),
+            xaxis=dict(
+                range=[-1.5, 1.5],
+                showgrid=False,
+                zeroline=False,
+                showticklabels=False
+            ),
+            yaxis=dict(
+                range=[-1.5, 1.5],
+                showgrid=False,
+                zeroline=False,
+                showticklabels=False
+            ),
+            font=dict(
+                family="Arial, sans-serif",
+                color="white"
+            )
+        )
+        
+        st.plotly_chart(fig)
+        
+        # Department descriptions
+        st.markdown("""
+        <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; margin-top: 20px;">
+            <h3 style="color: #e63946; margin-top: 0;">Department Responsibilities</h3>
+            <p style="color: #CCC;">Each C-Suite executive manages specific areas with direct reporting to the CEO:</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("""
+            <div style="background-color: #9c27b0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                <h4 style="color: white; margin: 0;">Head of Finance</h4>
+            </div>
+            
+            - Financial Planning & Analysis
+            - Accounts Receivable/Payable
+            - Audit & Compliance
+            - Budget Management
+            - Investor Relations
+            
+            <div style="background-color: #2196f3; padding: 10px; border-radius: 5px; margin: 15px 0 10px 0;">
+                <h4 style="color: white; margin: 0;">Head of Manufacturing</h4>
+            </div>
+            
+            - Production Planning & Control
+            - Quality Assurance
+            - Supply Chain Management
+            - Manufacturing Excellence
+            - Vendor Relations
+            
+            <div style="background-color: #03a9f4; padding: 10px; border-radius: 5px; margin: 15px 0 10px 0;">
+                <h4 style="color: white; margin: 0;">Head of R&D</h4>
+            </div>
+            
+            - Product Design & Development
+            - Material Research
+            - Quality Standards
+            - Prototyping & Testing
+            - Innovation Management
+            """, unsafe_allow_html=True)
+            
+        with col2:
+            st.markdown("""
+            <div style="background-color: #4caf50; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                <h4 style="color: white; margin: 0;">Head of Retail</h4>
+            </div>
+            
+            - Store Operations Management
+            - E-commerce Platform
+            - Inventory & Distribution
+            - Customer Experience
+            - Retail Analytics
+            
+            <div style="background-color: #ff9800; padding: 10px; border-radius: 5px; margin: 15px 0 10px 0;">
+                <h4 style="color: white; margin: 0;">Head of Marketing</h4>
+            </div>
+            
+            - Brand Strategy & Management
+            - Digital Marketing Campaigns
+            - Customer Relationship Management
+            - Market Research & Analysis
+            - Public Relations
+            
+            <div style="background-color: #9c27b0; padding: 10px; border-radius: 5px; margin: 15px 0 10px 0;">
+                <h4 style="color: white; margin: 0;">CEO</h4>
+            </div>
+            
+            - Strategic Direction
+            - Executive Leadership
+            - Corporate Governance
+            - Stakeholder Management
+            - Organizational Growth
+            """, unsafe_allow_html=True)
+    
+    with c_suite_tabs[1]:
+        # Show the C-Suite dashboards
+        st.markdown("""
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h3>C-Suite Executive Dashboards</h3>
+            <p>Each C-Suite executive has access to specialized dashboards tailored to their area of responsibility.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Create executive dashboard selection
+        executive = st.selectbox(
+            "Select Executive Dashboard",
+            ["CEO Dashboard", "CFO Dashboard", "CRO Dashboard", "CMO Dashboard", "CIO Dashboard", "COO Dashboard"]
+        )
+        
+        if executive == "CEO Dashboard":
+            st.markdown("""
+            <div style="background-color: #9c27b0; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: white; margin: 0;">CEO Dashboard</h3>
+                <p style="color: rgba(255,255,255,0.8); margin-top: 5px;">Comprehensive overview of all key performance indicators across the organization</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # CEO KPI rows
+            kpi_cols = st.columns(4)
+            with kpi_cols[0]:
+                st.metric("Revenue", "₹32.5 Cr", "8.2%")
+            with kpi_cols[1]:
+                st.metric("Net Profit", "₹4.8 Cr", "12.4%")
+            with kpi_cols[2]:
+                st.metric("Customer Growth", "14.2K", "5.7%")
+            with kpi_cols[3]:
+                st.metric("Divine Score", "82/100", "3 pts")
+            
+            # Create sample CEO dashboard
+            dept_performance = {
+                'Department': ['Retail', 'Manufacturing', 'Finance', 'Marketing', 'R&D'],
+                'Performance Score': [78, 82, 87, 73, 80],
+                'Budget Utilization': [92, 86, 78, 94, 88],
+                'Team Strength': [65, 120, 25, 18, 32],
+                'Project Completion': [85, 72, 93, 88, 70]
+            }
+            
+            df_dept = pd.DataFrame(dept_performance)
+            
+            # Create departmental performance chart
+            fig = px.bar(
+                df_dept, 
+                x='Department', 
+                y='Performance Score',
+                color='Performance Score',
+                text='Performance Score',
+                color_continuous_scale=px.colors.sequential.Viridis,
+                title="Departmental Performance Overview"
+            )
+            
+            fig.update_layout(
+                height=400,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white')
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Show CEO strategic initiatives
+            st.markdown("### Strategic Initiatives")
+            
+            initiatives = [
+                {"name": "Digital Transformation", "progress": 65, "status": "On Track"},
+                {"name": "Retail Expansion", "progress": 40, "status": "Delayed"},
+                {"name": "Sustainability Program", "progress": 80, "status": "Ahead of Schedule"},
+                {"name": "Supply Chain Optimization", "progress": 55, "status": "On Track"},
+                {"name": "Brand Repositioning", "progress": 90, "status": "Nearly Complete"}
+            ]
+            
+            for initiative in initiatives:
+                col1, col2, col3 = st.columns([3, 6, 1])
+                with col1:
+                    st.markdown(f"**{initiative['name']}**")
+                with col2:
+                    st.progress(initiative["progress"] / 100)
+                with col3:
+                    if initiative["status"] == "On Track":
+                        st.markdown("🟢")
+                    elif initiative["status"] == "Delayed":
+                        st.markdown("🔴")
+                    elif initiative["status"] == "Ahead of Schedule":
+                        st.markdown("🔵")
+                    else:
+                        st.markdown("🟡")
+        
+        elif executive == "CFO Dashboard":
+            st.markdown("""
+            <div style="background-color: #4caf50; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: white; margin: 0;">CFO Dashboard</h3>
+                <p style="color: rgba(255,255,255,0.8); margin-top: 5px;">Financial performance metrics and analysis</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # CFO KPI rows
+            kpi_cols = st.columns(4)
+            with kpi_cols[0]:
+                st.metric("Gross Margin", "42.8%", "2.3%")
+            with kpi_cols[1]:
+                st.metric("EBITDA", "₹5.9 Cr", "7.1%")
+            with kpi_cols[2]:
+                st.metric("Cash Flow", "₹3.2 Cr", "-1.2%")
+            with kpi_cols[3]:
+                st.metric("Inventory Turnover", "4.7", "0.3")
+            
+            # Sample financial data
+            financial_data = {
+                'Month': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                'Revenue': [2.8, 2.9, 3.1, 3.0, 3.2, 3.4, 3.5, 3.7, 3.9],
+                'Expenses': [2.2, 2.3, 2.4, 2.3, 2.5, 2.6, 2.7, 2.8, 2.9],
+                'Profit': [0.6, 0.6, 0.7, 0.7, 0.7, 0.8, 0.8, 0.9, 1.0]
+            }
+            
+            df_finance = pd.DataFrame(financial_data)
+            
+            # Create financial performance chart
+            fig = go.Figure()
+            
+            fig.add_trace(go.Bar(
+                x=df_finance['Month'],
+                y=df_finance['Revenue'],
+                name='Revenue',
+                marker_color='#4CAF50'
+            ))
+            
+            fig.add_trace(go.Bar(
+                x=df_finance['Month'],
+                y=df_finance['Expenses'],
+                name='Expenses',
+                marker_color='#F44336'
+            ))
+            
+            fig.add_trace(go.Scatter(
+                x=df_finance['Month'],
+                y=df_finance['Profit'],
+                name='Profit',
+                mode='lines+markers',
+                line=dict(color='#2196F3', width=3),
+                marker=dict(size=8)
+            ))
+            
+            fig.update_layout(
+                title="Financial Performance Trend",
+                barmode='group',
+                height=400,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white'),
+                legend=dict(
+                    orientation="h",
+                    yanchor="bottom",
+                    y=1.02,
+                    xanchor="right",
+                    x=1
+                )
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+        else:
+            # Generic placeholder for other executive dashboards
+            role_color = {
+                "CRO Dashboard": "#2196F3",
+                "CMO Dashboard": "#FF9800", 
+                "CIO Dashboard": "#9C27B0",
+                "COO Dashboard": "#E91E63"
+            }
+            
+            color = role_color.get(executive, "#607D8B")
+            
+            st.markdown(f"""
+            <div style="background-color: {color}; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: white; margin: 0;">{executive}</h3>
+                <p style="color: rgba(255,255,255,0.8); margin-top: 5px;">Specialized metrics and KPIs for this executive role</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("### Role-Specific Key Performance Indicators")
+            
+            # Generate some placeholder metrics based on the role
+            if "CRO" in executive:
+                metrics = [
+                    ("Sales Growth", "18.3%", "3.2%"),
+                    ("Customer Retention", "87.5%", "2.1%"),
+                    ("Average Order Value", "₹2,450", "5.8%"),
+                    ("New Store Performance", "92.6%", "4.3%")
+                ]
+            elif "CMO" in executive:
+                metrics = [
+                    ("Brand Awareness", "72.3%", "5.7%"),
+                    ("Marketing ROI", "3.2x", "0.4x"),
+                    ("Social Engagement", "142K", "12.3%"),
+                    ("Conversion Rate", "3.8%", "0.6%")
+                ]
+            elif "CIO" in executive:
+                metrics = [
+                    ("System Uptime", "99.95%", "0.12%"),
+                    ("Digital Adoption", "78.3%", "8.7%"),
+                    ("IT Cost Ratio", "3.2%", "-0.5%"),
+                    ("Security Posture", "87/100", "5 pts")
+                ]
+            else:  # COO
+                metrics = [
+                    ("Operational Efficiency", "87.3%", "2.8%"),
+                    ("Supply Chain Performance", "92.1%", "3.4%"),
+                    ("Defect Rate", "0.82%", "-0.3%"),
+                    ("Time to Market", "42 days", "-5 days")
+                ]
+                
+            # Display metrics in a grid
+            metric_cols = st.columns(4)
+            for i, (label, value, delta) in enumerate(metrics):
+                with metric_cols[i]:
+                    st.metric(label, value, delta)
+            
+            # Placeholder chart
+            st.markdown("### Key Performance Trend")
+            
+            # Generate sample data
+            dates = pd.date_range(start='2023-01-01', periods=12, freq='M')
+            performance = np.random.normal(75, 10, 12) + np.linspace(0, 10, 12)  # Trending upward
+            
+            df = pd.DataFrame({
+                'Date': dates,
+                'Performance': performance
+            })
+            
+            fig = px.line(
+                df, 
+                x='Date', 
+                y='Performance',
+                markers=True,
+                title=f"{executive.replace('Dashboard', 'Performance Trend')}",
+                color_discrete_sequence=[color]
+            )
+            
+            fig.update_layout(
+                height=400,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white')
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+    
+    with c_suite_tabs[2]:
+        # Performance metrics and scoring
+        st.markdown("""
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h3>Divine Score Performance Metrics</h3>
+            <p>Track and improve your organization's performance through the proprietary Divine Score system.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Divine Score overview
+        st.markdown("""
+        <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 style="color: #e63946; margin-top: 0;">Divine Score Explained</h3>
+            <p style="color: #CCC;">
+            The Divine Score is ECG's proprietary performance measurement system that evaluates organizational health
+            across multiple dimensions. Each C-Suite executive is responsible for specific components of the overall score,
+            creating shared accountability for organizational excellence.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Score breakdown
+        score_cols = st.columns([1, 2])
+        
+        with score_cols[0]:
+            # Overall Divine Score display
+            divine_score = 82
+            
+            # Create a gauge chart for the Divine Score
+            fig = go.Figure(go.Indicator(
+                mode = "gauge+number+delta",
+                value = divine_score,
+                title = {'text': "Divine Score"},
+                delta = {'reference': 79, 'increasing': {'color': "green"}},
+                gauge = {
+                    'axis': {'range': [0, 100], 'tickwidth': 1},
+                    'bar': {'color': "#9C27B0"},
+                    'bgcolor': "white",
+                    'steps': [
+                        {'range': [0, 50], 'color': "#FF5722"},
+                        {'range': [50, 75], 'color': "#FFC107"},
+                        {'range': [75, 90], 'color': "#4CAF50"},
+                        {'range': [90, 100], 'color': "#2196F3"}
+                    ],
+                    'threshold': {
+                        'line': {'color': "red", 'width': 4},
+                        'thickness': 0.75,
+                        'value': 90
+                    }
+                }
+            ))
+            
+            fig.update_layout(
+                height=300,
+                margin=dict(l=20, r=20, t=50, b=20),
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white')
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+            st.markdown("""
+            <div style="text-align: center; background-color: #212121; padding: 10px; border-radius: 5px;">
+                <p style="margin: 0; color: #CCC;">Last updated: Today at 9:30 AM</p>
+                <p style="margin: 5px 0 0 0; color: #4CAF50;">+3 points in last 30 days</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with score_cols[1]:
+            # Score breakdown by department/executive
+            scores = {
+                "Finance (CFO)": 87,
+                "Operations (COO)": 79,
+                "Marketing (CMO)": 73,
+                "Technology (CIO)": 88,
+                "Sales (CRO)": 81
+            }
+            
+            weights = {
+                "Finance (CFO)": 0.2,
+                "Operations (COO)": 0.25,
+                "Marketing (CMO)": 0.15,
+                "Technology (CIO)": 0.15,
+                "Sales (CRO)": 0.25
+            }
+            
+            # Calculate contribution to overall score
+            contributions = {dept: score * weights[dept] for dept, score in scores.items()}
+            
+            # Create a DataFrame for visualization
+            df_scores = pd.DataFrame({
+                'Department': list(scores.keys()),
+                'Score': list(scores.values()),
+                'Weight': [weights[dept] for dept in scores.keys()],
+                'Contribution': [contributions[dept] for dept in scores.keys()]
+            })
+            
+            # Sort by score
+            df_scores = df_scores.sort_values('Score', ascending=False)
+            
+            # Create a horizontal bar chart of scores
+            fig = go.Figure()
+            
+            # Add bars for scores
+            fig.add_trace(go.Bar(
+                y=df_scores['Department'],
+                x=df_scores['Score'],
+                orientation='h',
+                marker=dict(
+                    color=[
+                        '#4CAF50' if score >= 85 else
+                        '#2196F3' if score >= 80 else
+                        '#FFC107' if score >= 75 else
+                        '#FF9800' if score >= 70 else
+                        '#F44336'
+                        for score in df_scores['Score']
+                    ],
+                    line=dict(
+                        color='rgba(0, 0, 0, 0)',
+                        width=1
+                    )
+                ),
+                text=df_scores['Score'],
+                textposition='auto',
+                name='Score'
+            ))
+            
+            # Update layout
+            fig.update_layout(
+                title="Departmental Score Breakdown",
+                height=300,
+                margin=dict(l=20, r=20, t=50, b=20),
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white'),
+                xaxis=dict(
+                    title='Score',
+                    range=[0, 100]
+                ),
+                yaxis=dict(
+                    title=''
+                ),
+                showlegend=False
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Show a table with more details
+            st.markdown("#### Detailed Score Breakdown")
+            
+            # Add score interpretation
+            df_scores['Status'] = df_scores['Score'].apply(
+                lambda x: "Excellent" if x >= 85 else
+                          "Good" if x >= 80 else
+                          "Satisfactory" if x >= 75 else
+                          "Needs Improvement" if x >= 70 else
+                          "Critical Attention"
+            )
+            
+            # Display the table
+            st.dataframe(
+                df_scores[['Department', 'Score', 'Status', 'Weight', 'Contribution']],
+                use_container_width=True,
+                hide_index=True
+            )
+        
+        # Improvement suggestions section
+        st.markdown("### Divine Score Improvement Opportunities")
+        
+        improvement_cols = st.columns(3)
+        
+        with improvement_cols[0]:
+            st.markdown("""
+            <div style="background-color: #FF9800; padding: 15px; border-radius: 10px; height: 200px;">
+                <h4 style="color: white; margin: 0;">Marketing (73)</h4>
+                <ul style="color: white; margin-top: 10px;">
+                    <li>Increase social media engagement by 15%</li>
+                    <li>Improve marketing campaign ROI tracking</li>
+                    <li>Implement customer feedback loop for brand initiatives</li>
+                </ul>
+                <p style="color: white; margin-top: 10px; font-size: 0.9em;">Potential impact: +5 points</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+        with improvement_cols[1]:
+            st.markdown("""
+            <div style="background-color: #FFC107; padding: 15px; border-radius: 10px; height: 200px;">
+                <h4 style="color: white; margin: 0;">Operations (79)</h4>
+                <ul style="color: white; margin-top: 10px;">
+                    <li>Optimize production scheduling process</li>
+                    <li>Reduce manufacturing defect rate by 0.2%</li>
+                    <li>Implement advanced inventory forecasting</li>
+                </ul>
+                <p style="color: white; margin-top: 10px; font-size: 0.9em;">Potential impact: +4 points</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+        with improvement_cols[2]:
+            st.markdown("""
+            <div style="background-color: #FFC107; padding: 15px; border-radius: 10px; height: 200px;">
+                <h4 style="color: white; margin: 0;">Sales (81)</h4>
+                <ul style="color: white; margin-top: 10px;">
+                    <li>Enhance sales team training program</li>
+                    <li>Improve CRM data quality and utilization</li>
+                    <li>Implement cross-selling initiative for top products</li>
+                </ul>
+                <p style="color: white; margin-top: 10px; font-size: 0.9em;">Potential impact: +3 points</p>
+            </div>
+            """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     show_voi_jeans_demo()
