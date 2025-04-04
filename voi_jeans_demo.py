@@ -49,7 +49,7 @@ def show_event_management():
     """, unsafe_allow_html=True)
     
     # Create tabs for different aspects of event management
-    event_tabs = st.tabs(["Event Portfolio", "Seasonal Launch Platform", "Corporate Assembly", "Pricing Matrix"])
+    event_tabs = st.tabs(["Event Portfolio", "Seasonal Launch Platform", "Corporate Assembly", "Immersive Experiences", "Pricing Matrix"])
     
     with event_tabs[0]:
         st.markdown("### ECG Event Portfolio")
@@ -212,11 +212,32 @@ def show_event_management():
         # Create event planning timeline
         st.markdown("#### Event Planning Timeline")
         
-        # Timeline data
+        # Timeline data with actual dates
+        import datetime
+        today = datetime.datetime.now()
+        
+        # Calculate dates relative to event day (3 months from now)
+        event_day = today + datetime.timedelta(days=90)
+        
+        # Create timeline data with proper dates
         timeline_data = {
             "Phase": ["Planning", "Invitations", "Content Creation", "Setup", "Event Day", "Follow-up"],
-            "Start": ["-12 weeks", "-8 weeks", "-6 weeks", "-1 week", "Day 0", "+1 day"],
-            "End": ["-8 weeks", "-4 weeks", "-2 weeks", "Day 0", "Day 0", "+3 weeks"],
+            "Start": [
+                event_day - datetime.timedelta(days=90),  # -12 weeks
+                event_day - datetime.timedelta(days=60),  # -8 weeks
+                event_day - datetime.timedelta(days=45),  # -6 weeks
+                event_day - datetime.timedelta(days=7),   # -1 week
+                event_day,                                # Event day
+                event_day + datetime.timedelta(days=1)    # +1 day
+            ],
+            "End": [
+                event_day - datetime.timedelta(days=60),  # -8 weeks
+                event_day - datetime.timedelta(days=30),  # -4 weeks
+                event_day - datetime.timedelta(days=15),  # -2 weeks
+                event_day,                                # Event day
+                event_day,                                # Event day
+                event_day + datetime.timedelta(days=21)   # +3 weeks
+            ],
             "Status": ["Complete", "In Progress", "Not Started", "Not Started", "Not Started", "Not Started"],
             "Completion": [100, 60, 30, 0, 0, 0]
         }
@@ -428,6 +449,487 @@ def show_event_management():
             st.button("Configure Interactive Elements", key="configure_interactive")
     
     with event_tabs[3]:
+        st.markdown("### Immersive Digital Experiences")
+        st.markdown("""
+        ECG leverages cutting-edge technologies to create immersive digital experiences for events,
+        transforming traditional gatherings into interactive, engaging, and memorable experiences
+        that transcend physical limitations.
+        """)
+        
+        # Display the immersive technologies
+        st.markdown("#### Digital Technologies for Immersive Events")
+        
+        # Create columns for immersive tech cards
+        tech_col1, tech_col2 = st.columns(2)
+        
+        with tech_col1:
+            st.markdown("""
+            <div style="border: 2px solid #e63946; padding: 20px; border-radius: 10px; margin-bottom: 20px; background-color: #1E1E1E;">
+                <h4 style="color: #e63946; margin-top: 0;">Virtual Reality (VR) Showrooms</h4>
+                <p>Create fully immersive 3D virtual showrooms where buyers can explore products in detail, interact with items, and place orders in real-time.</p>
+                <ul>
+                    <li>360° product visualization</li>
+                    <li>Virtual try-on experiences</li>
+                    <li>Interactive product demonstrations</li>
+                    <li>Real-time order placements</li>
+                </ul>
+                <p><strong>Revenue Model:</strong> Premium subscription tier for brands (₹2.5 Lakhs/event) + maintenance fees for technical support</p>
+            </div>
+            
+            <div style="border: 2px solid #e63946; padding: 20px; border-radius: 10px; margin-bottom: 20px; background-color: #1E1E1E;">
+                <h4 style="color: #e63946; margin-top: 0;">Digital Avatars & Digital Twins</h4>
+                <p>Personalized digital avatars for attendees and presenters, enabling global participation without physical presence.</p>
+                <ul>
+                    <li>Personalized avatars created from user profile photos</li>
+                    <li>Real-time facial and gesture mapping</li>
+                    <li>Interactive networking in virtual spaces</li>
+                    <li>Digital twin product showcases</li>
+                </ul>
+                <p><strong>Revenue Model:</strong> Per-avatar creation fee (₹5,000/avatar) + platform access fee (₹1 Lakh/event)</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with tech_col2:
+            st.markdown("""
+            <div style="border: 2px solid #e63946; padding: 20px; border-radius: 10px; margin-bottom: 20px; background-color: #1E1E1E;">
+                <h4 style="color: #e63946; margin-top: 0;">Augmented Reality (AR) Product Experiences</h4>
+                <p>Overlay digital information on physical products or spaces, allowing attendees to experience enhanced product demonstrations.</p>
+                <ul>
+                    <li>AR product visualization on mobile devices</li>
+                    <li>Interactive product specifications</li>
+                    <li>Virtual placement in real environments</li>
+                    <li>Instant feedback and order capabilities</li>
+                </ul>
+                <p><strong>Revenue Model:</strong> AR experience development (₹3 Lakhs/collection) + usage fees (₹25,000/month)</p>
+            </div>
+            
+            <div style="border: 2px solid #e63946; padding: 20px; border-radius: 10px; margin-bottom: 20px; background-color: #1E1E1E;">
+                <h4 style="color: #e63946; margin-top: 0;">Virtual Venues & Metaverse Integration</h4>
+                <p>Custom-designed virtual venues for hosting large-scale events with interactive elements in metaverse environments.</p>
+                <ul>
+                    <li>Multi-room virtual conference centers</li>
+                    <li>Interactive booths and exhibition spaces</li>
+                    <li>Spatial audio for natural conversations</li>
+                    <li>Persistent virtual environments</li>
+                </ul>
+                <p><strong>Revenue Model:</strong> Custom venue design (₹5-10 Lakhs) + event hosting (₹2 Lakhs/day) + technical support</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+        # Digital experience creator
+        st.markdown("#### Digital Experience Designer")
+        
+        design_cols = st.columns(2)
+        
+        with design_cols[0]:
+            st.markdown("##### Experience Configuration")
+            
+            experience_type = st.selectbox(
+                "Experience Type", 
+                ["VR Showroom", "AR Product Experience", "Digital Avatars", "Virtual Venue"]
+            )
+            
+            participants = st.slider("Expected Participants", min_value=50, max_value=1000, value=200, step=50)
+            
+            duration = st.selectbox(
+                "Event Duration",
+                ["One-time (1 day)", "Short-term (2-3 days)", "Long-term (1 week)", "Permanent Installation"]
+            )
+            
+            integration_level = st.select_slider(
+                "Integration Level",
+                options=["Basic", "Standard", "Advanced", "Full Enterprise"],
+                value="Standard"
+            )
+            
+            customization = st.multiselect(
+                "Customization Options",
+                ["Branded Environment", "Interactive Product Catalog", "Live Data Integration", "AI Assistants", "Analytics Dashboard", "Social Sharing"],
+                default=["Branded Environment", "Interactive Product Catalog"]
+            )
+        
+        with design_cols[1]:
+            st.markdown("##### Cost Estimation")
+            
+            # Base cost calculation based on experience type
+            if experience_type == "VR Showroom":
+                base_cost = 250000
+                per_participant_cost = 1500
+                customization_cost = 25000 * len(customization)
+            elif experience_type == "AR Product Experience":
+                base_cost = 300000
+                per_participant_cost = 1000
+                customization_cost = 30000 * len(customization)
+            elif experience_type == "Digital Avatars":
+                base_cost = 100000
+                per_participant_cost = 5000
+                customization_cost = 20000 * len(customization)
+            else:  # Virtual Venue
+                base_cost = 500000
+                per_participant_cost = 2000
+                customization_cost = 50000 * len(customization)
+            
+            # Multiplier based on integration level
+            if integration_level == "Basic":
+                integration_multiplier = 1.0
+            elif integration_level == "Standard":
+                integration_multiplier = 1.2
+            elif integration_level == "Advanced":
+                integration_multiplier = 1.5
+            else:  # Full Enterprise
+                integration_multiplier = 2.0
+            
+            # Duration factor
+            if duration == "One-time (1 day)":
+                duration_factor = 1.0
+            elif duration == "Short-term (2-3 days)":
+                duration_factor = 1.5
+            elif duration == "Long-term (1 week)":
+                duration_factor = 2.0
+            else:  # Permanent
+                duration_factor = 3.0
+            
+            # Calculate total cost
+            participant_total = min(participants, 500) * per_participant_cost  # Cap at 500 for calculation
+            if participants > 500:
+                participant_total += (participants - 500) * (per_participant_cost * 0.7)  # Discount for scale
+                
+            total_cost = (base_cost + participant_total + customization_cost) * integration_multiplier * duration_factor
+            
+            # Calculate ongoing costs if applicable
+            if duration == "Permanent Installation":
+                monthly_maintenance = total_cost * 0.1  # 10% of total cost as monthly maintenance
+            else:
+                monthly_maintenance = 0
+            
+            # Display costs
+            st.metric("Base Experience Cost", f"₹{base_cost:,.2f}")
+            st.metric("Participant Cost", f"₹{participant_total:,.2f}")
+            st.metric("Customization Cost", f"₹{customization_cost:,.2f}")
+            
+            st.markdown(f"**Integration Level Multiplier: {integration_multiplier}x**")
+            st.markdown(f"**Duration Factor: {duration_factor}x**")
+            
+            st.metric("Total One-time Cost", f"₹{total_cost:,.2f}", delta="")
+            
+            if monthly_maintenance > 0:
+                st.metric("Monthly Maintenance", f"₹{monthly_maintenance:,.2f}", delta="")
+        
+        # Preview section
+        st.markdown("#### Experience Preview")
+        
+        preview_tabs = st.tabs(["Visual Preview", "Technology Stack", "Implementation Timeline"])
+        
+        with preview_tabs[0]:
+            # Create a mock visual preview based on the selected experience
+            
+            if experience_type == "VR Showroom":
+                st.markdown("""
+                <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; text-align: center;">
+                    <h4 style="color: #e63946;">VR Showroom Preview</h4>
+                    <div style="font-size: 18px; margin: 20px 0;">
+                        <span style="background-color: #333; padding: 5px 10px; border-radius: 5px; margin-right: 5px;">Main Entrance</span>
+                        <span style="background-color: #333; padding: 5px 10px; border-radius: 5px; margin-right: 5px;">→</span>
+                        <span style="background-color: #333; padding: 5px 10px; border-radius: 5px; margin-right: 5px;">Collection Gallery</span>
+                        <span style="background-color: #333; padding: 5px 10px; border-radius: 5px; margin-right: 5px;">→</span>
+                        <span style="background-color: #333; padding: 5px 10px; border-radius: 5px; margin-right: 5px;">Interactive Displays</span>
+                        <span style="background-color: #333; padding: 5px 10px; border-radius: 5px; margin-right: 5px;">→</span>
+                        <span style="background-color: #333; padding: 5px 10px; border-radius: 5px;">Order Processing</span>
+                    </div>
+                    <p>Users can navigate a photorealistic 3D environment where they can view, interact with, and purchase products in real-time.</p>
+                    <div style="background-color: #333; height: 300px; display: flex; align-items: center; justify-content: center; margin-top: 20px; border-radius: 5px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">🥽</div>
+                            <p>VR Preview would appear here</p>
+                            <p style="font-size: 12px; opacity: 0.7;">Requires VR headset for full experience</p>
+                        </div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            elif experience_type == "AR Product Experience":
+                st.markdown("""
+                <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; text-align: center;">
+                    <h4 style="color: #e63946;">AR Product Experience Preview</h4>
+                    <p>Using a smartphone or tablet, attendees can see digital overlays on physical products or spaces.</p>
+                    <div style="background-color: #333; height: 300px; display: flex; align-items: center; justify-content: center; margin-top: 20px; border-radius: 5px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">📱</div>
+                            <p>AR Preview would appear here</p>
+                            <p style="font-size: 12px; opacity: 0.7;">View through mobile device camera</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                        <div style="background-color: #333; padding: 10px; border-radius: 5px; width: 30%;">Product Specs</div>
+                        <div style="background-color: #333; padding: 10px; border-radius: 5px; width: 30%;">Material Info</div>
+                        <div style="background-color: #333; padding: 10px; border-radius: 5px; width: 30%;">Order Button</div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            elif experience_type == "Digital Avatars":
+                st.markdown("""
+                <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; text-align: center;">
+                    <h4 style="color: #e63946;">Digital Avatars Preview</h4>
+                    <p>Create personalized digital representations of participants for virtual interactions.</p>
+                    <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                        <div style="background-color: #333; padding: 20px; border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 24px;">👨‍💼</span>
+                        </div>
+                        <div style="background-color: #333; padding: 20px; border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 24px;">👩‍💼</span>
+                        </div>
+                        <div style="background-color: #333; padding: 20px; border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 24px;">👨‍💻</span>
+                        </div>
+                        <div style="background-color: #333; padding: 20px; border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 24px;">👩‍🔧</span>
+                        </div>
+                    </div>
+                    <div style="background-color: #333; height: 200px; display: flex; align-items: center; justify-content: center; margin-top: 20px; border-radius: 5px;">
+                        <div style="text-align: center;">
+                            <p>Virtual meeting environment with avatars</p>
+                        </div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            else:  # Virtual Venue
+                st.markdown("""
+                <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; text-align: center;">
+                    <h4 style="color: #e63946;">Virtual Venue Preview</h4>
+                    <p>Custom-designed virtual environments for hosting events, exhibitions, and meetings.</p>
+                    <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                        <div style="background-color: #333; padding: 10px; border-radius: 5px; width: 23%;">Reception</div>
+                        <div style="background-color: #333; padding: 10px; border-radius: 5px; width: 23%;">Main Hall</div>
+                        <div style="background-color: #333; padding: 10px; border-radius: 5px; width: 23%;">Exhibition Area</div>
+                        <div style="background-color: #333; padding: 10px; border-radius: 5px; width: 23%;">Meeting Rooms</div>
+                    </div>
+                    <div style="background-color: #333; height: 250px; display: flex; align-items: center; justify-content: center; margin-top: 20px; border-radius: 5px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">🏢</div>
+                            <p>Virtual Venue Preview would appear here</p>
+                            <p style="font-size: 12px; opacity: 0.7;">Customizable 3D environment</p>
+                        </div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+        with preview_tabs[1]:
+            st.markdown("##### Technology Components")
+            
+            # Display different tech stacks based on experience type
+            if experience_type == "VR Showroom":
+                tech_stack = {
+                    "Frontend": ["Unity 3D", "WebXR", "THREE.js"],
+                    "Backend": ["Cloud Rendering", "Content Delivery Network", "Real-time Database"],
+                    "Hardware": ["VR Headsets (Optional)", "High-performance Computers", "Mobile Devices (Limited Experience)"],
+                    "Integration": ["Product Catalog API", "Order Management System", "Analytics Platform"]
+                }
+            elif experience_type == "AR Product Experience":
+                tech_stack = {
+                    "Frontend": ["ARCore", "ARKit", "Mobile App", "WebAR"],
+                    "Backend": ["Image Recognition", "3D Model Server", "Content Management System"],
+                    "Hardware": ["Smartphones", "Tablets", "AR Glasses (Optional)"],
+                    "Integration": ["Product Information API", "E-commerce Platform", "Social Sharing"]
+                }
+            elif experience_type == "Digital Avatars":
+                tech_stack = {
+                    "Frontend": ["3D Avatar Engine", "Facial Recognition", "Animation System"],
+                    "Backend": ["AI Processing", "Machine Learning", "Audio Processing"],
+                    "Hardware": ["Webcams", "Computers", "Mobile Devices"],
+                    "Integration": ["Virtual Meeting Platform", "Communication API", "Identity Management"]
+                }
+            else:  # Virtual Venue
+                tech_stack = {
+                    "Frontend": ["3D Environment Engine", "Multi-user Platform", "Interactive Elements"],
+                    "Backend": ["Spatial Server", "User Management", "Content Delivery"],
+                    "Hardware": ["Computers", "VR Headsets (Optional)", "Mobile Devices"],
+                    "Integration": ["Calendar Systems", "CRM", "Interactive Media", "Data Analytics"]
+                }
+            
+            # Create tech stack table
+            tech_stack_data = {
+                "Component": [],
+                "Technologies": []
+            }
+            
+            for component, technologies in tech_stack.items():
+                tech_stack_data["Component"].append(component)
+                tech_stack_data["Technologies"].append(", ".join(technologies))
+            
+            tech_stack_df = pd.DataFrame(tech_stack_data)
+            st.dataframe(tech_stack_df, use_container_width=True)
+            
+            # Display integration architecture
+            st.markdown("##### Integration Architecture")
+            st.markdown("""
+            <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px;">
+                <h5 style="color: #e63946;">System Integration Points</h5>
+                <div style="display: flex; justify-content: space-around; margin: 20px 0;">
+                    <div style="background-color: #333; padding: 10px; border-radius: 5px; width: 30%;">User Authentication</div>
+                    <div style="background-color: #333; padding: 10px; border-radius: 5px; width: 30%;">Data Services</div>
+                    <div style="background-color: #333; padding: 10px; border-radius: 5px; width: 30%;">Analytics</div>
+                </div>
+                <div style="height: 50px; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: 2px; background-color: #e63946; height: 100%;"></div>
+                </div>
+                <div style="background-color: #333; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                    <p>ECG Core Platform APIs</p>
+                </div>
+                <div style="height: 50px; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: 2px; background-color: #e63946; height: 100%;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-around; margin: 20px 0;">
+                    <div style="background-color: #333; padding: 10px; border-radius: 5px; width: 30%;">Corporate Systems</div>
+                    <div style="background-color: #333; padding: 10px; border-radius: 5px; width: 30%;">Product Databases</div>
+                    <div style="background-color: #333; padding: 10px; border-radius: 5px; width: 30%;">Marketing Platforms</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+        with preview_tabs[2]:
+            st.markdown("##### Implementation Timeline")
+            
+            # Calculate implementation time based on the experience complexity
+            if experience_type == "VR Showroom":
+                base_weeks = 8
+            elif experience_type == "AR Product Experience":
+                base_weeks = 6
+            elif experience_type == "Digital Avatars":
+                base_weeks = 4
+            else:  # Virtual Venue
+                base_weeks = 10
+            
+            # Adjust for integration level
+            if integration_level == "Basic":
+                integration_time_factor = 1.0
+            elif integration_level == "Standard":
+                integration_time_factor = 1.2
+            elif integration_level == "Advanced":
+                integration_time_factor = 1.5
+            else:  # Full Enterprise
+                integration_time_factor = 1.8
+            
+            # Adjust for customization
+            customization_weeks = len(customization) * 0.5
+            
+            # Calculate total time
+            total_weeks = (base_weeks * integration_time_factor) + customization_weeks
+            
+            # Implementation phases
+            phases = [
+                {"phase": "Discovery & Requirements", "duration": max(1, round(total_weeks * 0.2))},
+                {"phase": "Design & Prototyping", "duration": max(1, round(total_weeks * 0.3))},
+                {"phase": "Development", "duration": max(2, round(total_weeks * 0.4))},
+                {"phase": "Testing & Integration", "duration": max(1, round(total_weeks * 0.2))},
+                {"phase": "Deployment & Training", "duration": max(1, round(total_weeks * 0.1))}
+            ]
+            
+            # Create implementation timeline data
+            timeline_data = {
+                "Phase": [p["phase"] for p in phases],
+                "Weeks": [p["duration"] for p in phases],
+                "Status": ["Not Started" for _ in phases]
+            }
+            
+            phase_df = pd.DataFrame(timeline_data)
+            
+            # Display the implementation timeline
+            st.dataframe(phase_df, use_container_width=True)
+            
+            # Display total implementation time
+            st.metric("Total Implementation Time", f"{round(total_weeks)} weeks")
+            
+            # Display milestone chart
+            st.markdown("##### Implementation Milestones")
+            
+            # Calculate milestone dates
+            today = datetime.datetime.now()
+            milestone_dates = []
+            current_date = today
+            
+            for p in phases:
+                milestone_dates.append(current_date)
+                current_date = current_date + datetime.timedelta(weeks=p["duration"])
+            
+            # Create milestone data
+            milestone_data = {
+                "Milestone": [f"{p['phase']} Complete" for p in phases],
+                "Target Date": milestone_dates
+            }
+            
+            milestone_df = pd.DataFrame(milestone_data)
+            st.dataframe(milestone_df, use_container_width=True)
+            
+        # Business impact section
+        st.markdown("#### Business Impact Analysis")
+        
+        impact_cols = st.columns(3)
+        
+        with impact_cols[0]:
+            st.metric("Engagement Increase", "+45%", delta="+15% vs traditional")
+        
+        with impact_cols[1]:
+            if experience_type in ["VR Showroom", "AR Product Experience"]:
+                st.metric("Conversion Rate", "+35%", delta="+20% vs traditional")
+            else:
+                st.metric("Attendance Rate", "+68%", delta="+25% vs traditional")
+        
+        with impact_cols[2]:
+            st.metric("Brand Perception", "+52%", delta="+18% vs traditional")
+        
+        # Case studies
+        st.markdown("#### Success Stories")
+        
+        case_studies = [
+            {
+                "title": "Virtual Fashion Week",
+                "client": "Premium Fashion Brand",
+                "technology": "VR Showroom + Digital Avatars",
+                "results": "3,500+ global attendees, ₹12Cr in orders, 85% higher engagement than physical events"
+            },
+            {
+                "title": "AR Retail Experience",
+                "client": "Department Store Chain",
+                "technology": "AR Product Experience",
+                "results": "42% increase in customer engagement, 27% lift in conversion rates, 3x ROI"
+            },
+            {
+                "title": "Virtual Corporate Assembly",
+                "client": "Multinational Corporation",
+                "technology": "Virtual Venue + Digital Avatars",
+                "results": "12,000+ global employees connected, 92% participation rate, 68% cost reduction vs physical"
+            }
+        ]
+        
+        case_cols = st.columns(3)
+        
+        for i, case in enumerate(case_studies):
+            with case_cols[i]:
+                st.markdown(f"""
+                <div style="border: 2px solid #e63946; padding: 15px; border-radius: 10px; height: 250px; background-color: #1E1E1E;">
+                    <h4 style="color: #e63946; margin-top: 0;">{case['title']}</h4>
+                    <p><strong>Client:</strong> {case['client']}</p>
+                    <p><strong>Technology:</strong> {case['technology']}</p>
+                    <p><strong>Results:</strong> {case['results']}</p>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        # Request for consultation button
+        st.markdown("""
+        <div style="background-color: #e63946; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px;">
+            <h3 style="color: white; margin: 0;">Ready to create immersive digital experiences?</h3>
+            <p style="color: white; margin-top: 10px;">
+            Contact our digital experience team for a consultation and discover how ECG can transform
+            your events into extraordinary immersive experiences.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.button("Request Digital Experience Consultation", key="request_immersive")
+    
+    with event_tabs[4]:
         st.markdown("### Event Management Pricing Matrix")
         st.markdown("""
         ECG offers tiered pricing for our event management services based on event type, duration,
