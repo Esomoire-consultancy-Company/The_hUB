@@ -1219,6 +1219,314 @@ def show_integration_demo():
                 # Add device linking button
                 st.button(f"Link New Device", key=f"link_device_{role}")
     
+    with exec_tabs[3]:
+        st.markdown("### 👑 Empire OS View (ECG Owner Access)")
+        st.markdown("""
+        This is the Emperor's View - exclusive to ECG's owner. This view provides complete governance oversight
+        across all companies in the network, showing the entire empire from a single command center.
+        """)
+        
+        # Add Empire access authentication with special message
+        st.warning("⚠️ Restricted Access: Empire OS View is exclusively for ECG's owner")
+        
+        empire_auth_col1, empire_auth_col2 = st.columns([1, 3])
+        with empire_auth_col1:
+            st.image("https://i.imgur.com/wMAD9K3.png", width=150)
+        with empire_auth_col2:
+            st.markdown("### Empire OS Authentication")
+            st.text_input("Emperor ID", value="ECG-EMPEROR-001", disabled=True)
+            st.text_input("Authentication Token", type="password", value="••••••••••••••••")
+            empire_login = st.button("Access Empire OS", key="empire_login")
+        
+        if empire_login or 'empire_view_active' in st.session_state:
+            st.session_state.empire_view_active = True
+            
+            # Create Empire OS view with all company data
+            st.success("Empire OS Access Granted - Welcome, Emperor")
+            
+            # Create master company stats display
+            st.markdown("## Empire Overview - All Companies")
+            
+            # Calculate empire metrics
+            total_companies = len(company_data)
+            avg_score = sum(data["score"] for data in company_data.values()) / total_companies
+            premium_companies = sum(1 for data in company_data.values() if data["score"] >= 85)
+            advanced_companies = sum(1 for data in company_data.values() if 80 <= data["score"] < 85)
+            standard_companies = sum(1 for data in company_data.values() if 75 <= data["score"] < 80)
+            basic_companies = sum(1 for data in company_data.values() if data["score"] < 75)
+            
+            # Display empire KPIs
+            empire_cols = st.columns(5)
+            with empire_cols[0]:
+                st.metric("Total Companies", f"{total_companies}")
+            with empire_cols[1]:
+                st.metric("Avg. Score", f"{avg_score:.1f}/100")
+            with empire_cols[2]:
+                st.metric("Premium Tier", f"{premium_companies}")
+            with empire_cols[3]:
+                st.metric("Advanced Tier", f"{advanced_companies}")
+            with empire_cols[4]:
+                st.metric("Standard Tier", f"{standard_companies}")
+            
+            # Create company comparison chart
+            company_score_data = {
+                "Company": list(company_data.keys()),
+                "Score": [data["score"] for data in company_data.values()]
+            }
+            company_score_df = pd.DataFrame(company_score_data)
+            
+            fig = px.bar(
+                company_score_df, 
+                x="Company", 
+                y="Score", 
+                title="Empire View - Company Performance Comparison",
+                color="Score",
+                color_continuous_scale=["red", "orange", "green"],
+                range_color=[70, 90],
+                height=400
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Create multi-company management interface
+            st.markdown("## Empire Management - All Companies")
+            st.markdown("Manage licenses, implementations, and governance across your entire empire.")
+            
+            # Company management table
+            empire_mgmt_data = {
+                "Company": list(company_data.keys()),
+                "Industry": [data["industry"] for data in company_data.values()],
+                "Score": [data["score"] for data in company_data.values()],
+                "Implementation Tier": [
+                    "Premium" if data["score"] >= 85 else 
+                    "Advanced" if data["score"] >= 80 else 
+                    "Standard" if data["score"] >= 75 else 
+                    "Basic" for data in company_data.values()
+                ],
+                "Governance Status": ["Active" for _ in company_data]
+            }
+            empire_mgmt_df = pd.DataFrame(empire_mgmt_data)
+            
+            # Make grid editable and clickable for the emperor
+            edited_df = st.data_editor(
+                empire_mgmt_df,
+                column_config={
+                    "Company": st.column_config.TextColumn("Company", width="medium"),
+                    "Industry": st.column_config.TextColumn("Industry", width="medium"),
+                    "Score": st.column_config.NumberColumn("Score", format="%d/100", width="small"),
+                    "Implementation Tier": st.column_config.SelectboxColumn(
+                        "Implementation Tier",
+                        options=["Premium", "Advanced", "Standard", "Basic"],
+                        width="medium"
+                    ),
+                    "Governance Status": st.column_config.SelectboxColumn(
+                        "Governance Status",
+                        options=["Active", "Pending", "Paused", "Inactive"],
+                        width="medium"
+                    )
+                },
+                hide_index=True,
+                use_container_width=True
+            )
+            
+            # Add action buttons for emperor control
+            emperor_action_cols = st.columns(3)
+            with emperor_action_cols[0]:
+                st.button("👑 Push Governance Updates", key="push_updates")
+            with emperor_action_cols[1]:
+                st.button("📊 Generate Empire Report", key="empire_report")
+            with emperor_action_cols[2]:
+                st.button("🔄 Synchronize All Companies", key="sync_companies")
+            
+            # Add consolidated cross-company visualization
+            st.markdown("## Empire OS - Cross-Company Visualization")
+            st.markdown("This view shows connections and data flow between all companies in your empire.")
+            
+            # Create company nodes for visualization
+            G_empire = nx.DiGraph()
+            
+            # Add ECG owner node at center
+            G_empire.add_node("ECG Emperor", group=0, size=35)
+            
+            # Add all companies as nodes
+            for company_name in company_data.keys():
+                G_empire.add_node(company_name, group=1, size=25)
+                # Connect Emperor to each company
+                G_empire.add_edge("ECG Emperor", company_name, weight=5)
+            
+            # Add executive dashboard nodes for each company
+            for company_name in company_data.keys():
+                for role in role_licenses.keys():
+                    node_name = f"{company_name} - {role}"
+                    G_empire.add_node(node_name, group=2, size=15)
+                    # Connect company to its dashboards
+                    G_empire.add_edge(company_name, node_name, weight=2)
+            
+            # Create position layout for empire network
+            pos_empire = nx.spring_layout(G_empire, k=0.3, seed=42)
+            
+            # Prepare node traces by group
+            empire_node_traces = []
+            empire_colors = ['#FFD700', '#1E3A8A', '#7C3AED']  # Gold for Emperor, blue for companies, purple for dashboards
+            empire_groups = {}
+            
+            # Collect nodes by group
+            for node in G_empire.nodes():
+                group = G_empire.nodes[node]['group']
+                size = G_empire.nodes[node]['size']
+                if group not in empire_groups:
+                    empire_groups[group] = {
+                        'x': [],
+                        'y': [],
+                        'text': [],
+                        'size': [],
+                        'color': empire_colors[group]
+                    }
+                x, y = pos_empire[node]
+                empire_groups[group]['x'].append(x)
+                empire_groups[group]['y'].append(y)
+                empire_groups[group]['text'].append(node)
+                empire_groups[group]['size'].append(size)
+            
+            # Create a trace for each group
+            for group_id, group_data in empire_groups.items():
+                node_trace = go.Scatter(
+                    x=group_data['x'],
+                    y=group_data['y'],
+                    text=group_data['text'],
+                    mode='markers+text',
+                    textposition="top center",
+                    marker=dict(
+                        size=group_data['size'],
+                        color=group_data['color'],
+                        line=dict(width=2, color='DarkSlateGrey')),
+                    name=["Emperor", "Companies", "Dashboards"][group_id]
+                )
+                empire_node_traces.append(node_trace)
+            
+            # Create edge trace
+            empire_edge_x = []
+            empire_edge_y = []
+            
+            for edge in G_empire.edges():
+                x0, y0 = pos_empire[edge[0]]
+                x1, y1 = pos_empire[edge[1]]
+                empire_edge_x.extend([x0, x1, None])
+                empire_edge_y.extend([y0, y1, None])
+            
+            empire_edge_trace = go.Scatter(
+                x=empire_edge_x,
+                y=empire_edge_y,
+                line=dict(width=1.5, color='#888'),
+                hoverinfo='none',
+                mode='lines'
+            )
+            
+            # Create figure
+            empire_fig = go.Figure(data=[empire_edge_trace] + empire_node_traces,
+                             layout=go.Layout(
+                                title="Empire OS - Full Governance Network",
+                                showlegend=True,
+                                hovermode='closest',
+                                margin=dict(b=20,l=5,r=5,t=40),
+                                xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                                yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                                height=600,
+                                plot_bgcolor='rgba(248,248,248,1)',
+                                legend=dict(
+                                    title="Network Components",
+                                    x=0.01,
+                                    y=0.99,
+                                    bordercolor="Black",
+                                    borderwidth=1
+                                )
+                            ))
+            
+            st.plotly_chart(empire_fig, use_container_width=True)
+            
+            # Add empire-wide command center
+            st.markdown("## Empire Command Center")
+            
+            command_tabs = st.tabs(["License Deployment", "Team Assignment", "Performance Monitoring"])
+            
+            with command_tabs[0]:
+                st.markdown("### Empire-wide License Deployment")
+                st.markdown("Deploy, revoke, or modify licenses across all companies from a central command.")
+                
+                license_deployment_cols = st.columns(3)
+                with license_deployment_cols[0]:
+                    st.selectbox("Select Company", company_data.keys(), key="license_company")
+                with license_deployment_cols[1]:
+                    st.selectbox("Select Dashboard", role_licenses.keys(), key="license_dashboard")
+                with license_deployment_cols[2]:
+                    st.selectbox("License Action", ["Deploy", "Modify", "Revoke", "Renew"], key="license_action")
+                
+                st.button("Execute License Action", key="execute_license")
+            
+            with command_tabs[1]:
+                st.markdown("### Empire-wide Team Assignment")
+                st.markdown("Manage implementation teams across all companies from a central view.")
+                
+                team_cols = st.columns(2)
+                with team_cols[0]:
+                    team_company = st.selectbox("Select Company", company_data.keys(), key="team_company")
+                    st.metric("Company Score", f"{company_data[team_company]['score']}/100")
+                    
+                    if company_data[team_company]['score'] >= 85:
+                        team_type = "Premium"
+                    elif company_data[team_company]['score'] >= 80:
+                        team_type = "Advanced"
+                    elif company_data[team_company]['score'] >= 75:
+                        team_type = "Standard"
+                    else:
+                        team_type = "Basic"
+                    
+                    st.metric("Recommended Team", team_type)
+                    
+                with team_cols[1]:
+                    st.markdown("**Team Members**")
+                    if team_type == "Premium":
+                        team = ["Senior Consultant (15+ yrs)", "Technical Architect", "Industry Expert", "Data Analyst", "Implementation Lead"]
+                    elif team_type == "Advanced":
+                        team = ["Senior Consultant (10+ yrs)", "Technical Lead", "Industry Specialist", "Implementation Specialist"]
+                    elif team_type == "Standard":
+                        team = ["Consultant (5+ yrs)", "Technical Specialist", "Implementation Associate"]
+                    else:
+                        team = ["Junior Consultant", "Technical Associate"]
+                    
+                    for member in team:
+                        st.checkbox(member, value=True)
+                    
+                    st.button("Update Team Assignment", key="update_team")
+            
+            with command_tabs[2]:
+                st.markdown("### Empire-wide Performance Monitoring")
+                st.markdown("Monitor implementation performance across all companies.")
+                
+                # Create performance data
+                performance_data = {
+                    "Company": list(company_data.keys()),
+                    "Implementation Progress": [random.randint(25, 100) for _ in company_data],
+                    "User Adoption": [random.randint(30, 95) for _ in company_data],
+                    "Data Quality": [random.randint(40, 98) for _ in company_data],
+                    "Support Tickets": [random.randint(0, 15) for _ in company_data]
+                }
+                
+                performance_df = pd.DataFrame(performance_data)
+                
+                # Create performance heatmap
+                fig = px.imshow(
+                    performance_df.iloc[:, 1:].values,
+                    x=performance_df.columns[1:],
+                    y=performance_df["Company"],
+                    color_continuous_scale=["red", "yellow", "green"],
+                    aspect="auto",
+                    title="Empire Implementation Performance Heatmap"
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+                st.button("Generate Detailed Performance Report", key="performance_report")
+    
     # Add ECG AI Assistant
     st.subheader("🤖 ECG AI Implementation Assistant")
     
