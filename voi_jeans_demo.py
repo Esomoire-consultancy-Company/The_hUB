@@ -1045,8 +1045,8 @@ def show_integration_demo():
         }
     }
     
-    # Create tabs to show Executive Network and License Details
-    exec_tabs = st.tabs(["Executive Network", "Executive License Details", "Connected Devices"])
+    # Create tabs to show Executive Network, License Details, and Empire View
+    exec_tabs = st.tabs(["Executive Network", "Executive License Details", "Connected Devices", "👑 Empire View"])
     
     with exec_tabs[0]:
         # Create a simple network visualization
