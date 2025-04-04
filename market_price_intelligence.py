@@ -276,7 +276,11 @@ def show_product_pricing_analysis():
         "Low": 1
     }
     
-    avg_margin_potential = sum([margin_score.get(mp, 0) for mp in filtered_df["Margin Potential"]]) / len(filtered_df)
+    # Prevent division by zero if filtered_df is empty
+    if len(filtered_df) > 0:
+        avg_margin_potential = sum([margin_score.get(mp, 0) for mp in filtered_df["Margin Potential"]]) / len(filtered_df)
+    else:
+        avg_margin_potential = 2.0  # Default to medium if no data is available
     
     st.markdown("### 🧠 Price Positioning Recommendation")
     
