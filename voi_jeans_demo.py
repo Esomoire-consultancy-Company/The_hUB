@@ -480,7 +480,7 @@ def show_integration_demo():
     nodes = [
         ("Design", 1), ("Production Planning", 1), ("Scotts Garments", 1), 
         ("Inventory Management", 2), ("Store Operations", 2), ("E-commerce", 2),
-        ("Finance", 3), ("CEO Dashboard", 3)
+        ("Finance", 3), ("CEO Dashboard", 3), ("CRO Dashboard", 3), ("CIO Dashboard", 3), ("CFO Dashboard", 3)
     ]
     
     # Add nodes
@@ -499,7 +499,18 @@ def show_integration_demo():
         ("Finance", "CEO Dashboard", 3),
         ("CEO Dashboard", "Design", 2),
         ("Store Operations", "Design", 3),
-        ("E-commerce", "Design", 3)
+        ("E-commerce", "Design", 3),
+        # CRO connections (Revenue focus)
+        ("Store Operations", "CRO Dashboard", 4),
+        ("E-commerce", "CRO Dashboard", 5),
+        ("CRO Dashboard", "CEO Dashboard", 2),
+        # CIO connections (Technology focus)
+        ("E-commerce", "CIO Dashboard", 4),
+        ("Inventory Management", "CIO Dashboard", 4),
+        ("CIO Dashboard", "CEO Dashboard", 2),
+        # CFO connections (Financial focus)
+        ("Finance", "CFO Dashboard", 5),
+        ("CFO Dashboard", "CEO Dashboard", 3)
     ]
     
     # Add edges
@@ -591,6 +602,150 @@ def show_integration_demo():
     fig.data[3].name = "Synergyze Hub (Governance)"
     
     st.plotly_chart(fig, use_container_width=True)
+    
+    # Add interactive clickable dashboards for C-suite executives
+    st.subheader("C-Suite Executive Dashboards")
+    st.markdown("Click on any dashboard to view its specific metrics and KPIs:")
+    
+    # Create tabs for each executive dashboard
+    executive_tabs = st.tabs(["CEO Dashboard", "CRO Dashboard", "CIO Dashboard", "CFO Dashboard"])
+    
+    with executive_tabs[0]:  # CEO Dashboard
+        st.markdown("### 🏢 CEO Dashboard")
+        st.markdown("""
+        The CEO Dashboard provides a holistic view of the entire Voi Jeans operation, with a focus on:
+        
+        - **Company Performance**: Key financial and operational KPIs
+        - **Strategic Initiatives**: Progress tracking on major organizational initiatives
+        - **Market Position**: Competitive analysis and market share information
+        - **Organizational Health**: Cross-departmental performance metrics
+        
+        *This dashboard aggregates insights from all other executive dashboards to provide a complete 
+        overview of the business for strategic decision-making.*
+        """)
+        
+        # Create a sample dashboard visualization for CEO
+        kpi_cols = st.columns(4)
+        with kpi_cols[0]:
+            st.metric("Revenue YTD", "₹128.5 Cr", "+12.4%")
+        with kpi_cols[1]:
+            st.metric("EBITDA", "₹24.3 Cr", "+8.2%")
+        with kpi_cols[2]:
+            st.metric("Market Share", "16.8%", "+2.1%")
+        with kpi_cols[3]:
+            st.metric("Stores", "20", "+3")
+            
+        # Sample executive chart
+        org_data = pd.DataFrame({
+            'Department': ['Design', 'Manufacturing', 'Retail', 'Finance', 'Marketing'],
+            'Performance': [92, 87, 95, 89, 91],
+            'Target': [90, 85, 90, 90, 90]
+        })
+        
+        fig = px.bar(org_data, x='Department', y=['Performance', 'Target'], 
+                    title="Departmental Performance vs Target",
+                    barmode='group', height=400)
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with executive_tabs[1]:  # CRO Dashboard
+        st.markdown("### 💰 CRO Dashboard")
+        st.markdown("""
+        The Chief Revenue Officer Dashboard focuses on sales and revenue metrics:
+        
+        - **Revenue Streams**: Breakdown by channel (stores vs e-commerce)
+        - **Sales Performance**: Trend analysis and forecasting
+        - **Customer Acquisition**: New customer metrics and conversion rates
+        - **Regional Performance**: Store-by-store comparison
+        
+        *This dashboard helps the CRO optimize revenue generation across all Voi Jeans channels.*
+        """)
+        
+        # Create a sample dashboard visualization for CRO
+        revenue_cols = st.columns(4)
+        with revenue_cols[0]:
+            st.metric("Retail Revenue", "₹98.2 Cr", "+10.2%")
+        with revenue_cols[1]:
+            st.metric("E-commerce Revenue", "₹30.3 Cr", "+18.7%")
+        with revenue_cols[2]:
+            st.metric("Customer Acquisition", "125K", "+22.4%")
+        with revenue_cols[3]:
+            st.metric("Avg. Order Value", "₹3,842", "+5.3%")
+            
+        # Sample revenue chart
+        channels = ['In-store', 'Website', 'Marketplace', 'Social Commerce']
+        values = [45, 25, 20, 10]
+        fig = px.pie(values=values, names=channels, title="Revenue by Channel",
+                     hole=0.4, color_discrete_sequence=px.colors.sequential.Plasma_r)
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with executive_tabs[2]:  # CIO Dashboard
+        st.markdown("### 💻 CIO Dashboard")
+        st.markdown("""
+        The Chief Information Officer Dashboard focuses on technology and systems:
+        
+        - **System Performance**: Uptime and response times for key platforms
+        - **Digital Transformation**: Progress on tech initiatives
+        - **Data Security**: Security metrics and compliance status
+        - **Technology ROI**: Investment tracking and impact assessment
+        
+        *This dashboard helps the CIO ensure that Voi Jeans' technology infrastructure 
+        supports the business effectively and securely.*
+        """)
+        
+        # Create a sample dashboard visualization for CIO
+        tech_cols = st.columns(4)
+        with tech_cols[0]:
+            st.metric("Platform Uptime", "99.97%", "+0.03%")
+        with tech_cols[1]:
+            st.metric("API Calls/Day", "3.2M", "+15.4%")
+        with tech_cols[2]:
+            st.metric("Tech ROI", "342%", "+27%")
+        with tech_cols[3]:
+            st.metric("Security Score", "94/100", "+6")
+            
+        # Sample technology chart
+        tech_data = pd.DataFrame({
+            'System': ['Synergyze Platform', 'E-commerce', 'ERP', 'CRM', 'Mobile App'],
+            'Response Time (ms)': [120, 230, 180, 150, 95]
+        })
+        fig = px.bar(tech_data, x='System', y='Response Time (ms)', 
+                    title="System Performance - Response Times",
+                    color='Response Time (ms)', height=400,
+                    color_continuous_scale=px.colors.sequential.Viridis)
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with executive_tabs[3]:  # CFO Dashboard
+        st.markdown("### 📊 CFO Dashboard")
+        st.markdown("""
+        The Chief Financial Officer Dashboard focuses on financial health:
+        
+        - **Financial Performance**: P&L, balance sheet, and cash flow metrics
+        - **Cost Management**: Expense tracking and optimization
+        - **Investment Analysis**: ROI on major investments
+        - **Risk Management**: Financial risk assessment and mitigation
+        
+        *This dashboard helps the CFO maintain financial stability and drive growth 
+        through strategic financial management.*
+        """)
+        
+        # Create a sample dashboard visualization for CFO
+        finance_cols = st.columns(4)
+        with finance_cols[0]:
+            st.metric("Gross Margin", "52.3%", "+3.1%")
+        with finance_cols[1]:
+            st.metric("Cash Balance", "₹32.7 Cr", "+18.4%")
+        with finance_cols[2]:
+            st.metric("Op. Expenses", "₹21.4 Cr", "-2.7%")
+        with finance_cols[3]:
+            st.metric("Working Capital", "₹47.2 Cr", "+7.8%")
+            
+        # Sample finance chart
+        categories = ['Cost of Goods', 'Store Operations', 'Marketing', 'Technology', 'Admin', 'Other']
+        values = [48, 20, 15, 8, 7, 2]
+        expense_df = pd.DataFrame({'Category': categories, 'Percentage': values})
+        fig = px.treemap(expense_df, path=['Category'], values='Percentage',
+                 title="Expense Breakdown", height=400)
+        st.plotly_chart(fig, use_container_width=True)
     
     # Show key integration examples
     st.subheader("Key Integration Examples")
