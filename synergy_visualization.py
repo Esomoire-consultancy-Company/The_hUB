@@ -99,18 +99,21 @@ def show_ecosystem_overview():
                   line=dict(color="DarkOrchid", width=2),
                   fillcolor="Plum", opacity=0.7)
     
-    # Add arrows connecting the boxes
-    fig.add_annotation(x=0.25, y=0.55, ax=0.25, ay=0.45,
-                       xref="paper", yref="paper", axref="paper", ayref="paper",
-                       showarrow=True, arrowhead=3, arrowsize=1.5, arrowwidth=2, arrowcolor="gray")
+    # Add arrows connecting the boxes using newer Plotly syntax
+    fig.add_annotation(x=0.25, y=0.55, xref="paper", yref="paper", 
+                      text="",
+                      showarrow=True, arrowhead=3, arrowsize=1.5, arrowwidth=2, 
+                      arrowcolor="gray", ax=0.25, ay=0.45)
     
-    fig.add_annotation(x=0.75, y=0.55, ax=0.75, ay=0.45,
-                       xref="paper", yref="paper", axref="paper", ayref="paper",
-                       showarrow=True, arrowhead=3, arrowsize=1.5, arrowwidth=2, arrowcolor="gray")
+    fig.add_annotation(x=0.75, y=0.55, xref="paper", yref="paper", 
+                      text="",
+                      showarrow=True, arrowhead=3, arrowsize=1.5, arrowwidth=2, 
+                      arrowcolor="gray", ax=0.75, ay=0.45)
     
-    fig.add_annotation(x=0.5, y=0.65, ax=0.5, ay=0.35,
-                       xref="paper", yref="paper", axref="paper", ayref="paper",
-                       showarrow=True, arrowhead=3, arrowsize=1.5, arrowwidth=2, arrowcolor="gray")
+    fig.add_annotation(x=0.5, y=0.65, xref="paper", yref="paper", 
+                       text="",
+                       showarrow=True, arrowhead=3, arrowsize=1.5, arrowwidth=2, 
+                       arrowcolor="gray", ax=0.5, ay=0.35)
     
     # Add text for the boxes
     fig.add_annotation(x=0.25, y=0.75, text="Woven Supply<br>(Manufacturing)",
