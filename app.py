@@ -72,8 +72,20 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Create three sections for navigation
-    tab1, tab2, tab3 = st.tabs(["🏭 Manufacturing (Scotts)", "🏬 Retail Distribution", "⚙️ Management Hub"])
+    # Add Management Hub as a prominent button before tabs
+    st.markdown(
+        """
+        <div style='background-color: #e63946; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 15px; cursor: pointer;'>
+            <p style='margin: 0; font-weight: bold; color: white;'>🔮 MANAGEMENT HUB</p>
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
+    if st.button("🔮 ENTER MANAGEMENT HUB", use_container_width=True, type="primary", key="enter_management_hub"):
+        st.session_state.page = 'voi_jeans_demo'
+        
+    # Create tabs for main navigation sections
+    tab1, tab2 = st.tabs(["🏭 Manufacturing (Scotts)", "🏬 Retail Distribution"])
     
     with tab1:
         # Manufacturing Portal Navigation
@@ -229,65 +241,7 @@ with st.sidebar:
             # Show a teaser about having a merchandiser
             st.info("Connect with your dedicated merchandising agent for personalized support throughout your order process.")
     
-    with tab3:
-        # Voi Jeans Management Hub
-        st.markdown("### Voi Jeans Management Hub")
-        
-        # Finance & Governance section
-        st.markdown("#### Finance & Governance")
-        if st.button("💰 CMP Cost Management", use_container_width=True, key="license_application"):
-            st.session_state.page = 'manufacturing_dashboard'
-        
-        if st.button("📊 Financial Performance", use_container_width=True, key="application_review"):
-            st.session_state.page = 'order_style_management'
-        
-        if st.button("💵 Vendor Payment Processing", use_container_width=True, key="payment_processing"):
-            st.session_state.page = 'reports'
-        
-        if st.button("📑 Compliance Documentation", use_container_width=True, key="license_approval"):
-            st.session_state.page = 'line_plan'
-        
-        if st.button("🔄 Monthly Reconciliation", use_container_width=True, key="license_renewal"):
-            st.session_state.page = 'production_timeline'
-        
-        # Administration section
-        st.markdown("#### Administration")
-        if st.button("👤 User Account Management", use_container_width=True, key="role_definition"):
-            st.session_state.page = 'manufacturing_dashboard'
-        
-        if st.button("🔐 Access Control Settings", use_container_width=True, key="permission_assignment"):
-            st.session_state.page = 'reports'
-        
-        if st.button("🏢 Department Configuration", use_container_width=True, key="user_classification"):
-            st.session_state.page = 'order_style_management'
-        
-        if st.button("📱 Mobile App Administration", use_container_width=True, key="user_categorization"):
-            st.session_state.page = 'line_plan'
-            
-        # Business Intelligence section
-        st.markdown("#### Business Intelligence")
-        if st.button("📈 Executive Dashboard", use_container_width=True, key="executive_dashboard"):
-            st.session_state.page = 'manufacturing_dashboard'
-        
-        if st.button("📊 SS25 Performance Metrics", use_container_width=True, key="ss25_metrics"):
-            st.session_state.page = 'retailer_analysis'
-        
-        if st.button("📉 Competitor Analysis", use_container_width=True, key="competitor_analysis"):
-            st.session_state.page = 'reports'
-        
-        if st.button("🌐 Market Trend Analysis", use_container_width=True, key="license_suspension"):
-            st.session_state.page = 'material_tracker'
-            
-        # Synergyze Visualization section
-        st.markdown("#### Synergyze Ecosystem")
-        if st.button("🔄 Synergyze Ecosystem Visualization", use_container_width=True, key="synergy_viz"):
-            st.session_state.page = 'synergy_visualization'
-            
-        if st.button("⚖️ License Management", use_container_width=True, key="license_management"):
-            st.session_state.page = 'synergy_visualization'
-            
-        if st.button("🔗 Supply & Retail Integration", use_container_width=True, key="woven_commune_integration"):
-            st.session_state.page = 'synergy_visualization'
+    # Management Hub section moved to main button above
     
     # Additional resources
     st.markdown("### Resources")

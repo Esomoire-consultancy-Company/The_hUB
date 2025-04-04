@@ -2371,8 +2371,8 @@ def show_integration_demo():
             st.image("https://i.imgur.com/wMAD9K3.png", width=150)
         with empire_auth_col2:
             st.markdown("### Empire OS Authentication")
-            st.text_input("Emperor ID", value="ECG-EMPEROR-001", disabled=True)
-            st.text_input("Authentication Token", type="password", placeholder="Enter your MCA-verified token")
+            st.text_input("Emperor ID", value="ECG-EMPEROR-001", disabled=True, key="emperor_id")
+            st.text_input("Authentication Token", type="password", placeholder="Enter your MCA-verified token", key="emperor_token")
             empire_login = st.button("Access Empire OS", key="empire_login")
         
         # Create Empire OS view if logged in
