@@ -4,6 +4,7 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
 import networkx as nx
+import random
 from PIL import Image
 import io
 import base64
@@ -1045,8 +1046,8 @@ def show_integration_demo():
         }
     }
     
-    # Create tabs to show Executive Network, License Details, and Empire View
-    exec_tabs = st.tabs(["Executive Network", "Executive License Details", "Connected Devices", "👑 Empire View"])
+    # Create tabs to show Executive Network, License Details, Connected Devices, Company Owner View, and Empire View
+    exec_tabs = st.tabs(["Executive Network", "Executive License Details", "Connected Devices", "🏢 Owner's View", "👑 Empire View"])
     
     with exec_tabs[0]:
         # Create a simple network visualization
