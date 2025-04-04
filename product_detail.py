@@ -153,33 +153,46 @@ def show_product_detail():
         st.markdown("#### Special Instructions")
         special_instructions = st.text_area("Add any special requirements or notes for this order:", height=100)
         
-        # Add to cart button
-        if st.button("Add to Order", use_container_width=True):
-            # Create order item
-            order_item = {
-                "product_id": product['id'],
-                "product_name": product['name'],
-                "fabric": selected_fabric,
-                "branding": branding_option,
-                "sizes": size_quantities if 'available_sizes' in product else {},
-                "total_quantity": total_quantity if 'available_sizes' in product else product['moq'],
-                "special_instructions": special_instructions,
-                "base_price": product['price_range']
-            }
-            
-            # Add wash/color if applicable
-            if 'wash_options' in product:
-                order_item["wash"] = selected_wash
-            elif 'color_options' in product:
-                order_item["color"] = selected_color
-            
-            # Add to cart
-            if 'cart' not in st.session_state:
-                st.session_state.cart = []
-            
-            st.session_state.cart.append(order_item)
-            st.session_state.page = 'order_booking'
-            st.rerun()
+        # Action buttons section
+        action_buttons = st.columns(2)
+        
+        with action_buttons[0]:
+            # Add to cart button
+            if st.button("Add to Order", use_container_width=True, type="primary"):
+                # Create order item
+                order_item = {
+                    "product_id": product['id'],
+                    "product_name": product['name'],
+                    "fabric": selected_fabric,
+                    "branding": branding_option,
+                    "sizes": size_quantities if 'available_sizes' in product else {},
+                    "total_quantity": total_quantity if 'available_sizes' in product else product['moq'],
+                    "special_instructions": special_instructions,
+                    "base_price": product['price_range']
+                }
+                
+                # Add wash/color if applicable
+                if 'wash_options' in product:
+                    order_item["wash"] = selected_wash
+                elif 'color_options' in product:
+                    order_item["color"] = selected_color
+                
+                # Add to cart
+                if 'cart' not in st.session_state:
+                    st.session_state.cart = []
+                
+                st.session_state.cart.append(order_item)
+                st.session_state.page = 'order_booking'
+                st.rerun()
+        
+        with action_buttons[1]:
+            # Market Price Intelligence button
+            if st.button("🔍 Check Market Pricing", use_container_width=True):
+                st.session_state.page = 'market_price_intelligence'
+                st.rerun()
+                
+        # Add explanatory note for Market Price Intelligence
+        st.info("💡 Use our Market Price Intelligence tool to analyze competitive pricing across the industry for similar products.")
     
     # Product details and specs section
     st.markdown("---")

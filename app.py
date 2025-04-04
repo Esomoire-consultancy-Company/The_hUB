@@ -23,6 +23,7 @@ from init_db import show_db_initialization, initialize_database
 from supply_chain_visualization import show_supply_chain_visualization
 from synergy_visualization import show_synergy_visualization
 from voi_jeans_demo import show_voi_jeans_demo
+from market_price_intelligence import show_market_price_intelligence
 
 # Configure the page
 st.set_page_config(
@@ -304,6 +305,8 @@ elif st.session_state.page == 'synergy_visualization':
     show_synergy_visualization()
 elif st.session_state.page == 'voi_jeans_demo':
     show_voi_jeans_demo()
+elif st.session_state.page == 'market_price_intelligence':
+    show_market_price_intelligence()
 
 # Footer
 st.markdown("---")
