@@ -286,17 +286,21 @@ def show_product_detail():
             </div>
             """, unsafe_allow_html=True)
             
-            # Get appropriate image based on product name
-            if "Denim" in related['name']:
-                img_url = "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
-            elif "Shirt" in related['name']:
-                img_url = "https://images.unsplash.com/photo-1593030942418-5448ef6b4416?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80" 
-            elif "Jacket" in related['name']:
-                img_url = "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+            # Get appropriate image based on product name - using professional denim product images
+            if "Denim Jeans" in related['name'] or "Slim Jeans" in related['name']:
+                img_url = "https://images.unsplash.com/photo-1604176424472-9d997e67f540?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+            elif "Regular Jeans" in related['name'] or "Classic Jeans" in related['name']:
+                img_url = "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80" 
+            elif "Denim Shirt" in related['name']:
+                img_url = "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80" 
+            elif "Denim Jacket" in related['name']:
+                img_url = "https://images.unsplash.com/photo-1591213954196-2d0ccb3f8d4c?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
             elif "T-Shirt" in related['name']:
-                img_url = "https://images.unsplash.com/photo-1581655353564-df123a1eb820?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+                img_url = "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+            elif "Shorts" in related['name']:
+                img_url = "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
             else:
-                img_url = "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+                img_url = "https://images.unsplash.com/photo-1565084888279-aca607ecce0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
             
             # Display image with rounded corners and hover zoom effect
             st.markdown(f"""
