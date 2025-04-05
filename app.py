@@ -25,6 +25,7 @@ from synergy_visualization import show_synergy_visualization
 from voi_jeans_demo import show_voi_jeans_demo
 from market_price_intelligence import show_market_price_intelligence
 from synergy_hub import show_synergy_hub, show_voice_over_demo
+from inventory_export import show_inventory_export
 
 # Configure the page
 st.set_page_config(
@@ -171,6 +172,15 @@ with st.sidebar:
             
         if st.button("📉 Raw Material Demand Prediction", use_container_width=True, key="raw_material_prediction"):
             st.session_state.page = 'material_tracker'
+            
+        # NEW! Inventory Export Feature
+        st.markdown("""
+        <div style='background-color: #4CAF50; padding: 5px; border-radius: 5px; text-align: center; margin: 10px 0;'>
+            <p style='margin: 0; color: white; font-size: 0.8em;'>✨ NEW FEATURE</p>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🖼️ Export Inventory to PowerPoint", use_container_width=True, key="inventory_export_mfg", type="primary"):
+            st.session_state.page = 'inventory_export'
         
         # Database initialization (hidden in an expander to not clutter the UI)
         with st.expander("⚙️ Database Management"):
@@ -218,6 +228,15 @@ with st.sidebar:
             
         if st.button("🏙️ Regional Market Insights", use_container_width=True, key="regional_insights"):
             st.session_state.page = 'reports'
+            
+        # NEW! Inventory Export Feature
+        st.markdown("""
+        <div style='background-color: #4CAF50; padding: 5px; border-radius: 5px; text-align: center; margin: 10px 0;'>
+            <p style='margin: 0; color: white; font-size: 0.8em;'>✨ NEW FEATURE</p>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🖼️ Export Inventory to PowerPoint", use_container_width=True, key="inventory_export", type="primary"):
+            st.session_state.page = 'inventory_export'
         
         # Add a hint about the retail analytics
         st.info("Access real-time sales analytics and performance metrics across all Voi Jeans retail locations.")
@@ -312,6 +331,8 @@ elif st.session_state.page == 'synergy_hub':
     show_synergy_hub()
 elif st.session_state.page == 'voice_over_demo':
     show_voice_over_demo()
+elif st.session_state.page == 'inventory_export':
+    show_inventory_export()
 
 # Footer
 st.markdown("---")
