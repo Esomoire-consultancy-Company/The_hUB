@@ -4081,17 +4081,17 @@ def get_strength_for_score(score):
         return "Core operational systems with digitization potential"
 
 def show_c_suite_module():
-    """Display the C-Suite module with CEO at center and other executives around it"""
+    """Display the Virtual C-Suite intelligence module with continuous learning focus"""
     
-    st.subheader("ECG Consulting Wing - C-Suite Governance Module")
+    st.subheader("ECG Consulting Wing - Virtual C-Suite Intelligence Module")
     
     st.markdown("""
     <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-        <h3 style="color: #e63946; margin: 0;">C-Suite Governance Overview</h3>
+        <h3 style="color: #e63946; margin: 0;">Virtual C-Suite Intelligence Model</h3>
         <p style="color: #CCC; margin-top: 10px;">
-        The C-Suite Governance Module is the cornerstone of ECG's consulting approach, providing executives 
-        with a comprehensive view of their organization. The CEO is positioned at the center with direct 
-        oversight of all key departments, each led by specialized C-level executives.
+        The Virtual C-Suite Intelligence Module is the cornerstone of ECG's innovative approach, providing 
+        executives with continuous learning and intelligence gathering. This model focuses on how data is 
+        collected, processed, and transformed into actionable insights rather than just organizational structure.
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -4100,58 +4100,57 @@ def show_c_suite_module():
     st.markdown("### Select Company")
     
     company = st.selectbox(
-        "Choose your company to view C-Suite structure:",
+        "Choose your company to view Intelligence Model:",
         ["Voi Jeans Retail India Pvt Ltd"],
         index=0
     )
     
     # C-Suite visualization using a custom circular layout
-    st.markdown(f"### {company} C-Suite Structure")
+    st.markdown(f"### {company} Virtual C-Suite Intelligence Model")
     
     # Create tabs for different views
-    c_suite_tabs = st.tabs(["Department Breakdown", "C-Suite Dashboard", "Performance Metrics"])
+    c_suite_tabs = st.tabs(["Intelligence Framework", "C-Suite Dashboard", "Performance Metrics"])
     
     with c_suite_tabs[0]:
-        # Create a visualization similar to the provided image
+        # Create a visualization of the Intelligence Framework
         st.markdown("""
         <div style="text-align: center; margin-bottom: 20px;">
-            <h3>Department Breakdown with Synergyze Module Mapping</h3>
-            <p>This visualization shows the reporting structure with the CEO at the center and C-suite executives leading their respective departments.</p>
+            <h3>Virtual C-Suite Intelligence Framework</h3>
+            <p>This visualization shows how continuous learning, data collection, and intelligence processing work together in the Virtual C-Suite model.</p>
         </div>
         """, unsafe_allow_html=True)
         
-        # Create the C-Suite visualization
-        # Define department data
-        departments = [
-            {"name": "Head of Finance", "color": "#9c27b0", "sub_departments": ["Financial Planning", "Accounts", "Audit"]},
-            {"name": "Head of Retail", "color": "#4caf50", "sub_departments": ["Store Operations", "E-commerce", "Inventory Management"]},
-            {"name": "Head of Manufacturing", "color": "#2196f3", "sub_departments": ["Production Planning", "Quality Control", "Supply Chain"]},
-            {"name": "Head of Marketing", "color": "#ff9800", "sub_departments": ["Digital Marketing", "Customer Relations", "Brand Management"]},
-            {"name": "Head of R&D", "color": "#03a9f4", "sub_departments": ["Design Team", "Product Development", "QA Team"]}
+        # Define intelligence components
+        intelligence_components = [
+            {"name": "Data Collection", "color": "#2196f3", "sub_components": ["Sensors & IoT", "Digital Transactions", "External APIs"]},
+            {"name": "Data Processing", "color": "#4caf50", "sub_components": ["Cleansing", "Normalization", "Integration"]},
+            {"name": "Analytics Engine", "color": "#ff9800", "sub_components": ["Descriptive", "Predictive", "Prescriptive"]},
+            {"name": "Decision Intelligence", "color": "#9c27b0", "sub_components": ["Risk Assessment", "Opportunity Mapping", "Strategy Simulation"]},
+            {"name": "Knowledge Distribution", "color": "#03a9f4", "sub_components": ["Dashboards", "Alerts", "Reports"]}
         ]
         
         # Use Plotly to create a custom circular visualization
         fig = go.Figure()
         
         # Calculate positions in a circle
-        num_departments = len(departments)
+        num_components = len(intelligence_components)
         radius = 1
         center_x, center_y = 0, 0
         
-        # Add CEO in the center
+        # Add Intelligence Hub in the center
         fig.add_trace(go.Scatter(
             x=[center_x], 
             y=[center_y],
             mode='markers+text',
             marker=dict(
-                color='#9c27b0',
+                color='#e63946',
                 size=60,
                 line=dict(
                     color='white',
                     width=2
                 )
             ),
-            text=['CEO'],
+            text=['Intelligence<br>Hub'],
             textposition='middle center',
             textfont=dict(
                 color='white',
@@ -4159,30 +4158,30 @@ def show_c_suite_module():
                 family='Arial, sans-serif'
             ),
             hoverinfo='text',
-            hovertext=['Chief Executive Officer'],
-            name='CEO'
+            hovertext=['Central Intelligence Repository'],
+            name='Intelligence Hub'
         ))
         
-        # Add departments around the center
-        for i, dept in enumerate(departments):
-            angle = (2 * np.pi * i / num_departments)
+        # Add components around the center
+        for i, component in enumerate(intelligence_components):
+            angle = (2 * np.pi * i / num_components)
             x = center_x + radius * np.cos(angle)
             y = center_y + radius * np.sin(angle)
             
-            # Add department node
+            # Add component node
             fig.add_trace(go.Scatter(
                 x=[x], 
                 y=[y],
                 mode='markers+text',
                 marker=dict(
-                    color=dept["color"],
+                    color=component["color"],
                     size=50,
                     line=dict(
                         color='white',
                         width=2
                     )
                 ),
-                text=[dept["name"]],
+                text=[component["name"]],
                 textposition='middle center',
                 textfont=dict(
                     color='white',
@@ -4190,38 +4189,56 @@ def show_c_suite_module():
                     family='Arial, sans-serif'
                 ),
                 hoverinfo='text',
-                hovertext=[dept["name"]],
-                name=dept["name"]
+                hovertext=[component["name"]],
+                name=component["name"]
             ))
             
-            # Add line from CEO to department
+            # Add two-way line from Intelligence Hub to component
             fig.add_trace(go.Scatter(
                 x=[center_x, x],
                 y=[center_y, y],
                 mode='lines',
                 line=dict(
-                    color=dept["color"],
+                    color=component["color"],
                     width=3
                 ),
                 hoverinfo='none',
                 showlegend=False
             ))
             
-            # Add sub-departments
-            for j, sub_dept in enumerate(dept["sub_departments"]):
-                # Calculate position for sub-department
+            # Add arrowhead to indicate bi-directional flow
+            arrowhead_x = center_x + (radius/2) * np.cos(angle)
+            arrowhead_y = center_y + (radius/2) * np.sin(angle)
+            
+            fig.add_trace(go.Scatter(
+                x=[arrowhead_x], 
+                y=[arrowhead_y],
+                mode='markers',
+                marker=dict(
+                    symbol='arrow',
+                    color=component["color"],
+                    size=15,
+                    angle=angle * 180 / np.pi
+                ),
+                hoverinfo='none',
+                showlegend=False
+            ))
+            
+            # Add sub-components
+            for j, sub_comp in enumerate(component["sub_components"]):
+                # Calculate position for sub-component
                 sub_radius = 0.3
-                sub_angle = angle + (j - len(dept["sub_departments"])/2 + 0.5) * 0.2
+                sub_angle = angle + (j - len(component["sub_components"])/2 + 0.5) * 0.2
                 sub_x = x + sub_radius * np.cos(sub_angle)
                 sub_y = y + sub_radius * np.sin(sub_angle)
                 
-                # Add sub-department node
+                # Add sub-component node
                 fig.add_trace(go.Scatter(
                     x=[sub_x], 
                     y=[sub_y],
                     mode='markers+text',
                     marker=dict(
-                        color=dept["color"],
+                        color=component["color"],
                         opacity=0.7,
                         size=30,
                         line=dict(
@@ -4229,7 +4246,7 @@ def show_c_suite_module():
                             width=1
                         )
                     ),
-                    text=[sub_dept],
+                    text=[sub_comp],
                     textposition='middle center',
                     textfont=dict(
                         color='white',
@@ -4237,18 +4254,18 @@ def show_c_suite_module():
                         family='Arial, sans-serif'
                     ),
                     hoverinfo='text',
-                    hovertext=[sub_dept],
-                    name=sub_dept,
+                    hovertext=[sub_comp],
+                    name=sub_comp,
                     showlegend=False
                 ))
                 
-                # Add line from department to sub-department
+                # Add line from component to sub-component
                 fig.add_trace(go.Scatter(
                     x=[x, sub_x],
                     y=[y, sub_y],
                     mode='lines',
                     line=dict(
-                        color=dept["color"],
+                        color=component["color"],
                         width=2,
                         dash='dot'
                     ),
@@ -4258,7 +4275,7 @@ def show_c_suite_module():
         
         # Update layout
         fig.update_layout(
-            title="C-Suite Structure with Department Breakdown",
+            title="Virtual C-Suite Intelligence Framework",
             showlegend=False,
             height=700,
             width=700,
@@ -4285,11 +4302,11 @@ def show_c_suite_module():
         
         st.plotly_chart(fig)
         
-        # Department descriptions
+        # Intelligence process descriptions
         st.markdown("""
         <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; margin-top: 20px;">
-            <h3 style="color: #e63946; margin-top: 0;">Department Responsibilities</h3>
-            <p style="color: #CCC;">Each C-Suite executive manages specific areas with direct reporting to the CEO:</p>
+            <h3 style="color: #e63946; margin-top: 0;">Continuous Intelligence Process</h3>
+            <p style="color: #CCC;">The Virtual C-Suite leverages a continuous learning model with real-time data processing and intelligence distribution:</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -4297,68 +4314,68 @@ def show_c_suite_module():
         
         with col1:
             st.markdown("""
-            <div style="background-color: #9c27b0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-                <h4 style="color: white; margin: 0;">Head of Finance</h4>
+            <div style="background-color: #2196f3; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                <h4 style="color: white; margin: 0;">Data Collection</h4>
             </div>
             
-            - Financial Planning & Analysis
-            - Accounts Receivable/Payable
-            - Audit & Compliance
-            - Budget Management
-            - Investor Relations
+            - **Sensors & IoT**: Real-time data from connected devices and systems
+            - **Digital Transactions**: Customer interactions and purchase data
+            - **External APIs**: Market trends, competitor analysis, and economic indicators
+            - **Human Inputs**: Manual entries, feedback, and qualitative assessments
+            - **Social Listening**: Brand mentions, sentiment, and social media trends
             
-            <div style="background-color: #2196f3; padding: 10px; border-radius: 5px; margin: 15px 0 10px 0;">
-                <h4 style="color: white; margin: 0;">Head of Manufacturing</h4>
+            <div style="background-color: #4caf50; padding: 10px; border-radius: 5px; margin: 15px 0 10px 0;">
+                <h4 style="color: white; margin: 0;">Data Processing</h4>
             </div>
             
-            - Production Planning & Control
-            - Quality Assurance
-            - Supply Chain Management
-            - Manufacturing Excellence
-            - Vendor Relations
+            - **Cleansing**: Error detection and correction of incoming data
+            - **Normalization**: Standardizing data for consistent analysis
+            - **Integration**: Combining multiple data sources into a unified view
+            - **Enrichment**: Adding context and metadata to enhance value
+            - **Validation**: Ensuring data accuracy and reliability
             
-            <div style="background-color: #03a9f4; padding: 10px; border-radius: 5px; margin: 15px 0 10px 0;">
-                <h4 style="color: white; margin: 0;">Head of R&D</h4>
+            <div style="background-color: #ff9800; padding: 10px; border-radius: 5px; margin: 15px 0 10px 0;">
+                <h4 style="color: white; margin: 0;">Analytics Engine</h4>
             </div>
             
-            - Product Design & Development
-            - Material Research
-            - Quality Standards
-            - Prototyping & Testing
-            - Innovation Management
+            - **Descriptive Analytics**: What has happened and current state
+            - **Diagnostic Analytics**: Why it happened and root cause analysis
+            - **Predictive Analytics**: What will happen and trend forecasting
+            - **Prescriptive Analytics**: Action recommendations and optimization
+            - **Cognitive Analytics**: Learning patterns and contextual understanding
             """, unsafe_allow_html=True)
             
         with col2:
             st.markdown("""
-            <div style="background-color: #4caf50; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-                <h4 style="color: white; margin: 0;">Head of Retail</h4>
+            <div style="background-color: #9c27b0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                <h4 style="color: white; margin: 0;">Decision Intelligence</h4>
             </div>
             
-            - Store Operations Management
-            - E-commerce Platform
-            - Inventory & Distribution
-            - Customer Experience
-            - Retail Analytics
+            - **Risk Assessment**: Identifying and quantifying potential threats
+            - **Opportunity Mapping**: Discovering new business avenues
+            - **Strategy Simulation**: Testing scenarios before implementation
+            - **Resource Optimization**: Ensuring efficient allocation
+            - **Constraint Analysis**: Identifying and addressing limitations
             
-            <div style="background-color: #ff9800; padding: 10px; border-radius: 5px; margin: 15px 0 10px 0;">
-                <h4 style="color: white; margin: 0;">Head of Marketing</h4>
+            <div style="background-color: #03a9f4; padding: 10px; border-radius: 5px; margin: 15px 0 10px 0;">
+                <h4 style="color: white; margin: 0;">Knowledge Distribution</h4>
             </div>
             
-            - Brand Strategy & Management
-            - Digital Marketing Campaigns
-            - Customer Relationship Management
-            - Market Research & Analysis
-            - Public Relations
+            - **Executive Dashboards**: Role-specific insights for decision makers
+            - **Automated Alerts**: Proactive notifications for critical events
+            - **Scheduled Reports**: Regular performance updates and trends
+            - **Mobile Access**: On-the-go intelligence for executives
+            - **Collaboration Tools**: Sharing insights across teams
             
-            <div style="background-color: #9c27b0; padding: 10px; border-radius: 5px; margin: 15px 0 10px 0;">
-                <h4 style="color: white; margin: 0;">CEO</h4>
+            <div style="background-color: #e63946; padding: 10px; border-radius: 5px; margin: 15px 0 10px 0;">
+                <h4 style="color: white; margin: 0;">Intelligence Hub</h4>
             </div>
             
-            - Strategic Direction
-            - Executive Leadership
-            - Corporate Governance
-            - Stakeholder Management
-            - Organizational Growth
+            - **Knowledge Repository**: Centralized storage of all insights
+            - **Learning Algorithms**: Continuously improving intelligence
+            - **Pattern Recognition**: Identifying correlations and causations
+            - **Adaptive Governance**: Dynamic rules based on changing conditions
+            - **Feedback Integration**: Improving based on outcomes and user input
             """, unsafe_allow_html=True)
     
     with c_suite_tabs[1]:
@@ -4613,13 +4630,438 @@ def show_c_suite_module():
             st.plotly_chart(fig, use_container_width=True)
     
     with c_suite_tabs[2]:
-        # Performance metrics and scoring
+        # Performance metrics and continuous learning visualization
         st.markdown("""
         <div style="text-align: center; margin-bottom: 20px;">
-            <h3>Divine Score Performance Metrics</h3>
-            <p>Track and improve your organization's performance through the proprietary Divine Score system.</p>
+            <h3>Divine Score & Continuous Learning</h3>
+            <p>Track and improve your organization's performance through the proprietary Divine Score system with continuous learning capabilities.</p>
         </div>
         """, unsafe_allow_html=True)
+        
+        # Add new section for continuous learning visualization
+        st.markdown("""
+        <div style="background-color: #1E1E1E; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 style="color: #e63946; margin: 0;">Continuous Intelligence & Learning</h3>
+            <p style="color: #CCC; margin-top: 10px;">
+            The Virtual C-Suite model features a continuous intelligence cycle that improves over time through machine learning
+            and feedback loops. Below is a visualization of how the system continuously gathers, processes, and learns from data.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Create tabs for continuous learning
+        learning_tabs = st.tabs(["Learning Cycle", "Data Sources", "Intelligence Evolution"])
+        
+        with learning_tabs[0]:
+            st.markdown("### Continuous Learning Cycle")
+            
+            # Create a circular flow diagram for the continuous learning cycle
+            cycle_stages = [
+                "Data Collection", 
+                "Processing & Analysis",
+                "Insight Generation",
+                "Decision Support",
+                "Implementation",
+                "Outcome Measurement",
+                "Feedback & Learning"
+            ]
+            
+            # Create a circular layout for the learning cycle
+            num_stages = len(cycle_stages)
+            radius = 1.2
+            center_x, center_y = 0, 0
+            
+            # Calculate positions in a circle
+            node_x = []
+            node_y = []
+            for i in range(num_stages):
+                angle = 2 * np.pi * i / num_stages
+                x = center_x + radius * np.cos(angle)
+                y = center_y + radius * np.sin(angle)
+                node_x.append(x)
+                node_y.append(y)
+            
+            # Create edges for the cycle (connect all nodes in sequence)
+            edge_x = []
+            edge_y = []
+            for i in range(num_stages):
+                # Connect to the next node (circular)
+                x0, y0 = node_x[i], node_y[i]
+                x1, y1 = node_x[(i + 1) % num_stages], node_y[(i + 1) % num_stages]
+                
+                # Add edge with arrow
+                edge_x.extend([x0, x1, None])
+                edge_y.extend([y0, y1, None])
+            
+            # Create figure
+            fig = go.Figure()
+            
+            # Add edges
+            fig.add_trace(go.Scatter(
+                x=edge_x, y=edge_y,
+                line=dict(width=2, color='#888'),
+                hoverinfo='none',
+                mode='lines',
+                showlegend=False
+            ))
+            
+            # Add nodes
+            fig.add_trace(go.Scatter(
+                x=node_x, 
+                y=node_y,
+                mode='markers+text',
+                text=cycle_stages,
+                textposition="middle center",
+                marker=dict(
+                    size=35,
+                    color=['#2196f3', '#4caf50', '#ff9800', '#9c27b0', '#03a9f4', '#e63946', '#8bc34a'],
+                    line=dict(width=2, color='DarkSlateGrey')
+                ),
+                hoverinfo='text',
+                showlegend=False
+            ))
+            
+            # Add the central hub
+            fig.add_trace(go.Scatter(
+                x=[center_x], 
+                y=[center_y],
+                mode='markers+text',
+                text=['Virtual<br>C-Suite<br>Intelligence'],
+                textposition="middle center",
+                marker=dict(
+                    size=70,
+                    color='#e63946',
+                    line=dict(width=2, color='white')
+                ),
+                hoverinfo='text',
+                hovertext=['Central Intelligence System'],
+                showlegend=False
+            ))
+            
+            # Add radial connections from center to all nodes
+            center_edge_x = []
+            center_edge_y = []
+            for i in range(num_stages):
+                center_edge_x.extend([center_x, node_x[i], None])
+                center_edge_y.extend([center_y, node_y[i], None])
+            
+            fig.add_trace(go.Scatter(
+                x=center_edge_x, 
+                y=center_edge_y,
+                line=dict(width=1, color='#888', dash='dot'),
+                hoverinfo='none',
+                mode='lines',
+                showlegend=False
+            ))
+            
+            # Update layout
+            fig.update_layout(
+                title="Continuous Learning Cycle",
+                showlegend=False,
+                height=600,
+                width=800,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=20, r=20, t=60, b=20),
+                xaxis=dict(
+                    range=[-1.5, 1.5],
+                    showgrid=False,
+                    zeroline=False,
+                    showticklabels=False
+                ),
+                yaxis=dict(
+                    range=[-1.5, 1.5],
+                    showgrid=False,
+                    zeroline=False,
+                    showticklabels=False
+                ),
+                font=dict(color='white')
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Describe the learning cycle stages
+            st.markdown("#### How the Continuous Learning Cycle Works")
+            
+            learning_cols = st.columns(2)
+            
+            with learning_cols[0]:
+                st.markdown("""
+                **1. Data Collection**
+                - Real-time data gathering from multiple sources
+                - Structured and unstructured data integration
+                - Automated data filtering and prioritization
+                
+                **2. Processing & Analysis**
+                - Cleansing and normalization of incoming data
+                - Pattern detection across multiple dimensions
+                - Contextual analysis with historical trends
+                
+                **3. Insight Generation**
+                - Automated insight discovery and highlighting
+                - Cross-functional impact assessment
+                - Priority-based insight categorization
+                
+                **4. Decision Support**
+                - Recommendations based on predictive models
+                - Risk assessment of different decision pathways
+                - Cost-benefit analysis for executive decisions
+                """)
+                
+            with learning_cols[1]:
+                st.markdown("""
+                **5. Implementation**
+                - Action tracking and implementation monitoring
+                - Resource allocation optimization
+                - Real-time adjustment to changing conditions
+                
+                **6. Outcome Measurement**
+                - Performance measurement against KPIs
+                - Variance analysis from projected outcomes
+                - Attribution modeling for causal understanding
+                
+                **7. Feedback & Learning**
+                - Model refinement based on actual outcomes
+                - Algorithm improvement through reinforcement learning
+                - Knowledge repository enrichment with new insights
+                
+                **Central Intelligence System**
+                - Coordinates all aspects of the learning cycle
+                - Maintains cross-functional knowledge repository
+                - Ensures continuous improvement of the entire system
+                """)
+        
+        with learning_tabs[1]:
+            st.markdown("### Intelligence Data Sources")
+            
+            # Create a visualization of data sources feeding into the system
+            st.markdown("""
+            The Virtual C-Suite Intelligence system ingests data from multiple sources to create a comprehensive intelligence foundation.
+            These sources are continuously monitored and their importance in the decision-making process is dynamically adjusted based on their reliability and relevance.
+            """)
+            
+            # Create data source comparison
+            data_sources = {
+                "Source Category": [
+                    "Internal Operations", 
+                    "Customer Interactions", 
+                    "Market Intelligence", 
+                    "Financial Systems",
+                    "Competitor Analysis",
+                    "Social Media",
+                    "Industry Research"
+                ],
+                "Data Volume": [85, 92, 65, 78, 45, 88, 52],
+                "Update Frequency": ["Real-time", "Real-time", "Daily", "Daily", "Weekly", "Real-time", "Monthly"],
+                "Intelligence Value": [90, 85, 80, 95, 75, 65, 70],
+                "Data Quality": [95, 88, 75, 98, 70, 60, 85]
+            }
+            
+            # Create radar chart to show the relative importance of different data sources
+            source_categories = data_sources["Source Category"]
+            intelligence_values = data_sources["Intelligence Value"]
+            data_quality = data_sources["Data Quality"]
+            data_volume = data_sources["Data Volume"]
+            
+            fig = go.Figure()
+            
+            fig.add_trace(go.Scatterpolar(
+                r=intelligence_values,
+                theta=source_categories,
+                fill='toself',
+                name='Intelligence Value',
+                line=dict(color='#FF9800')
+            ))
+            
+            fig.add_trace(go.Scatterpolar(
+                r=data_quality,
+                theta=source_categories,
+                fill='toself',
+                name='Data Quality',
+                line=dict(color='#4CAF50')
+            ))
+            
+            fig.add_trace(go.Scatterpolar(
+                r=data_volume,
+                theta=source_categories,
+                fill='toself',
+                name='Data Volume',
+                line=dict(color='#2196F3')
+            ))
+            
+            fig.update_layout(
+                polar=dict(
+                    radialaxis=dict(
+                        visible=True,
+                        range=[0, 100]
+                    )
+                ),
+                title="Data Sources Comparison",
+                showlegend=True,
+                height=500,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white')
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Data source details
+            st.markdown("#### Key Data Sources and Their Contributions")
+            
+            # Convert to DataFrame for display
+            source_df = pd.DataFrame(data_sources)
+            
+            # Add tooltip explanations to the table
+            st.dataframe(source_df, use_container_width=True)
+            
+            # Add data refresh timeline
+            st.markdown("#### Data Refresh Timeline")
+            
+            # Sample data showing when different data sources are refreshed
+            refresh_data = {
+                "Time": ["00:00", "06:00", "12:00", "18:00", "24:00"],
+                "Internal Operations": [2, 8, 15, 10, 2],
+                "Customer Interactions": [1, 10, 20, 15, 2],
+                "Market Intelligence": [5, 2, 6, 3, 0],
+                "Financial Systems": [10, 3, 7, 3, 0],
+                "Competitor Analysis": [0, 0, 1, 0, 0],
+                "Social Media": [2, 5, 8, 6, 3],
+                "Industry Research": [0, 0, 2, 0, 0]
+            }
+            
+            refresh_df = pd.DataFrame(refresh_data)
+            
+            # Create a stacked area chart showing data refresh patterns over a 24-hour period
+            fig = go.Figure()
+            
+            for source in source_categories:
+                fig.add_trace(go.Scatter(
+                    x=refresh_df["Time"],
+                    y=refresh_df[source],
+                    mode='lines',
+                    stackgroup='one',
+                    name=source
+                ))
+            
+            fig.update_layout(
+                title="24-Hour Data Refresh Pattern",
+                xaxis_title="Time of Day",
+                yaxis_title="Number of Data Updates",
+                height=400,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white')
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with learning_tabs[2]:
+            st.markdown("### Intelligence Evolution")
+            
+            st.markdown("""
+            The Virtual C-Suite intelligence system evolves over time, continuously improving its predictive accuracy
+            and decision-making capabilities. This evolution is measured through multiple performance indicators.
+            """)
+            
+            # Create a visualization showing how the system improves over time
+            
+            # Sample data showing system evolution over time
+            evolution_data = {
+                "Month": pd.date_range(start="2023-01-01", periods=12, freq="M"),
+                "Prediction Accuracy": [75, 77, 78, 80, 82, 83, 85, 86, 87, 88, 89, 90],
+                "Processing Efficiency": [65, 68, 72, 75, 78, 80, 82, 85, 87, 89, 91, 92],
+                "Data Integration": [60, 65, 70, 72, 75, 78, 83, 85, 88, 90, 92, 93],
+                "Insight Quality": [70, 72, 74, 75, 78, 80, 82, 84, 86, 87, 89, 91],
+                "Response Time (ms)": [250, 225, 200, 185, 170, 155, 140, 130, 120, 115, 110, 105]
+            }
+            
+            evolution_df = pd.DataFrame(evolution_data)
+            
+            # Create line chart showing system evolution
+            fig = go.Figure()
+            
+            metrics = ["Prediction Accuracy", "Processing Efficiency", "Data Integration", "Insight Quality"]
+            colors = ["#2196F3", "#4CAF50", "#FF9800", "#9C27B0"]
+            
+            for i, metric in enumerate(metrics):
+                fig.add_trace(go.Scatter(
+                    x=evolution_df["Month"],
+                    y=evolution_df[metric],
+                    mode='lines+markers',
+                    name=metric,
+                    line=dict(color=colors[i], width=3),
+                    marker=dict(size=8)
+                ))
+            
+            fig.update_layout(
+                title="Intelligence System Evolution",
+                xaxis_title="Time",
+                yaxis_title="Performance (%)",
+                height=400,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white'),
+                yaxis=dict(range=[55, 95])
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Response time chart
+            response_fig = go.Figure()
+            
+            response_fig.add_trace(go.Scatter(
+                x=evolution_df["Month"],
+                y=evolution_df["Response Time (ms)"],
+                mode='lines+markers',
+                name="Response Time",
+                line=dict(color="#E91E63", width=3),
+                marker=dict(size=8)
+            ))
+            
+            response_fig.update_layout(
+                title="System Response Time Improvement",
+                xaxis_title="Time",
+                yaxis_title="Response Time (ms)",
+                height=300,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white')
+            )
+            
+            st.plotly_chart(response_fig, use_container_width=True)
+            
+            # Add milestone achievements
+            st.markdown("#### Significant System Improvements")
+            
+            milestones = [
+                {"date": "Feb 2023", "title": "Natural Language Processing Integration", "description": "Enhanced ability to process unstructured text data from reports and communications"},
+                {"date": "Apr 2023", "title": "Predictive Analytics Upgrade", "description": "Improved forecasting accuracy through advanced machine learning models"},
+                {"date": "Jul 2023", "title": "Real-time Processing Framework", "description": "Reduced data processing latency by 40% through optimized architecture"},
+                {"date": "Sep 2023", "title": "Cross-functional Insight Engine", "description": "New algorithms for discovering insights across departmental boundaries"},
+                {"date": "Nov 2023", "title": "Adaptive Learning Implementation", "description": "System now automatically improves models based on outcome feedback"},
+                {"date": "Jan 2024", "title": "Quantum-inspired Optimization", "description": "New computational techniques for complex decision optimization"}
+            ]
+            
+            for i, milestone in enumerate(milestones):
+                col1, col2 = st.columns([1, 5])
+                with col1:
+                    st.markdown(f"**{milestone['date']}**")
+                with col2:
+                    expander = st.expander(milestone['title'])
+                    with expander:
+                        st.markdown(milestone['description'])
+                        
+                        # Show before/after metrics for each milestone
+                        metrics_col1, metrics_col2 = st.columns(2)
+                        with metrics_col1:
+                            st.markdown("**Before:**")
+                            st.markdown(f"- Accuracy: {evolution_df['Prediction Accuracy'][i]}%")
+                            st.markdown(f"- Processing: {evolution_df['Processing Efficiency'][i]}%")
+                        with metrics_col2:
+                            st.markdown("**After:**")
+                            st.markdown(f"- Accuracy: {evolution_df['Prediction Accuracy'][i+1]}%")
+                            st.markdown(f"- Processing: {evolution_df['Processing Efficiency'][i+1]}%")
         
         # Divine Score overview
         st.markdown("""
