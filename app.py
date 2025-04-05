@@ -29,8 +29,8 @@ from inventory_export import show_inventory_export
 
 # Configure the page
 st.set_page_config(
-    page_title="ECG Synergyze Platform",
-    page_icon="⚙️",
+    page_title="Synergy Hub Demo",
+    page_icon="🔄",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -59,18 +59,18 @@ if 'order_submitted' not in st.session_state:
 
 # Sidebar navigation
 with st.sidebar:
-    st.title("Voi Jeans Management Portal")
+    st.title("Synergy Hub Demo")
     
     # Demo button with a prominent style
     st.markdown(
         """
         <div style='background-color: #1E3A8A; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 15px;'>
-            <p style='margin: 0; font-weight: bold; color: white;'>✨ NEW!</p>
+            <p style='margin: 0; font-weight: bold; color: white;'>✨ FEATURED DEMO</p>
         </div>
         """, 
         unsafe_allow_html=True
     )
-    if st.button("🧥 VOI JEANS DEMO", use_container_width=True, type="primary"):
+    if st.button("🔄 SYNERGY HUB DEMO", use_container_width=True, type="primary"):
         st.session_state.page = 'voi_jeans_demo'
     
     st.markdown("---")
@@ -79,12 +79,12 @@ with st.sidebar:
     st.markdown(
         """
         <div style='background-color: #e63946; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 15px; cursor: pointer;'>
-            <p style='margin: 0; font-weight: bold; color: white;'>🔮 MANAGEMENT HUB</p>
+            <p style='margin: 0; font-weight: bold; color: white;'>🔮 GOVERNANCE PORTAL</p>
         </div>
         """, 
         unsafe_allow_html=True
     )
-    if st.button("🔮 ENTER MANAGEMENT HUB", use_container_width=True, type="primary", key="enter_management_hub"):
+    if st.button("🔮 ENTER GOVERNANCE PORTAL", use_container_width=True, type="primary", key="enter_management_hub"):
         st.session_state.page = 'voi_jeans_demo'
         
     # Create tabs for main navigation sections
@@ -339,7 +339,7 @@ st.markdown("---")
 st.markdown("""
 <div style='display: flex; justify-content: space-between; align-items: center;'>
     <div style='text-align: left;'>
-        <p style='margin: 0; font-size: 0.8em;'>© ECG Synergyze™ Platform</p>
+        <p style='margin: 0; font-size: 0.8em;'>© Synergy Hub™ Platform</p>
         <p style='margin: 0; font-size: 0.7em;'>Powering Woven Supply™ and Commune Connect™</p>
     </div>
     <div style='text-align: right;'>
