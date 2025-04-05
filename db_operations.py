@@ -9,12 +9,41 @@ from database import (
 )
 
 # ===== Buyer Operations =====
-def get_all_buyers():
-    """Get all buyers from the database"""
+def get_all_buyers(page=None, per_page=None, search_term=None):
+    """
+    Get all buyers from the database with optional pagination and search
+    
+    Args:
+        page (int, optional): Page number (1-indexed)
+        per_page (int, optional): Number of items per page
+        search_term (str, optional): Search term to filter by name or contact person
+        
+    Returns:
+        tuple: (buyers_list, total_count) where total_count is the total number of records
+    """
     db = get_db_session()
     try:
-        buyers = db.query(Buyer).all()
-        return buyers
+        query = db.query(Buyer)
+        
+        # Apply search filter if provided
+        if search_term:
+            search_term = f"%{search_term}%"
+            query = query.filter(
+                (Buyer.name.ilike(search_term)) | 
+                (Buyer.contact_person.ilike(search_term)) |
+                (Buyer.email.ilike(search_term))
+            )
+        
+        # Get total count for pagination
+        total_count = query.count()
+        
+        # Apply pagination if both page and per_page are provided
+        if page is not None and per_page is not None:
+            query = query.order_by(Buyer.name)
+            query = query.offset((page - 1) * per_page).limit(per_page)
+        
+        buyers = query.all()
+        return buyers, total_count
     finally:
         db.close()
 
