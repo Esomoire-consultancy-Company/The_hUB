@@ -15,6 +15,7 @@ from db_operations import (
     get_styles_by_order, add_style, update_style_status,
     import_orders_from_excel
 )
+from pagination_utils import create_pagination_ui, initialize_pagination_state, create_search_filter_ui
 
 def show_order_style_management():
     """Display the order and style management interface"""
@@ -36,59 +37,49 @@ def show_order_overview():
     """Display an overview of all orders with filtering options"""
     st.subheader("Orders Overview")
     
-    # Filter options
-    col1, col2, col3 = st.columns(3)
+    # Initialize pagination state
+    initialize_pagination_state("orders")
     
-    with col1:
-        # Get all buyers for filter
-        buyers = get_all_buyers()
-        buyer_names = ["All Buyers"] + [buyer.name for buyer in buyers]
-        selected_buyer = st.selectbox("Filter by Buyer", buyer_names)
+    # Create search and filter UI
+    filters = {
+        "status": ["New", "In Progress", "Completed", "Cancelled"],
+        "date_range": ["Last 30 Days", "Last 90 Days", "Last Year", "Custom Range"]
+    }
     
-    with col2:
-        # Status filter
-        status_options = ["All Statuses", "New", "In Progress", "Completed", "Cancelled"]
-        selected_status = st.selectbox("Filter by Status", status_options)
+    search_term, filter_values = create_search_filter_ui("orders", filters)
     
-    with col3:
-        # Date range filter
-        date_options = ["All Time", "Last 30 Days", "Last 90 Days", "Custom Range"]
-        selected_date_range = st.selectbox("Filter by Date", date_options)
-    
-    # If custom date range is selected
-    if selected_date_range == "Custom Range":
+    # Handle date range
+    if filter_values.get("date_range") == "Custom Range":
         col1, col2 = st.columns(2)
         with col1:
-            start_date = st.date_input("Start Date", datetime.now().date() - timedelta(days=30))
+            start_date = st.date_input("Start Date", datetime.now().date() - timedelta(days=30), key="orders_start_date")
         with col2:
-            end_date = st.date_input("End Date", datetime.now().date())
+            end_date = st.date_input("End Date", datetime.now().date(), key="orders_end_date")
     else:
         # Set default date ranges
         end_date = datetime.now().date()
-        if selected_date_range == "Last 30 Days":
+        if filter_values.get("date_range") == "Last 30 Days":
             start_date = end_date - timedelta(days=30)
-        elif selected_date_range == "Last 90 Days":
+        elif filter_values.get("date_range") == "Last 90 Days":
             start_date = end_date - timedelta(days=90)
-        else:  # All Time
+        elif filter_values.get("date_range") == "Last Year":
+            start_date = end_date - timedelta(days=365)
+        else:  # All Time or None
             start_date = datetime(2000, 1, 1).date()
     
-    # Get orders based on filters
-    if selected_buyer == "All Buyers":
-        orders = get_all_orders()
-    else:
-        # Find buyer id
-        buyer = next((b for b in buyers if b.name == selected_buyer), None)
-        if buyer:
-            orders = get_orders_by_buyer(buyer.id)
-        else:
-            orders = []
+    # Get current page and per_page values
+    current_page = st.session_state.orders_page
+    per_page = st.session_state.orders_per_page
     
-    # Filter by status
-    if selected_status != "All Statuses":
-        orders = [order for order in orders if order.status == selected_status]
-    
-    # Filter by date
-    orders = [order for order in orders if start_date <= order.order_date <= end_date]
+    # Get orders based on filters with pagination
+    date_range = (start_date, end_date) if start_date and end_date else None
+    orders, total_count = get_all_orders(
+        page=current_page, 
+        per_page=per_page, 
+        search_term=search_term if search_term else None,
+        status_filter=filter_values.get("status"),
+        date_range=date_range
+    )
     
     if orders:
         # Create dataframe for displaying orders
@@ -198,8 +189,17 @@ def show_order_overview():
             # Get the selected order
             selected_order_id = df[df["PO Number"] == selected_po]["id"].iloc[0]
             
-            # Get the styles for this order
-            styles = get_styles_by_order(selected_order_id)
+            # Initialize pagination state for styles
+            initialize_pagination_state("styles")
+            current_page = st.session_state.styles_page
+            per_page = st.session_state.styles_per_page
+            
+            # Get the styles for this order with pagination
+            styles, styles_total = get_styles_by_order(
+                selected_order_id, 
+                page=current_page,
+                per_page=per_page
+            )
             
             if styles:
                 # Create dataframe for styles
@@ -256,10 +256,46 @@ def show_order_overview():
                             st.rerun()
                         else:
                             st.error("Failed to update order status")
+                
+                # Add pagination UI for styles
+                st.divider()
+                prev_button, next_button, total_pages, _ = create_pagination_ui(
+                    total_records=styles_total,
+                    current_page=current_page,
+                    per_page=per_page,
+                    key_prefix="styles"
+                )
+                
+                # Handle pagination navigation
+                if prev_button and current_page > 1:
+                    st.session_state.styles_page -= 1
+                    st.rerun()
+                
+                if next_button and current_page < total_pages:
+                    st.session_state.styles_page += 1
+                    st.rerun()
             else:
                 st.warning("No styles found for this order")
     else:
         st.info("No orders found with the selected filters")
+    
+    # Add pagination UI
+    st.divider()
+    prev_button, next_button, total_pages, _ = create_pagination_ui(
+        total_records=total_count,
+        current_page=current_page,
+        per_page=per_page,
+        key_prefix="orders"
+    )
+    
+    # Handle pagination navigation
+    if prev_button and current_page > 1:
+        st.session_state.orders_page -= 1
+        st.rerun()
+    
+    if next_button and current_page < total_pages:
+        st.session_state.orders_page += 1
+        st.rerun()
 
 def show_order_editor():
     """Display the order and style editor"""
@@ -364,7 +400,17 @@ def show_order_editor():
                 # Show the styles for this order
                 st.subheader(f"Styles for {selected_order.po_number}")
                 
-                styles = get_styles_by_order(selected_order.id)
+                # Initialize pagination state for styles
+                initialize_pagination_state("edit_styles")
+                current_page = st.session_state.edit_styles_page
+                per_page = st.session_state.edit_styles_per_page
+                
+                # Get the styles for this order with pagination
+                styles, styles_total = get_styles_by_order(
+                    selected_order.id,
+                    page=current_page,
+                    per_page=per_page
+                )
                 
                 if styles:
                     # Create dataframe for styles
@@ -428,6 +474,24 @@ def show_order_editor():
                                 st.rerun()
                             else:
                                 st.error("Failed to update style status")
+                    
+                    # Add pagination UI for styles
+                    st.divider()
+                    prev_button, next_button, total_pages, _ = create_pagination_ui(
+                        total_records=styles_total,
+                        current_page=current_page,
+                        per_page=per_page,
+                        key_prefix="edit_styles"
+                    )
+                    
+                    # Handle pagination navigation
+                    if prev_button and current_page > 1:
+                        st.session_state.edit_styles_page -= 1
+                        st.rerun()
+                    
+                    if next_button and current_page < total_pages:
+                        st.session_state.edit_styles_page += 1
+                        st.rerun()
                     
                     # Add more styles to this order
                     if st.button("Add More Styles to This Order"):

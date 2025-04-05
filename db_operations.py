@@ -71,13 +71,55 @@ def get_buyer_by_id(buyer_id):
         db.close()
 
 # ===== Order Operations =====
-def get_all_orders():
-    """Get all orders from the database with buyer information"""
+def get_all_orders(page=None, per_page=None, search_term=None, status_filter=None, date_range=None):
+    """
+    Get all orders from the database with buyer information, with optional pagination and filtering
+    
+    Args:
+        page (int, optional): Page number (1-indexed)
+        per_page (int, optional): Number of items per page
+        search_term (str, optional): Search term to filter by PO number or buyer name
+        status_filter (str, optional): Filter by order status
+        date_range (tuple, optional): Filter by date range (start_date, end_date)
+        
+    Returns:
+        tuple: (orders_list, total_count) where total_count is the total number of records
+    """
     db = get_db_session()
     try:
-        # Use join to eagerly load the buyer information with the orders
-        orders = db.query(Order).options(sqlalchemy.orm.joinedload(Order.buyer)).all()
-        return orders
+        # Start with a query that joins Order with Buyer to enable searching by buyer name
+        query = db.query(Order).options(sqlalchemy.orm.joinedload(Order.buyer)).join(Buyer)
+        
+        # Apply search filter if provided
+        if search_term:
+            search_term = f"%{search_term}%"
+            query = query.filter(
+                (Order.po_number.ilike(search_term)) | 
+                (Buyer.name.ilike(search_term))
+            )
+        
+        # Apply status filter if provided
+        if status_filter:
+            query = query.filter(Order.status == status_filter)
+        
+        # Apply date range filter if provided
+        if date_range and len(date_range) == 2:
+            start_date, end_date = date_range
+            if start_date:
+                query = query.filter(Order.order_date >= start_date)
+            if end_date:
+                query = query.filter(Order.order_date <= end_date)
+        
+        # Get total count for pagination
+        total_count = query.count()
+        
+        # Apply pagination if both page and per_page are provided
+        if page is not None and per_page is not None:
+            query = query.order_by(Order.order_date.desc())
+            query = query.offset((page - 1) * per_page).limit(per_page)
+        
+        orders = query.all()
+        return orders, total_count
     finally:
         db.close()
 
@@ -138,15 +180,52 @@ def update_order_status(order_id, status):
         db.close()
 
 # ===== Style Operations =====
-def get_styles_by_order(order_id):
-    """Get all styles for a specific order"""
+def get_styles_by_order(order_id, page=None, per_page=None, search_term=None, status_filter=None):
+    """
+    Get all styles for a specific order with optional pagination and filtering
+    
+    Args:
+        order_id: The order ID to filter by
+        page (int, optional): Page number (1-indexed)
+        per_page (int, optional): Number of items per page
+        search_term (str, optional): Search term to filter by style number or description
+        status_filter (str, optional): Filter by style status
+        
+    Returns:
+        tuple: (styles_list, total_count) where total_count is the total number of records
+    """
     db = get_db_session()
     try:
         # Convert numpy.int64 to Python int if needed
         if hasattr(order_id, 'item'):  # Check if it's numpy type
             order_id = int(order_id)
-        styles = db.query(Style).filter(Style.order_id == order_id).all()
-        return styles
+            
+        query = db.query(Style).filter(Style.order_id == order_id)
+        
+        # Apply search filter if provided
+        if search_term:
+            search_term = f"%{search_term}%"
+            query = query.filter(
+                (Style.style_number.ilike(search_term)) | 
+                (Style.description.ilike(search_term)) |
+                (Style.category.ilike(search_term)) |
+                (Style.color.ilike(search_term))
+            )
+        
+        # Apply status filter if provided
+        if status_filter:
+            query = query.filter(Style.status == status_filter)
+        
+        # Get total count for pagination
+        total_count = query.count()
+        
+        # Apply pagination if both page and per_page are provided
+        if page is not None and per_page is not None:
+            query = query.order_by(Style.style_number)
+            query = query.offset((page - 1) * per_page).limit(per_page)
+        
+        styles = query.all()
+        return styles, total_count
     finally:
         db.close()
 
@@ -190,15 +269,52 @@ def update_style_status(style_id, status):
         db.close()
 
 # ===== Material Operations =====
-def get_materials_by_style(style_id):
-    """Get all materials for a specific style"""
+def get_materials_by_style(style_id, page=None, per_page=None, search_term=None, material_type=None, status_filter=None):
+    """
+    Get all materials for a specific style with optional pagination and filtering
+    
+    Args:
+        style_id: The style ID to filter by
+        page (int, optional): Page number (1-indexed)
+        per_page (int, optional): Number of items per page
+        search_term (str, optional): Search term to filter by material name
+        material_type (str, optional): Filter by material type (Fabric, Trim, Accessories)
+        status_filter (str, optional): Filter by material status
+        
+    Returns:
+        tuple: (materials_list, total_count) where total_count is the total number of records
+    """
     db = get_db_session()
     try:
         # Convert numpy.int64 to Python int if needed
         if hasattr(style_id, 'item'):  # Check if it's numpy type
             style_id = int(style_id)
-        materials = db.query(Material).filter(Material.style_id == style_id).all()
-        return materials
+            
+        query = db.query(Material).filter(Material.style_id == style_id)
+        
+        # Apply search filter if provided
+        if search_term:
+            search_term = f"%{search_term}%"
+            query = query.filter(Material.name.ilike(search_term))
+        
+        # Apply material type filter if provided
+        if material_type:
+            query = query.filter(Material.type == material_type)
+        
+        # Apply status filter if provided
+        if status_filter:
+            query = query.filter(Material.status == status_filter)
+        
+        # Get total count for pagination
+        total_count = query.count()
+        
+        # Apply pagination if both page and per_page are provided
+        if page is not None and per_page is not None:
+            query = query.order_by(Material.name)
+            query = query.offset((page - 1) * per_page).limit(per_page)
+        
+        materials = query.all()
+        return materials, total_count
     finally:
         db.close()
 
@@ -309,15 +425,50 @@ def get_production_entries_by_date_range(start_date, end_date):
     finally:
         db.close()
 
-def get_production_entries_by_style(style_id):
-    """Get all production entries for a specific style"""
+def get_production_entries_by_style(style_id, page=None, per_page=None, process_filter=None, date_range=None):
+    """
+    Get all production entries for a specific style with optional pagination and filtering
+    
+    Args:
+        style_id: The style ID to filter by
+        page (int, optional): Page number (1-indexed)
+        per_page (int, optional): Number of items per page
+        process_filter (str, optional): Filter by process (Cutting, Stitching, Packing, Dispatch)
+        date_range (tuple, optional): Filter by date range (start_date, end_date)
+        
+    Returns:
+        tuple: (entries_list, total_count) where total_count is the total number of records
+    """
     db = get_db_session()
     try:
         # Convert numpy.int64 to Python int if needed
         if hasattr(style_id, 'item'):  # Check if it's numpy type
             style_id = int(style_id)
-        entries = db.query(ProductionEntry).filter(ProductionEntry.style_id == style_id).all()
-        return entries
+            
+        query = db.query(ProductionEntry).filter(ProductionEntry.style_id == style_id)
+        
+        # Apply process filter if provided
+        if process_filter:
+            query = query.filter(ProductionEntry.process == process_filter)
+        
+        # Apply date range filter if provided
+        if date_range and len(date_range) == 2:
+            start_date, end_date = date_range
+            if start_date:
+                query = query.filter(ProductionEntry.date >= start_date)
+            if end_date:
+                query = query.filter(ProductionEntry.date <= end_date)
+        
+        # Get total count for pagination
+        total_count = query.count()
+        
+        # Apply pagination if both page and per_page are provided
+        if page is not None and per_page is not None:
+            query = query.order_by(ProductionEntry.date.desc())
+            query = query.offset((page - 1) * per_page).limit(per_page)
+        
+        entries = query.all()
+        return entries, total_count
     finally:
         db.close()
 
