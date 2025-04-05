@@ -24,11 +24,12 @@ from supply_chain_visualization import show_supply_chain_visualization
 from synergy_visualization import show_synergy_visualization
 from voi_jeans_demo import show_voi_jeans_demo
 from market_price_intelligence import show_market_price_intelligence
+from synergy_hub import show_synergy_hub, show_voice_over_demo
 
 # Configure the page
 st.set_page_config(
-    page_title="ECG Manufacturing Portal",
-    page_icon="👕",
+    page_title="ECG Synergyze Platform",
+    page_icon="⚙️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -41,7 +42,7 @@ if 'db_initialized' not in st.session_state:
 
 # Initialize session state for app flow
 if 'page' not in st.session_state:
-    st.session_state.page = 'manufacturing_dashboard'  # Start directly on manufacturing dashboard page
+    st.session_state.page = 'synergy_hub'  # Start with the SynergyHub as the landing page
 
 if 'completed_onboarding' not in st.session_state:
     st.session_state.completed_onboarding = True  # Skip onboarding for testing
@@ -307,7 +308,22 @@ elif st.session_state.page == 'voi_jeans_demo':
     show_voi_jeans_demo()
 elif st.session_state.page == 'market_price_intelligence':
     show_market_price_intelligence()
+elif st.session_state.page == 'synergy_hub':
+    show_synergy_hub()
+elif st.session_state.page == 'voice_over_demo':
+    show_voice_over_demo()
 
 # Footer
 st.markdown("---")
-st.caption("Voi Jeans Retail India Pvt Ltd | Denim Excellence. CMP Manufacturing. Retail Distribution.")
+st.markdown("""
+<div style='display: flex; justify-content: space-between; align-items: center;'>
+    <div style='text-align: left;'>
+        <p style='margin: 0; font-size: 0.8em;'>© ECG Synergyze™ Platform</p>
+        <p style='margin: 0; font-size: 0.7em;'>Powering Woven Supply™ and Commune Connect™</p>
+    </div>
+    <div style='text-align: right;'>
+        <p style='margin: 0; font-size: 0.8em;'>Licensed to: Voi Jeans Retail India Pvt Ltd</p>
+        <p style='margin: 0; font-size: 0.7em;'>License valid through April 2026</p>
+    </div>
+</div>
+""", unsafe_allow_html=True)
