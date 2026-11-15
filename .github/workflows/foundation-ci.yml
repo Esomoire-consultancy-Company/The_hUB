@@ -1,0 +1,37 @@
+name: The_hUB — Python foundation check
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '*.py'
+      - 'automation/**'
+      - '.github/workflows/foundation-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install uv
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: 'latest-known'
+          enable-cache: true
+      - name: Ensure Python 3.11
+        run: uv python install 3.11
+      - name: Validate existing dependency lock
+        run: uv sync --locked --python 3.11
+      - name: Syntax and module imports without database access
+        run: |
+          uv run --no-sync python -m compileall -q .
+          uv run --no-sync python -c "import sys, streamlit, pandas, numpy, plotly, sqlalchemy; print('Python',sys.version.split()[0],'- base imports OK')"
+      - name: Test automation standard-library logic
+        run: uv run --no-sync python -m unittest discover -s tests -p 'test_*.py' -v
