@@ -91,4 +91,4 @@ jobs:
       - name: Automation unit tests
         run: uv run --no-sync python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Marketing non-sending preview smoke
-        run: uv run --no-sync python automation/marketing_preview.py automation/marketing_campaigns.csv
+        run: uv run --no-sync python -m automation.marketing_preview automation/marketing_campaigns.csv

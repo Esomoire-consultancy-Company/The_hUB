@@ -21,4 +21,4 @@ jobs:
         with:
           persist-credentials: false
       - name: Build non-sending campaign preview
-        run: python automation/marketing_preview.py automation/marketing_campaigns.csv
+        run: python -m automation.marketing_preview automation/marketing_campaigns.csv
