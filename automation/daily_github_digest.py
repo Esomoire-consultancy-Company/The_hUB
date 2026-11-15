@@ -1,12 +1,12 @@
 """Read-only, single-repository GitHub work activity; no notification delivery."""
 from datetime import datetime, timedelta, timezone
-import html
 import json
 import os
 import re
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
+from automation.safe_summary import markdown_safe
 
 MAX_API_PAGE = 100
 MAX_DISPLAYED = 20
@@ -19,12 +19,6 @@ def api_get(path, token):
     })
     with urlopen(req, timeout=15) as response:
         return json.load(response)
-
-def markdown_safe(value, max_len=140):
-    raw = re.sub(r"[\r\n\t\x00-\x1f]+", " ", str(value or ""))[:max_len]
-    escaped = html.escape(raw, quote=True).replace("@", "&#64;")
-    return re.sub(r"([\\\x60*_{}\[\]()#+\-.!|>])",
-                  lambda match: "\\" + match.group(1), escaped)
 
 def digest(repository, token, now=None):
     if not isinstance(repository, str) or not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository):

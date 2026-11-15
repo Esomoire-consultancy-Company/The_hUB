@@ -66,19 +66,20 @@ def show_synergy_hub():
         
         selected_role = st.selectbox("Select Your Role", roles, key="role_select")
         
-        # Authentication simulation
-        st.markdown("### Quick Authentication")
-        auth_code = st.text_input("Enter Access Code", type="password")
-        
-        # Login button
-        login_pressed = st.button("Login to Ecosystem", type="primary", use_container_width=True)
-        if login_pressed and selected_company != "Select a Company" and selected_role != "Select Your Role":
-            st.session_state['company'] = selected_company
-            st.session_state['role'] = selected_role
-            st.session_state['authenticated'] = True
-            st.success(f"Welcome to {selected_company}!")
-            st.session_state.page = 'voi_jeans_demo'
-            st.rerun()
+        # Demonstration selector: this is NOT an identity or authorization path.
+        # Do not set a genuine authenticated principal or create a licence.
+        st.markdown("### Demonstration workspace")
+        st.caption("Demo only. Selecting a company or role does not verify identity, grant access, or create a licence.")
+        enter_demo = st.button("Enter Demo View (no authentication)", type="primary", use_container_width=True)
+        if enter_demo:
+            if selected_company == "Select a Company" or selected_role == "Select Your Role":
+                st.warning("Select a sample company and role to open the demo.")
+            else:
+                st.session_state['demo_company'] = selected_company
+                st.session_state['demo_role'] = selected_role
+                st.session_state['demo_mode'] = True
+                st.session_state.page = 'voi_jeans_demo'
+                st.rerun()
     
     with col2:
         # Main hub visualization
@@ -308,7 +309,7 @@ def show_synergy_hub():
     st.markdown("---")
     st.markdown("""
     <div style='background-color: #f0f2f6; padding: 15px; border-radius: 5px; margin-bottom: 15px; text-align: center;'>
-    <p style='margin: 0; font-size: 0.9em;'>All platforms are part of the Synergyze™ ecosystem, licensed under ECG Enterprise License.</p>
+    <p style='margin: 0; font-size: 0.9em;'>Historical platform demonstration. Licence entitlement, issuing authority, and current validity have not been verified.</p>
     <p style='margin: 0; font-size: 0.8em;'>© ECG Corporate 2025. All Rights Reserved.</p>
     </div>
     """, unsafe_allow_html=True)

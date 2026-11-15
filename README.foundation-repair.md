@@ -26,3 +26,10 @@ Historic failed job: https://github.com/Esomoire-consultancy-Company/The_hUB/act
 6. Daily notification: confirm scope, timezone, time, destination and access permissions before any schedule or sending.
 
 **Current status:** Branch-only PRE-PRODUCTION REVIEW. Draft PR must remain unmerged until gates pass.
+
+## R0.3 additional controls (review branch)
+- Centralize Markdown summary escaping; strip newline, Unicode bidi and control characters. Nothing is sent.
+- Make demo-only company/role selection explicit. It must never mark a person as authenticated.
+- Replace unverified live-licence claims with clearly historical demo references.
+- Run a UI interaction smoke to verify demo navigation does not establish real authorization.
+- This is **not** a replacement for real SSO, DigitalMe, Warden, or externally effective authorization.

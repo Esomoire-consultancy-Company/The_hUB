@@ -1,20 +1,15 @@
 """Read-only marketing campaign review; never delivers or posts messages."""
 import csv
-import html
 import os
-import re
 import sys
 from pathlib import Path
+from automation.safe_summary import markdown_safe as safe_markdown
 
 REQUIRED = ("campaign_id", "audience", "channel", "message", "consent_record", "content_approved")
 
 def cell(row, field):
     value = row.get(field)
     return value.strip() if isinstance(value, str) else ""
-
-def safe_markdown(value):
-    value = html.escape(str(value), quote=True).replace("@", "&#64;")
-    return re.sub(r"([\\\x60*_{}\[\]()#+\-.!|>])", lambda m: "\\" + m.group(1), value)[:160]
 
 def build_preview(path):
     with open(path, encoding="utf-8", newline="") as file:

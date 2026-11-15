@@ -81,6 +81,13 @@ jobs:
           assert Path("smoke.db").exists(), "Expected only disposable SQLite database"
           print("Streamlit first render OK using disposable SQLite")
           PY
+      - name: Demo navigation and identity-boundary smoke
+        run: |
+          sandbox=$(mktemp -d)
+          trap 'rm -rf "$sandbox"' EXIT
+          cd "$sandbox"
+          export DATABASE_URL="sqlite:///$sandbox/demo.db"
+          PYTHONPATH="$GITHUB_WORKSPACE" "$GITHUB_WORKSPACE/.venv/bin/python" "$GITHUB_WORKSPACE/tests/smoke_demo_navigation.py"
       - name: Automation unit tests
         run: uv run --no-sync python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Marketing non-sending preview smoke

@@ -5,7 +5,8 @@ import tempfile
 import unittest
 from unittest.mock import patch
 from automation.marketing_preview import build_preview, write_preview
-from automation.daily_github_digest import digest, markdown_safe
+from automation.daily_github_digest import digest
+from automation.safe_summary import markdown_safe
 
 HEADERS = ("campaign_id", "audience", "channel", "message", "consent_record", "content_approved")
 NOW = datetime(2026, 11, 16, 0, 0, tzinfo=timezone.utc)
@@ -38,6 +39,14 @@ class MarketingChecks(unittest.TestCase):
             approved, hold = build_preview(path)
             self.assertEqual(len(approved), 0)
             self.assertEqual(len(hold), 2)
+
+    def test_report_value_cannot_inject_new_lines(self):
+        from automation.marketing_preview import safe_markdown
+        value = 'X\n# Fake approved campaign\u2028approved\u202e @all'
+        escaped = safe_markdown(value)
+        self.assertNotIn('\n', escaped)
+        self.assertNotIn('\u202e', escaped)
+        self.assertNotIn('# Fake approved', escaped)
 
     def test_missing_audience_or_channel_is_on_hold(self):
         rows = [

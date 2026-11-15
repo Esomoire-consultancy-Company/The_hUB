@@ -35,6 +35,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+st.info("DEMO ONLY — no verified login, current licence, live production authority, or external execution is provided by this interface.")
+
 # Initialize database with sample data if needed
 if 'db_initialized' not in st.session_state:
     # Try to initialize database
@@ -343,8 +345,8 @@ st.markdown("""
         <p style='margin: 0; font-size: 0.7em;'>Powering Woven Supply™ and Commune Connect™</p>
     </div>
     <div style='text-align: right;'>
-        <p style='margin: 0; font-size: 0.8em;'>Licensed to: Voi Jeans Retail India Pvt Ltd</p>
-        <p style='margin: 0; font-size: 0.7em;'>License valid through April 2026</p>
+        <p style='margin: 0; font-size: 0.8em;'>Historical demonstration participant: VOI Jeans Retail India Pvt Ltd</p>
+        <p style='margin: 0; font-size: 0.7em;'>Historical licence reference: April 2026; current entitlement NOT verified</p>
     </div>
 </div>
 """, unsafe_allow_html=True)
