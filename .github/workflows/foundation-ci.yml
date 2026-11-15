@@ -35,7 +35,7 @@ jobs:
           uv run --no-sync python -c "import sys, streamlit, pandas, numpy, plotly, sqlalchemy; print('Python',sys.version.split()[0],'- base imports OK')"
       - name: Verify SQLite fallback without external database
         env:
-          DATABASE_URL: sqlite:///:memory:
+          DATABASE_URL: 'sqlite:///:memory:'
         run: |
           uv run --no-sync python - <<'PY'
           from sqlalchemy import text
