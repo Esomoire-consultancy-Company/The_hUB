@@ -46,7 +46,8 @@ class MarketingChecks(unittest.TestCase):
         escaped = safe_markdown(value)
         self.assertNotIn('\n', escaped)
         self.assertNotIn('\u202e', escaped)
-        self.assertNotIn('# Fake approved', escaped)
+        self.assertIn('\\# Fake approved', escaped)
+        self.assertNotIn('\n# Fake approved', escaped)
 
     def test_missing_audience_or_channel_is_on_hold(self):
         rows = [
