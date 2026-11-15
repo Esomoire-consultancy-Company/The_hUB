@@ -9,10 +9,14 @@ app = AppTest.from_file(str(app_path), default_timeout=35).run()
 assert not app.exception, [str(x.message) for x in app.exception]
 buttons = [x for x in app.button if x.label == "Enter Demo View (no authentication)"]
 assert len(buttons) == 1, "Expected demonstration entry control"
-app.selectbox[0].set_value("Voi Jeans Retail India")
+app.selectbox[0].set_value("Scotts Garments CMP")
 app.selectbox[1].set_value("Marketing Director")
 app = app.run()
 assert not app.exception, [str(x.message) for x in app.exception]
+# Simulate a stale identity left by the retired pseudo-login.
+app.session_state["authenticated"] = "legacy-user"
+app.session_state["company"] = "Old Company"
+app.session_state["role"] = "Old Role"
 [x for x in app.button if x.label == "Enter Demo View (no authentication)"][0].click()
 app = app.run()
 assert not app.exception, [str(x.message) for x in app.exception]
@@ -22,5 +26,14 @@ try:
     claim = app.session_state["authenticated"]
 except KeyError:
     claim = False
-assert claim is not True, "Demo must never assert authenticated principal"
+assert not bool(claim), "Demo must never retain any truthy authenticated principal"
+assert app.session_state["demo_company"] == "Scotts Garments CMP"
+assert app.session_state["demo_role"] == "Marketing Director"
+for key in ("company", "role"):
+    try:
+        stale = app.session_state[key]
+    except KeyError:
+        stale = None
+    assert stale is None, f"Stale identity key persisted: {key}"
+assert any("Scotts Garments CMP" in str(x.body) for x in app.caption), "Demo context not shown"
 print("Demo navigation smoke OK: demo_mode only, no authenticated principal")

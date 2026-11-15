@@ -46,8 +46,16 @@ class MarketingChecks(unittest.TestCase):
         escaped = safe_markdown(value)
         self.assertNotIn('\n', escaped)
         self.assertNotIn('\u202e', escaped)
+        self.assertNotIn('\u2028', escaped)
         self.assertIn('\\# Fake approved', escaped)
         self.assertNotIn('\n# Fake approved', escaped)
+
+    def test_bidi_format_marks_removed(self):
+        from automation.safe_summary import markdown_safe
+        value = 'a\u200eb\u200fc\u061cd'
+        result = markdown_safe(value)
+        for mark in ('\u200e', '\u200f', '\u061c'):
+            self.assertNotIn(mark, result)
 
     def test_missing_audience_or_channel_is_on_hold(self):
         rows = [

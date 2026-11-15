@@ -42,3 +42,10 @@ Historic failed job: https://github.com/Esomoire-consultancy-Company/The_hUB/act
 - The destructive browser "Reset Database" control has been removed; no browser-triggered table dropping is offered.
 - CI tests normal app first render with a disposable SQLite file path and verifies that no file is created. Separately, the demo navigation test opts in with disposable SQLite synthetic data.
 - These safeguards are deliberately separate from actual identity, regulated data, company access or licence governance.
+
+## R0.4 review fixes
+- The earlier notice overstated safety by claiming "no external execution"; it now warns that **this is a demo and only disposable SQLite should be connected**. A UI notice is not an isolation boundary.
+- The demo selector clears the keys used by the old pseudo-login (`authenticated`, `company`, `role`) before navigation.
+- The selected company and role appear only as **example context** on the static VOI demo; this cannot confer access to the selected organization.
+- UI smoke deliberately injects a truthy legacy authentication value and verifies it is cleared.
+- Report sanitizer now removes U+200E/U+200F/U+061C directional marks; regression tests assert Unicode separators are removed.

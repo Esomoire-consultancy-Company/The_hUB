@@ -75,6 +75,9 @@ def show_synergy_hub():
             if selected_company == "Select a Company" or selected_role == "Select Your Role":
                 st.warning("Select a sample company and role to open the demo.")
             else:
+                # Never inherit old simulated-login state across demo navigation.
+                for key in ('authenticated', 'company', 'role'):
+                    st.session_state.pop(key, None)
                 st.session_state['demo_company'] = selected_company
                 st.session_state['demo_role'] = selected_role
                 st.session_state['demo_mode'] = True

@@ -36,7 +36,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.info("DEMO ONLY — no verified login, current licence, live production authority, or external execution is provided by this interface.")
+st.warning("DEMONSTRATION — this interface does not authenticate users or validate live licences. Connect only a disposable SQLite demonstration database; it is not approved for production business data.")
 
 # Synthetic sample data is opt-in and restricted to explicitly configured SQLite demos.
 # Ordinary app startup never seeds, overwrites, resets, or migrates a business database.
@@ -330,6 +330,14 @@ elif st.session_state.page == 'supply_chain_visualization':
 elif st.session_state.page == 'synergy_visualization':
     show_synergy_visualization()
 elif st.session_state.page == 'voi_jeans_demo':
+    if st.session_state.get('demo_mode'):
+        sample_company = st.session_state.get('demo_company', 'Unspecified')
+        sample_role = st.session_state.get('demo_role', 'Unspecified')
+        st.caption(
+            f"Demonstration selection: {sample_company} / {sample_role}. "
+            "The screens below are static VOI examples, NOT records or rights "
+            "of the selected organization."
+        )
     show_voi_jeans_demo()
 elif st.session_state.page == 'market_price_intelligence':
     show_market_price_intelligence()
