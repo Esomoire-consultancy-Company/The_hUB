@@ -64,7 +64,10 @@ jobs:
           assert Path("voi_jeans.db").exists()
           print("SQLite unset-env fallback in disposable sandbox OK")
           PY
-      - name: Streamlit first-render smoke on disposable SQLite database
+      - name: Streamlit synthetic-demo first render on disposable SQLite database
+        env:
+          THE_HUB_DEMO_MODE: '1'
+          THE_HUB_ALLOW_SAMPLE_SEED: '1'
         run: |
           sandbox=$(mktemp -d)
           trap 'rm -rf "$sandbox"' EXIT
