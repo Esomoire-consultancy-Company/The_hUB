@@ -81,14 +81,33 @@ jobs:
           assert Path("smoke.db").exists(), "Expected only disposable SQLite database"
           print("Streamlit first render OK using disposable SQLite")
           PY
+      - name: Verify app startup does not seed sample data
+        run: |
+          sandbox=$(mktemp -d)
+          trap 'rm -rf "$sandbox"' EXIT
+          cd "$sandbox"
+          export DATABASE_URL="sqlite:///$sandbox/untouched.db"
+          env -u THE_HUB_DEMO_MODE -u THE_HUB_ALLOW_SAMPLE_SEED PYTHONPATH="$GITHUB_WORKSPACE" "$GITHUB_WORKSPACE/.venv/bin/python" - <<'PY'
+          import os
+          from pathlib import Path
+          from streamlit.testing.v1 import AppTest
+          source = Path(os.environ["GITHUB_WORKSPACE"]) / "app.py"
+          app = AppTest.from_file(str(source), default_timeout=35).run()
+          assert not app.exception, [str(x.message) for x in app.exception]
+          assert not Path("untouched.db").exists(), "Normal app startup unexpectedly wrote sample data"
+          print("Normal app first render did not create any database")
+          PY
       - name: Demo navigation and identity-boundary smoke
+        env:
+          THE_HUB_DEMO_MODE: '1'
+          THE_HUB_ALLOW_SAMPLE_SEED: '1'
         run: |
           sandbox=$(mktemp -d)
           trap 'rm -rf "$sandbox"' EXIT
           cd "$sandbox"
           export DATABASE_URL="sqlite:///$sandbox/demo.db"
           PYTHONPATH="$GITHUB_WORKSPACE" "$GITHUB_WORKSPACE/.venv/bin/python" "$GITHUB_WORKSPACE/tests/smoke_demo_navigation.py"
-      - name: Automation unit tests
+      - name: Automation and sample-data policy unit tests
         run: uv run --no-sync python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Marketing non-sending preview smoke
         run: uv run --no-sync python -m automation.marketing_preview automation/marketing_campaigns.csv

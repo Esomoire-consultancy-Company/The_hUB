@@ -1,4 +1,5 @@
 import streamlit as st
+from demo_seed_policy import sample_seed_permitted
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
@@ -37,11 +38,14 @@ st.set_page_config(
 
 st.info("DEMO ONLY — no verified login, current licence, live production authority, or external execution is provided by this interface.")
 
-# Initialize database with sample data if needed
+# Synthetic sample data is opt-in and restricted to explicitly configured SQLite demos.
+# Ordinary app startup never seeds, overwrites, resets, or migrates a business database.
 if 'db_initialized' not in st.session_state:
-    # Try to initialize database
-    initialize_database()
-    st.session_state.db_initialized = True
+    st.session_state.db_initialized = False
+    if sample_seed_permitted():
+        initialize_database()
+        st.session_state.db_initialized = True
+        st.caption("Synthetic demonstration records loaded into an explicitly configured SQLite database.")
 
 # Initialize session state for app flow
 if 'page' not in st.session_state:

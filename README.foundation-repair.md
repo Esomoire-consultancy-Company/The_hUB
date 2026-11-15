@@ -33,3 +33,12 @@ Historic failed job: https://github.com/Esomoire-consultancy-Company/The_hUB/act
 - Replace unverified live-licence claims with clearly historical demo references.
 - Run a UI interaction smoke to verify demo navigation does not establish real authorization.
 - This is **not** a replacement for real SSO, DigitalMe, Warden, or externally effective authorization.
+
+## R0.4 sample-data safety and activation boundary
+
+- The prior `app.py` automatically invoked `initialize_database()` on first render. This could create tables and insert demonstration records into any configured database that lacked buyers.
+- In the review branch, sample-data seeding fails closed unless **all** of `THE_HUB_DEMO_MODE=1`, `THE_HUB_ALLOW_SAMPLE_SEED=1`, and an explicit `DATABASE_URL=sqlite:///...` are present. Unset URLs and PostgreSQL cannot be seeded by this demo path.
+- The database management UI cannot operate unless the same demo-only gate passes.
+- The destructive browser "Reset Database" control has been removed; no browser-triggered table dropping is offered.
+- CI tests normal app first render with a disposable SQLite file path and verifies that no file is created. Separately, the demo navigation test opts in with disposable SQLite synthetic data.
+- These safeguards are deliberately separate from actual identity, regulated data, company access or licence governance.
