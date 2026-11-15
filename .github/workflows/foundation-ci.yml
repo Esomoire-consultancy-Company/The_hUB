@@ -1,4 +1,4 @@
-name: The_hUB — Python foundation check
+name: The_hUB — Python foundation and isolation checks
 
 on:
   workflow_dispatch:
@@ -8,7 +8,9 @@ on:
       - 'uv.lock'
       - '*.py'
       - 'automation/**'
-      - '.github/workflows/foundation-ci.yml'
+      - 'tests/**'
+      - '.github/workflows/**'
+      - 'README.foundation-repair.md'
 
 permissions:
   contents: read
@@ -16,10 +18,12 @@ permissions:
 jobs:
   foundation:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
-      - name: Checkout source
+      - name: Checkout source without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Install uv
         uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
@@ -29,11 +33,11 @@ jobs:
         run: uv python install 3.11
       - name: Validate existing dependency lock
         run: uv sync --locked --python 3.11
-      - name: Syntax and module imports without database access
+      - name: Syntax and base imports (exclude .venv)
         run: |
-          uv run --no-sync python -m compileall -q .
-          uv run --no-sync python -c "import sys, streamlit, pandas, numpy, plotly, sqlalchemy; print('Python',sys.version.split()[0],'- base imports OK')"
-      - name: Verify SQLite fallback without external database
+          uv run --no-sync python -m compileall -q -x '(^|/)(\.venv|\.git)/' .
+          uv run --no-sync python -c "import sys, streamlit, pandas, numpy, plotly, sqlalchemy; print('Python', sys.version.split()[0], '- base imports OK')"
+      - name: Verify SQLite explicit-memory connection
         env:
           DATABASE_URL: 'sqlite:///:memory:'
         run: |
@@ -42,7 +46,25 @@ jobs:
           from database import engine
           with engine.connect() as connection:
               assert connection.scalar(text("SELECT 1")) == 1
-          print("SQLite fallback connection OK")
+          print("SQLite explicit connection OK")
           PY
-      - name: Test automation standard-library logic
+      - name: Verify SQLite fallback when DATABASE_URL absent
+        run: |
+          sandbox=$(mktemp -d)
+          trap 'rm -rf "$sandbox"' EXIT
+          cd "$sandbox"
+          env -u DATABASE_URL PYTHONPATH="$GITHUB_WORKSPACE" "$GITHUB_WORKSPACE/.venv/bin/python" - <<'PY'
+          from pathlib import Path
+          from sqlalchemy import text
+          from database import engine, create_tables
+          assert str(engine.url) == "sqlite:///voi_jeans.db"
+          create_tables()
+          with engine.connect() as connection:
+              assert connection.scalar(text("SELECT 1")) == 1
+          assert Path("voi_jeans.db").exists()
+          print("SQLite unset-env fallback in disposable sandbox OK")
+          PY
+      - name: Automation unit tests
         run: uv run --no-sync python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Marketing non-sending preview smoke
+        run: uv run --no-sync python automation/marketing_preview.py automation/marketing_campaigns.csv

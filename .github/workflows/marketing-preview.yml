@@ -2,15 +2,23 @@ name: Marketing — review-only preview
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'automation/marketing_preview.py'
+      - 'automation/marketing_campaigns.csv'
+      - '.github/workflows/marketing-preview.yml'
 
 permissions:
   contents: read
 
 jobs:
   prepare-preview:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Build non-sending campaign preview
         run: python automation/marketing_preview.py automation/marketing_campaigns.csv

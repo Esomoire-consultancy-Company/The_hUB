@@ -1,8 +1,12 @@
-name: Daily work — GitHub source digest (review-only)
+name: Daily work — repository activity digest (review-only)
 
 on:
   workflow_dispatch:
-  # No schedule until recipients, timezone, hour and sources are approved.
+  pull_request:
+    paths:
+      - 'automation/daily_github_digest.py'
+      - '.github/workflows/daily-work-digest.yml'
+  # No recurring schedule or recipient delivery until explicitly approved.
 
 permissions:
   contents: read
@@ -11,11 +15,14 @@ permissions:
 
 jobs:
   draft-digest:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Generate read-only GitHub activity digest
+        with:
+          persist-credentials: false
+      - name: Generate GitHub source digest (no delivery)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
