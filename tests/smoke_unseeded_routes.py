@@ -20,7 +20,7 @@ for route in [
     app.session_state["page"] = route
     app = app.run()
     assert not app.exception, f"Route {route}: " + repr([str(x.message) for x in app.exception])
-    assert any("database-backed demonstration area is unavailable" in str(w.message)
+    assert any("database-backed demonstration area is unavailable" in str(w.body)
                for w in app.warning), f"Missing unavailable state on {route}"
     assert not database.exists(), f"Unexpected database creation on {route}"
 print("All 9 database-dependent routes blocked safely without demo activation")
