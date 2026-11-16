@@ -100,6 +100,13 @@ jobs:
           assert not Path("untouched.db").exists(), "Normal app startup unexpectedly wrote sample data"
           print("Normal app first render did not create any database")
           PY
+      - name: Verify database-backed routes fail closed without demo setup
+        run: |
+          sandbox=$(mktemp -d)
+          trap 'rm -rf "$sandbox"' EXIT
+          cd "$sandbox"
+          export DATABASE_URL="sqlite:///$sandbox/unseeded.db"
+          env -u THE_HUB_DEMO_MODE -u THE_HUB_ALLOW_SAMPLE_SEED PYTHONPATH="$GITHUB_WORKSPACE" "$GITHUB_WORKSPACE/.venv/bin/python" "$GITHUB_WORKSPACE/tests/smoke_unseeded_routes.py"
       - name: Demo navigation and identity-boundary smoke
         env:
           THE_HUB_DEMO_MODE: '1'

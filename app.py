@@ -43,9 +43,12 @@ st.warning("DEMONSTRATION — this interface does not authenticate users or vali
 if 'db_initialized' not in st.session_state:
     st.session_state.db_initialized = False
     if sample_seed_permitted():
-        initialize_database()
+        inserted = initialize_database()
         st.session_state.db_initialized = True
-        st.caption("Synthetic demonstration records loaded into an explicitly configured SQLite database.")
+        if inserted:
+            st.caption("Synthetic demonstration records were inserted into the explicitly configured SQLite demo database.")
+        else:
+            st.caption("Existing SQLite demonstration records detected; no new sample records inserted.")
 
 # Initialize session state for app flow
 if 'page' not in st.session_state:
@@ -295,8 +298,21 @@ with st.sidebar:
             del st.session_state.conversation
         st.rerun()
 
-# Main content area based on the current page
-if st.session_state.page == 'onboarding':
+# Database-backed demo pages remain unavailable unless the explicit SQLite
+# sample-data foundation is enabled. This prevents failed queries on a missing
+# schema as well as unapproved access to data through those routes.
+DATABASE_BACKED_DEMO_PAGES = frozenset({
+    'manufacturing_dashboard', 'order_style_management', 'material_tracker',
+    'production_timeline', 'line_plan', 'reports', 'db_initialization',
+    'supply_chain_visualization', 'inventory_export',
+})
+if st.session_state.page in DATABASE_BACKED_DEMO_PAGES and not sample_seed_permitted():
+    st.warning(
+        "This database-backed demonstration area is unavailable. "
+        "It requires an explicitly configured disposable SQLite demo. "
+        "No live database connection or production access is offered."
+    )
+elif st.session_state.page == 'onboarding':
     show_onboarding()
 elif st.session_state.page == 'product_catalog':
     show_product_catalog()
@@ -330,9 +346,11 @@ elif st.session_state.page == 'supply_chain_visualization':
 elif st.session_state.page == 'synergy_visualization':
     show_synergy_visualization()
 elif st.session_state.page == 'voi_jeans_demo':
-    if st.session_state.get('demo_mode'):
-        sample_company = st.session_state.get('demo_company', 'Unspecified')
-        sample_role = st.session_state.get('demo_role', 'Unspecified')
+    if (st.session_state.get('demo_mode') is True
+            and st.session_state.get('demo_company')
+            and st.session_state.get('demo_role')):
+        sample_company = st.session_state['demo_company']
+        sample_role = st.session_state['demo_role']
         st.caption(
             f"Demonstration selection: {sample_company} / {sample_role}. "
             "The screens below are static VOI examples, NOT records or rights "

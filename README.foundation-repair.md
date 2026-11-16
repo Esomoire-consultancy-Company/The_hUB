@@ -49,3 +49,10 @@ Historic failed job: https://github.com/Esomoire-consultancy-Company/The_hUB/act
 - The selected company and role appear only as **example context** on the static VOI demo; this cannot confer access to the selected organization.
 - UI smoke deliberately injects a truthy legacy authentication value and verifies it is cleared.
 - Report sanitizer now removes U+200E/U+200F/U+061C directional marks; regression tests assert Unicode separators are removed.
+
+## R0.5 database release gate
+
+- Database-backed routes now display a clear unavailable state when explicit SQLite demo configuration is absent. The routes are `manufacturing_dashboard`, `order_style_management`, `material_tracker`, `production_timeline`, `line_plan`, `reports`, `db_initialization`, `supply_chain_visualization` and `inventory_export`.
+- The optional demo-seeding caption distinguishes newly added records from previously existing records.
+- Tests cover default `os.environ` lookup and all nine routes in an unseeded disposable SQLite environment.
+- Known write paths remain in `db_operations.py`, `order_style_management.py`, `material_tracker.py`, `line_plan.py` and schema creation in `manufacturing_dashboard.py`. They are **not production-authorized**; see `README.database-write-inventory.md`.

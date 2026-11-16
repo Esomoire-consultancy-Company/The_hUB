@@ -1,5 +1,7 @@
 """Synthetic data seeding must fail closed without two explicit demo flags."""
 import unittest
+import os
+from unittest.mock import patch
 from demo_seed_policy import sample_seed_permitted
 
 
@@ -27,6 +29,17 @@ class DemoSeedPolicyTests(unittest.TestCase):
                 "THE_HUB_DEMO_MODE": "1",
                 "THE_HUB_ALLOW_SAMPLE_SEED": "1"
             }))
+
+    def test_real_environment_no_argument_path(self):
+        # This is the same call style used by app.py. Avoid inherited CI flags.
+        with patch.dict(os.environ, {
+            "DATABASE_URL": "sqlite:///demo-test.db",
+            "THE_HUB_DEMO_MODE": "1",
+            "THE_HUB_ALLOW_SAMPLE_SEED": "1",
+        }, clear=True):
+            self.assertTrue(sample_seed_permitted())
+            os.environ.pop("THE_HUB_ALLOW_SAMPLE_SEED")
+            self.assertFalse(sample_seed_permitted())
 
     def test_explicit_synthetic_in_memory_sqlite_allowed(self):
         self.assertTrue(sample_seed_permitted({
