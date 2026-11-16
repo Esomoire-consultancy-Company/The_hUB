@@ -6,9 +6,12 @@ import random
 import json
 
 from database import create_tables, get_db_session, Buyer, Order, Style, ProductionLine, LineAllocation
+from demo_seed_policy import sample_seed_permitted
 
 def initialize_database():
-    """Initialize the database with sample data for demonstration"""
+    """Seed synthetic demo records only inside a specifically authorized SQLite demo."""
+    if not sample_seed_permitted():
+        raise RuntimeError("Sample data seeding is disabled outside an explicit local SQLite demo")
     # Create database tables if they don't exist
     create_tables()
     
@@ -201,8 +204,11 @@ def initialize_database():
 
 def show_db_initialization():
     """Show the database initialization interface"""
-    st.title("Database Initialization")
-    
+    st.title("Demonstration Database Setup")
+    if not sample_seed_permitted():
+        st.warning("Sample-data administration is disabled. This view cannot alter a real or unconfigured database.")
+        return
+
     # Check if we already have data
     db = get_db_session()
     try:
@@ -231,19 +237,8 @@ def show_db_initialization():
             with col4:
                 st.metric("Production Lines", lines_count)
             
-            # Option to reset
-            if st.button("Reset Database"):
-                # Drop all tables and recreate
-                from database import Base, engine
-                Base.metadata.drop_all(engine)
-                create_tables()
-                
-                # Reinitialize
-                if initialize_database():
-                    st.success("Database has been reset and reinitialized with fresh sample data.")
-                    st.rerun()
-                else:
-                    st.error("Failed to reinitialize database.")
+            # Resetting data via the browser is never permitted, even in demo mode.
+            st.caption("Database reset is disabled; no destructive browser operation is provided.")
         else:
             # Initialize the database
             st.info("Database is not initialized yet. Click the button below to initialize with sample data.")

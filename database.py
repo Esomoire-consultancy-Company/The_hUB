@@ -11,12 +11,23 @@ if not DATABASE_URL:
     # Fallback to SQLite for development
     DATABASE_URL = "sqlite:///voi_jeans.db"
 
-# Create the SQLAlchemy engine with connection pooling settings
+# Connection timeout parameters depend on the database driver.
+# SQLite uses sqlite3's "timeout"; PostgreSQL uses "connect_timeout".
+# Preserve provider-specific settings instead of passing PostgreSQL parameters
+# to SQLite when the development fallback is selected.
+database_backend = sa.engine.make_url(DATABASE_URL).get_backend_name()
+if database_backend == "sqlite":
+    connection_options = {"timeout": 15}
+elif database_backend == "postgresql":
+    connection_options = {"connect_timeout": 15}
+else:
+    connection_options = {}
+
 engine = create_engine(
-    DATABASE_URL, 
+    DATABASE_URL,
     pool_pre_ping=True,
     pool_recycle=3600,
-    connect_args={"connect_timeout": 15}
+    connect_args=connection_options,
 )
 
 # Create a base class for declarative models

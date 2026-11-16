@@ -1,4 +1,5 @@
 import streamlit as st
+from demo_seed_policy import sample_seed_permitted
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
@@ -35,11 +36,19 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Initialize database with sample data if needed
+st.warning("DEMONSTRATION — this interface does not authenticate users or validate live licences. Connect only a disposable SQLite demonstration database; it is not approved for production business data.")
+
+# Synthetic sample data is opt-in and restricted to explicitly configured SQLite demos.
+# Ordinary app startup never seeds, overwrites, resets, or migrates a business database.
 if 'db_initialized' not in st.session_state:
-    # Try to initialize database
-    initialize_database()
-    st.session_state.db_initialized = True
+    st.session_state.db_initialized = False
+    if sample_seed_permitted():
+        inserted = initialize_database()
+        st.session_state.db_initialized = True
+        if inserted:
+            st.caption("Synthetic demonstration records were inserted into the explicitly configured SQLite demo database.")
+        else:
+            st.caption("Existing SQLite demonstration records detected; no new sample records inserted.")
 
 # Initialize session state for app flow
 if 'page' not in st.session_state:
@@ -289,8 +298,21 @@ with st.sidebar:
             del st.session_state.conversation
         st.rerun()
 
-# Main content area based on the current page
-if st.session_state.page == 'onboarding':
+# Database-backed demo pages remain unavailable unless the explicit SQLite
+# sample-data foundation is enabled. This prevents failed queries on a missing
+# schema as well as unapproved access to data through those routes.
+DATABASE_BACKED_DEMO_PAGES = frozenset({
+    'manufacturing_dashboard', 'order_style_management', 'material_tracker',
+    'production_timeline', 'line_plan', 'reports', 'db_initialization',
+    'supply_chain_visualization', 'inventory_export',
+})
+if st.session_state.page in DATABASE_BACKED_DEMO_PAGES and not sample_seed_permitted():
+    st.warning(
+        "This database-backed demonstration area is unavailable. "
+        "It requires an explicitly configured disposable SQLite demo. "
+        "No live database connection or production access is offered."
+    )
+elif st.session_state.page == 'onboarding':
     show_onboarding()
 elif st.session_state.page == 'product_catalog':
     show_product_catalog()
@@ -324,6 +346,16 @@ elif st.session_state.page == 'supply_chain_visualization':
 elif st.session_state.page == 'synergy_visualization':
     show_synergy_visualization()
 elif st.session_state.page == 'voi_jeans_demo':
+    if (st.session_state.get('demo_mode') is True
+            and st.session_state.get('demo_company')
+            and st.session_state.get('demo_role')):
+        sample_company = st.session_state['demo_company']
+        sample_role = st.session_state['demo_role']
+        st.caption(
+            f"Demonstration selection: {sample_company} / {sample_role}. "
+            "The screens below are static VOI examples, NOT records or rights "
+            "of the selected organization."
+        )
     show_voi_jeans_demo()
 elif st.session_state.page == 'market_price_intelligence':
     show_market_price_intelligence()
@@ -343,8 +375,8 @@ st.markdown("""
         <p style='margin: 0; font-size: 0.7em;'>Powering Woven Supply™ and Commune Connect™</p>
     </div>
     <div style='text-align: right;'>
-        <p style='margin: 0; font-size: 0.8em;'>Licensed to: Voi Jeans Retail India Pvt Ltd</p>
-        <p style='margin: 0; font-size: 0.7em;'>License valid through April 2026</p>
+        <p style='margin: 0; font-size: 0.8em;'>Historical demonstration participant: VOI Jeans Retail India Pvt Ltd</p>
+        <p style='margin: 0; font-size: 0.7em;'>Historical licence reference: April 2026; current entitlement NOT verified</p>
     </div>
 </div>
 """, unsafe_allow_html=True)
